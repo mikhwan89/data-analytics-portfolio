@@ -1038,6 +1038,150 @@ with_growth <span class="sql-kw">as</span> (
         </div>
       </div>
 
+      <div class="opinion-card">
+        <h3>The Modern Data Stack: Why BigQuery + DBT + Looker Is the Architecture I Keep Coming Back To</h3>
+        <p class="opinion-preview">
+          The modern data stack isn't just a buzzword — it's a genuine architectural shift in how data teams build and operate.
+          After working across traditional warehouses, monolithic ETL pipelines, and legacy BI tools, I've settled on a view:
+          BigQuery, DBT, and Looker (or Holistics.io) represent the cleanest, most scalable pattern available today — and the reasons
+          are structural, not cosmetic.
+        </p>
+        <button class="opinion-toggle" onclick="toggleOpinion('opinion-mds', this)">Read full article ↓</button>
+
+        <div class="article-body" id="opinion-mds" style="display:none;">
+
+          <h4><span class="point-num">—</span>The Stack in One Sentence</h4>
+          <p>
+            <strong>BigQuery stores and scales your data. DBT transforms it into trusted, documented models. Looker or Holistics turns those models
+            into governed, self-service analytics.</strong> Each layer does one thing well. Each layer is replaceable independently.
+            That modularity is the whole point.
+          </p>
+          <p>
+            Most data stacks I've inherited were built differently: a monolithic ETL tool that both moved and transformed data,
+            a BI tool that also stored its own extract of the data, and no clear separation between raw source, business logic, and presentation.
+            Debugging a metric discrepancy meant tracing logic across three tools in three different languages. With the modern stack,
+            every layer has a clear owner, a clear language, and a clear responsibility.
+          </p>
+
+          <h4><span class="point-num">1</span>BigQuery: The Warehouse That Scales With You</h4>
+          <p>
+            BigQuery sits at the foundation. It's a fully managed, serverless data warehouse — meaning no cluster provisioning,
+            no index tuning, no capacity planning guesswork. You query terabytes the same way you query megabytes.
+          </p>
+          <p>
+            The separation of compute and storage is key. You pay for the storage you use and the queries you run — not for a cluster
+            that idles overnight. For most analytics workloads, this is dramatically more cost-efficient than traditional provisioned warehouses.
+          </p>
+          <p>
+            BigQuery also integrates natively with the rest of the GCP ecosystem: Pub/Sub for streaming ingestion, Dataflow for complex pipelines,
+            Looker for direct-query BI, and Vertex AI for ML workflows. If your organization is building toward a data-driven future on GCP,
+            BigQuery is the obvious center of gravity. But the arguments for BigQuery as the warehouse layer generalize to Snowflake or Redshift —
+            the modern data stack pattern holds regardless of which managed warehouse you pick.
+          </p>
+
+          <h4><span class="point-num">2</span>DBT: Bringing Software Engineering to SQL</h4>
+          <p>
+            DBT is where the paradigm shift really becomes visible. Before DBT, SQL transformations lived in stored procedures,
+            inside ETL tools, in ad-hoc scripts, or — most commonly — spread across all three with no coordination. DBT introduces
+            a structured, version-controlled, testable approach to SQL that data engineers had been asking for since the beginning.
+          </p>
+          <h5>One Language, One Place</h5>
+          <p>
+            Every transformation is a <code>.sql</code> file. Your raw source lands in the warehouse, and DBT transforms it in layers —
+            staging models clean and standardize, intermediate models apply business logic, mart models produce BI-ready tables.
+            Anyone on the team can open a model file and immediately understand what it does. There's no proprietary GUI to learn,
+            no drag-and-drop visual you have to reverse-engineer.
+          </p>
+          <h5>Tests as First-Class Citizens</h5>
+          <p>
+            DBT treats data quality tests the same way software engineers treat unit tests: they're built into the project, not an afterthought.
+            You define that a customer ID must be unique, that revenue must never be null, that channel must be one of a set of known values —
+            and DBT enforces those assertions on every run. When something breaks upstream, you catch it at the transformation layer,
+            not when a confused stakeholder asks why two dashboards disagree.
+          </p>
+          <h5>Documentation That Doesn't Rot</h5>
+          <p>
+            DBT generates a full data catalog from the same files that define your models. Column descriptions, lineage graphs, test coverage —
+            all maintained alongside the transformation code. Contrast this with every other documentation approach I've seen: a Confluence page
+            nobody updates, a spreadsheet with a "last updated: 2021" header, or simply nothing. DBT documentation is <em>co-located with the logic</em>,
+            so it either gets updated or the model doesn't merge.
+          </p>
+
+          <h4><span class="point-num">3</span>Looker (or Holistics): The Governed Semantic Layer</h4>
+          <p>
+            DBT gives you clean, tested tables in your warehouse. The final layer is the semantic model — a single definition of your business
+            metrics that every dashboard and ad-hoc query draws from. This is where Looker's LookML and Holistics' AMQL come in.
+          </p>
+          <p>
+            The core problem they solve: even with clean DBT mart tables, if two analysts write their own SQL queries against those tables,
+            they'll eventually define <code>revenue</code> slightly differently. One includes refunds. One doesn't. The metric diverges.
+            A governed semantic layer forces a single, auditable definition that everyone queries through — not around.
+          </p>
+          <p>
+            This is also why I believe <strong>Looker and Holistics.io are genuinely interchangeable</strong> in this stack.
+            Both treat the semantic layer as code — LookML for Looker, AMQL for Holistics. Both support Git-based workflows.
+            Both connect via direct query to the warehouse, not via data extract.
+            The philosophy is identical: define your metrics once, in code, in version control, and serve them to every consumer.
+          </p>
+          <p>
+            The choice between them often comes down to scale and budget. Looker is enterprise-grade, built for large organizations with complex
+            permission hierarchies and a heavy emphasis on data governance. Holistics is leaner, faster to set up, and more accessible for
+            smaller teams — while still offering the same code-based semantic layer that makes it a serious platform.
+            Either works. The architecture is the same.
+          </p>
+
+          <h4><span class="point-num">4</span>Why the Layers Fit Together So Well</h4>
+          <p>
+            The stack isn't just a collection of good tools — it's a coherent design. Each layer's output is the next layer's input,
+            and the handoffs are clean:
+          </p>
+          <ol>
+            <li><strong>Ingestion tools</strong> (Fivetran, Supermetrics, Airbyte) load raw data into BigQuery. No transformation yet — just raw source fidelity.</li>
+            <li><strong>DBT</strong> transforms raw data into mart tables: clean, tested, documented, with a full lineage graph from source to mart.</li>
+            <li><strong>Looker or Holistics</strong> connects directly to those mart tables via the semantic layer — adding business metric definitions, row-level security, and self-service exploration on top of already-trusted data.</li>
+          </ol>
+          <p>
+            Critically, every layer is independently replaceable. Switch from Fivetran to Airbyte — your DBT models don't change.
+            Switch from BigQuery to Snowflake — your LookML connection string changes, your business logic doesn't.
+            Switch from Looker to Holistics — your mart tables stay exactly the same. This is what a well-designed stack looks like:
+            <em>changes at one layer don't cascade unpredictably into other layers</em>.
+          </p>
+          <p>
+            There's also a cultural benefit that's easy to overlook. When SQL transformations live in Git (DBT) and the semantic layer
+            lives in Git (LookML/AMQL), the entire analytics codebase is reviewable, versionable, and deployable the same way
+            application code is. Data engineers and analytics engineers speak the same language. Pull requests for metric changes
+            go through the same review process as production code. That discipline compounds over time — it's the difference between
+            a data team that operates like a software team and one that operates like a spreadsheet team.
+          </p>
+
+          <div class="article-conclusion">
+            <p>
+              The modern data stack isn't the cheapest option, and it's not the simplest to set up. It requires a team willing to treat
+              data work as engineering work — with version control, testing, documentation, and code review as non-negotiables.
+            </p>
+            <p>
+              But once it's in place, the return is substantial: faster iteration, fewer metric disputes, cleaner handoffs between roles,
+              and a foundation that scales with your data volume and team size without a rewrite.
+              BigQuery handles the scale. DBT handles the logic. Looker or Holistics handles the governance.
+              That's the stack — and I haven't seen a more coherent alternative for organizations serious about data.
+            </p>
+          </div>
+
+          <div class="article-tags">
+            <span class="tag blue">BigQuery</span>
+            <span class="tag blue">DBT</span>
+            <span class="tag blue">Looker</span>
+            <span class="tag blue">Holistics</span>
+            <span class="tag blue">Modern Data Stack</span>
+            <span class="tag">LookML</span>
+            <span class="tag">AMQL</span>
+            <span class="tag">Data Warehouse</span>
+            <span class="tag">Semantic Layer</span>
+            <span class="tag">Data Engineering</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
