@@ -89,6 +89,25 @@
     .btn-outline { background: transparent; border-color: var(--border); color: var(--text); }
     .btn-outline:hover { border-color: var(--accent); text-decoration: none; }
 
+    /* ===== CAREER ===== */
+    #career { background: var(--bg2); border-bottom: 1px solid var(--border); }
+    .career-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .career-item {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-left: 3px solid var(--border);
+      border-radius: var(--radius); padding: 18px 20px;
+      transition: border-left-color .2s, transform .2s;
+    }
+    .career-item:hover { border-left-color: var(--accent); transform: translateY(-1px); }
+    .career-item.current { border-left-color: var(--accent2); }
+    .career-dates { font-size: 11px; color: var(--text-muted); font-family: 'SF Mono', monospace; margin-bottom: 6px; }
+    .career-company { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .career-role { font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 10px; }
+    .career-sector {
+      display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 4px;
+      background: var(--bg); border: 1px solid var(--border); color: var(--text-muted);
+    }
+
     /* ===== SKILLS ===== */
     #skills { background: var(--bg); border-bottom: 1px solid var(--border); }
     .skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -270,6 +289,7 @@
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 900px) {
+      .career-grid { grid-template-columns: 1fr 1fr; }
       .skills-grid { grid-template-columns: 1fr 1fr; }
       .kpi-row { grid-template-columns: 1fr 1fr; }
       .charts-grid { grid-template-columns: 1fr; }
@@ -290,6 +310,7 @@
 <nav>
   <span class="nav-brand">Ikhwan <span>Analytics</span></span>
   <ul class="nav-links">
+    <li><a href="#career">Career</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#achievements">Achievements</a></li>
     <li><a href="#dashboard">Dashboard</a></li>
@@ -307,13 +328,74 @@
     <div class="hero-inner">
       <h1>Turning Raw Data<br/>Into <span>Business Decisions</span></h1>
       <p class="hero-desc">
-        End-to-end data work — from ETL pipelines and SQL modeling to dashboards
-        that actually drive decisions. Scroll down to see the work.
+        End-to-end data work across e-commerce, ride-hailing, and fintech —
+        from ETL pipelines and SQL modeling to BI dashboards that drive real decisions.
       </p>
       <div class="hero-btns">
         <a href="#dashboard" class="btn btn-primary">View Dashboard</a>
         <a href="https://github.com/mikhwan89/marketing-analytics-dbt" target="_blank" class="btn btn-outline">DBT Project on GitHub</a>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAREER -->
+<section id="career">
+  <div class="container">
+    <p class="section-label">Experience</p>
+    <h2>Career</h2>
+    <p class="section-sub">Data leadership roles across Southeast Asia's most prominent tech and startup companies — from market research to building analytics teams from scratch.</p>
+    <div class="career-grid">
+
+      <div class="career-item current">
+        <div class="career-dates">Jan 2024 – Present</div>
+        <div class="career-company">CAMP Investment Technologies</div>
+        <div class="career-role">VP of Data & Strategy</div>
+        <span class="career-sector">Fintech · Investment</span>
+      </div>
+
+      <div class="career-item">
+        <div class="career-dates">Jan 2022 – Dec 2023</div>
+        <div class="career-company">Tokenomy</div>
+        <div class="career-role">VP of Growth → Head of Analytics</div>
+        <span class="career-sector">Crypto · Web3</span>
+      </div>
+
+      <div class="career-item">
+        <div class="career-dates">Aug 2019 – Jun 2021</div>
+        <div class="career-company">LinkAja</div>
+        <div class="career-role">Head of Data Analytics & BI Group</div>
+        <span class="career-sector">Fintech · Digital Payments</span>
+      </div>
+
+      <div class="career-item">
+        <div class="career-dates">Jun 2017 – Dec 2021</div>
+        <div class="career-company">Grab</div>
+        <div class="career-role">Country Lead Analytics → Acting Head of Economics → Head of Strategic Planning</div>
+        <span class="career-sector">Ride-hailing · Super App</span>
+      </div>
+
+      <div class="career-item">
+        <div class="career-dates">Jan 2015 – Dec 2016</div>
+        <div class="career-company">Alfacart</div>
+        <div class="career-role">Head of BI & Data Management</div>
+        <span class="career-sector">E-commerce · Retail</span>
+      </div>
+
+      <div class="career-item">
+        <div class="career-dates">Apr 2014 – Dec 2014</div>
+        <div class="career-company">Lazada Indonesia</div>
+        <div class="career-role">Business Planner & Analyst</div>
+        <span class="career-sector">E-commerce · Marketplace</span>
+      </div>
+
+      <div class="career-item">
+        <div class="career-dates">Feb 2011 – Apr 2014</div>
+        <div class="career-company">IDC</div>
+        <div class="career-role">Market Analyst</div>
+        <span class="career-sector">Market Research · IT</span>
+      </div>
+
     </div>
   </div>
 </section>
@@ -332,7 +414,8 @@
         <div class="tags">
           <span class="tag blue">PostgreSQL</span>
           <span class="tag blue">BigQuery</span>
-          <span class="tag blue">Snowflake</span>
+          <span class="tag blue">OracleSQL</span>
+          <span class="tag blue">plpgsql</span>
           <span class="tag blue">Window Functions</span>
           <span class="tag blue">CTEs</span>
         </div>
@@ -343,10 +426,11 @@
         <p>Build and maintain modular data pipelines using DBT with staging → intermediate → mart layering, tests, and documentation.</p>
         <div class="tags">
           <span class="tag green">DBT Core</span>
-          <span class="tag green">Python</span>
           <span class="tag green">Airflow</span>
-          <span class="tag green">REST APIs</span>
-          <span class="tag green">Cron</span>
+          <span class="tag green">Fivetran</span>
+          <span class="tag green">Supermetrics</span>
+          <span class="tag green">Python</span>
+          <span class="tag green">R</span>
         </div>
       </div>
       <div class="skill-card">
@@ -471,6 +555,23 @@
             <span class="impact-pill">Hyperlocal Analytics</span>
             <span class="impact-pill blue">Data Infrastructure</span>
             <span class="impact-pill purple">Company-wide Adoption</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alfacart: Price algorithm -->
+      <div class="ach-card">
+        <div class="ach-company">
+          <div class="ach-logo" style="background:rgba(88,166,255,0.15);color:var(--accent);border:1px solid rgba(88,166,255,0.3);font-size:14px">AC</div>
+          <div class="ach-company-name">Alfacart</div>
+        </div>
+        <div class="ach-body">
+          <h3>Designed Price Recommendation & Product Suggestion Algorithms</h3>
+          <p>Built data algorithms to generate dynamic price recommendations and personalized product suggestions, integrating and cleansing data from multiple sources. The algorithms were applied directly to the e-commerce platform, driving measurable improvements in sales conversion and customer satisfaction.</p>
+          <div class="ach-impact">
+            <span class="impact-pill">Sales Conversion ↑</span>
+            <span class="impact-pill blue">Algorithmic Pricing</span>
+            <span class="impact-pill purple">Personalization</span>
           </div>
         </div>
       </div>
