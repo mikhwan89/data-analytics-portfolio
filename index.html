@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Analytics Portfolio – Ikhwan</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --bg3: #21262d;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent2: #3fb950;
+      --accent3: #f78166;
+      --accent4: #d2a8ff;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --radius: 8px;
+      --shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ===== NAV ===== */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .nav-brand { font-weight: 700; font-size: 16px; color: var(--text); letter-spacing: -0.3px; }
+    .nav-brand span { color: var(--accent); }
+    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-links a { color: var(--text-muted); font-size: 14px; transition: color .2s; }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+    .nav-gh {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg3); border: 1px solid var(--border);
+      padding: 6px 14px; border-radius: 6px;
+      color: var(--text); font-size: 13px; font-weight: 500;
+      transition: border-color .2s;
+    }
+    .nav-gh:hover { border-color: var(--accent); text-decoration: none; }
+
+    /* ===== SECTIONS ===== */
+    section { padding: 80px 0; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+    .section-label {
+      font-size: 12px; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 8px;
+    }
+    h2 { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 12px; }
+    .section-sub { color: var(--text-muted); max-width: 560px; margin-bottom: 48px; }
+
+    /* ===== HERO ===== */
+    #hero {
+      min-height: 88vh;
+      display: flex; align-items: center;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(88,166,255,0.12) 0%, transparent 70%);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.3);
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 12px; color: var(--accent); margin-bottom: 20px;
+    }
+    .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--accent2); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    h1 { font-size: 52px; font-weight: 800; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 20px; }
+    h1 span { color: var(--accent); }
+    .hero-desc { color: var(--text-muted); font-size: 17px; line-height: 1.7; margin-bottom: 32px; max-width: 480px; }
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      padding: 10px 22px; border-radius: 6px; font-size: 14px; font-weight: 600;
+      cursor: pointer; border: 1px solid transparent; transition: all .2s;
+    }
+    .btn-primary { background: var(--accent); color: #0d1117; }
+    .btn-primary:hover { background: #79c0ff; text-decoration: none; }
+    .btn-outline { background: transparent; border-color: var(--border); color: var(--text); }
+    .btn-outline:hover { border-color: var(--accent); text-decoration: none; }
+    .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .stat-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      padding: 20px; border-radius: var(--radius); text-align: center;
+    }
+    .stat-card .num { font-size: 28px; font-weight: 800; color: var(--accent); }
+    .stat-card .lbl { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+    /* ===== SKILLS ===== */
+    #skills { background: var(--bg); border-bottom: 1px solid var(--border); }
+    .skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .skill-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+      transition: border-color .2s, transform .2s;
+    }
+    .skill-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .skill-icon { font-size: 28px; margin-bottom: 12px; }
+    .skill-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .skill-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 11px; padding: 2px 8px; border-radius: 4px;
+      background: var(--bg3); border: 1px solid var(--border); color: var(--text-muted);
+    }
+    .tag.blue { background: rgba(88,166,255,0.1); border-color: rgba(88,166,255,0.3); color: var(--accent); }
+    .tag.green { background: rgba(63,185,80,0.1); border-color: rgba(63,185,80,0.3); color: var(--accent2); }
+    .tag.purple { background: rgba(210,168,255,0.1); border-color: rgba(210,168,255,0.3); color: var(--accent4); }
+
+    /* ===== DASHBOARD ===== */
+    #dashboard { background: var(--bg2); border-bottom: 1px solid var(--border); }
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .kpi {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px;
+      position: relative; overflow: hidden;
+    }
+    .kpi::after {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+    }
+    .kpi.blue::after  { background: var(--accent); }
+    .kpi.green::after { background: var(--accent2); }
+    .kpi.red::after   { background: var(--accent3); }
+    .kpi.purple::after { background: var(--accent4); }
+    .kpi-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+    .kpi-value { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+    .kpi-delta { font-size: 12px; margin-top: 4px; }
+    .kpi-delta.up { color: var(--accent2); }
+    .kpi-delta.down { color: var(--accent3); }
+
+    .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .charts-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .chart-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px;
+    }
+    .chart-card h3 { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.8px; }
+    .chart-wrap { position: relative; height: 220px; }
+    .chart-wrap.tall { height: 260px; }
+
+    /* campaign table */
+    .table-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .table-card h3 {
+      font-size: 13px; font-weight: 600; color: var(--text-muted);
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      text-transform: uppercase; letter-spacing: 0.8px;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    td { font-size: 13px; padding: 10px 16px; border-bottom: 1px solid rgba(48,54,61,0.5); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(88,166,255,0.04); }
+    .badge {
+      display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;
+    }
+    .badge.good { background: rgba(63,185,80,0.15); color: var(--accent2); }
+    .badge.ok   { background: rgba(88,166,255,0.15); color: var(--accent); }
+    .badge.low  { background: rgba(247,129,102,0.15); color: var(--accent3); }
+
+    /* ===== DBT SECTION ===== */
+    #dbt { background: var(--bg); border-bottom: 1px solid var(--border); }
+    .dbt-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+    .dag-wrap {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px;
+    }
+    .dag-title { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 24px; }
+    .dag-layers { display: flex; flex-direction: column; gap: 0; }
+    .dag-layer { display: flex; flex-direction: column; align-items: center; }
+    .layer-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .layer-label.raw    { color: var(--text-muted); }
+    .layer-label.stg    { color: var(--accent2); }
+    .layer-label.int    { color: var(--accent); }
+    .layer-label.mart   { color: var(--accent4); }
+    .layer-nodes { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .dag-node {
+      padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 600;
+      cursor: default; white-space: nowrap;
+    }
+    .dag-node.raw  { background: var(--bg3); border: 1px solid var(--border); color: var(--text-muted); }
+    .dag-node.stg  { background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.3); color: var(--accent2); }
+    .dag-node.int  { background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.3); color: var(--accent); }
+    .dag-node.mart { background: rgba(210,168,255,0.1); border: 1px solid rgba(210,168,255,0.3); color: var(--accent4); }
+    .dag-arrow { text-align: center; color: var(--border); padding: 6px 0; font-size: 18px; }
+
+    .code-tabs { margin-bottom: 12px; display: flex; gap: 6px; }
+    .tab-btn {
+      background: var(--bg2); border: 1px solid var(--border);
+      color: var(--text-muted); padding: 5px 12px; border-radius: 5px;
+      font-size: 12px; cursor: pointer; transition: all .2s;
+    }
+    .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #0d1117; font-weight: 600; }
+    .code-block {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px; overflow-x: auto; display: none;
+    }
+    .code-block.active { display: block; }
+    pre { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 12px; line-height: 1.7; color: var(--text); }
+    .sql-kw  { color: #ff7b72; }
+    .sql-fn  { color: #d2a8ff; }
+    .sql-cm  { color: #8b949e; font-style: italic; }
+    .sql-ref { color: #79c0ff; }
+    .sql-str { color: #a5d6ff; }
+    .sql-num { color: #f2cc60; }
+
+    .gh-cta {
+      margin-top: 24px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .gh-cta p { font-size: 14px; color: var(--text-muted); }
+    .gh-cta strong { color: var(--text); display: block; font-size: 15px; margin-bottom: 4px; }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--bg); border-top: 1px solid var(--border);
+      padding: 32px; text-align: center;
+    }
+    footer p { color: var(--text-muted); font-size: 13px; }
+    footer a { color: var(--accent); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+      .hero-stats { grid-template-columns: repeat(3, 1fr); }
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+      .kpi-row { grid-template-columns: 1fr 1fr; }
+      .charts-grid { grid-template-columns: 1fr; }
+      .charts-row2 { grid-template-columns: 1fr; }
+      .dbt-layout { grid-template-columns: 1fr; }
+      h1 { font-size: 38px; }
+    }
+    @media (max-width: 600px) {
+      .skills-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      h2 { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-brand">Ikhwan <span>Analytics</span></span>
+  <ul class="nav-links">
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="#dbt">ETL / DBT</a></li>
+  </ul>
+  <a href="https://github.com/mikhwan89" target="_blank" class="nav-gh">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+    GitHub
+  </a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">Available for Freelance Projects</div>
+        <h1>Turning Raw Data<br/>Into <span>Business Decisions</span></h1>
+        <p class="hero-desc">
+          Data Analyst with hands-on experience in end-to-end ETL pipelines, marketing analytics, and
+          building BI dashboards that actually get used. I turn messy data into clean, actionable insights.
+        </p>
+        <div class="hero-btns">
+          <a href="#dashboard" class="btn btn-primary">View Dashboard</a>
+          <a href="https://github.com/mikhwan89/marketing-analytics-dbt" target="_blank" class="btn btn-outline">DBT Project on GitHub</a>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card"><div class="num">4+</div><div class="lbl">Years Experience</div></div>
+        <div class="stat-card"><div class="num">SQL</div><div class="lbl">Primary Tool</div></div>
+        <div class="stat-card"><div class="num">DBT</div><div class="lbl">ETL Framework</div></div>
+        <div class="stat-card"><div class="num">88</div><div class="lbl">Sample Customers</div></div>
+        <div class="stat-card"><div class="num">3</div><div class="lbl">DBT Layers</div></div>
+        <div class="stat-card"><div class="num">5+</div><div class="lbl">Channels Modeled</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <p class="section-label">Capabilities</p>
+    <h2>What I Bring to the Table</h2>
+    <p class="section-sub">From writing production SQL to building automated pipelines and interactive dashboards — end to end.</p>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-icon">🗄️</div>
+        <h3>SQL & Data Modeling</h3>
+        <p>Advanced SQL for analytics — window functions, CTEs, complex joins, query optimization. Data modeling with star/snowflake schemas.</p>
+        <div class="tags">
+          <span class="tag blue">PostgreSQL</span>
+          <span class="tag blue">BigQuery</span>
+          <span class="tag blue">Snowflake</span>
+          <span class="tag blue">Window Functions</span>
+          <span class="tag blue">CTEs</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">⚙️</div>
+        <h3>ETL / ELT Pipelines</h3>
+        <p>Build and maintain modular data pipelines using DBT with staging → intermediate → mart layering, tests, and documentation.</p>
+        <div class="tags">
+          <span class="tag green">DBT Core</span>
+          <span class="tag green">Python</span>
+          <span class="tag green">Airflow</span>
+          <span class="tag green">REST APIs</span>
+          <span class="tag green">Cron</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">📊</div>
+        <h3>Marketing Analytics</h3>
+        <p>Multi-channel attribution, funnel analysis, CAC/LTV modeling, ROAS optimization, and cohort analysis for SaaS businesses.</p>
+        <div class="tags">
+          <span class="tag purple">Google Ads</span>
+          <span class="tag purple">Facebook Ads</span>
+          <span class="tag purple">Attribution</span>
+          <span class="tag purple">Cohort Analysis</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">📈</div>
+        <h3>BI & Visualization</h3>
+        <p>Build dashboards that tell a story — with clear KPIs, trend lines, and drill-down capabilities for stakeholders at every level.</p>
+        <div class="tags">
+          <span class="tag blue">Looker Studio</span>
+          <span class="tag blue">Power BI</span>
+          <span class="tag blue">Metabase</span>
+          <span class="tag blue">Chart.js</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🐍</div>
+        <h3>Python for Analytics</h3>
+        <p>Data wrangling with Pandas, statistical analysis, API integrations, and automation scripts for recurring data tasks.</p>
+        <div class="tags">
+          <span class="tag green">Pandas</span>
+          <span class="tag green">NumPy</span>
+          <span class="tag green">Requests</span>
+          <span class="tag green">Flask</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">☁️</div>
+        <h3>Cloud & Infrastructure</h3>
+        <p>Deploy analytics workloads on GCP, manage PostgreSQL databases, automate jobs with cron and shell scripts.</p>
+        <div class="tags">
+          <span class="tag purple">GCP</span>
+          <span class="tag purple">PostgreSQL</span>
+          <span class="tag purple">Nginx</span>
+          <span class="tag purple">Linux</span>
+          <span class="tag purple">Git</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard">
+  <div class="container">
+    <p class="section-label">Sample Dashboard</p>
+    <h2>Marketing Analytics Dashboard</h2>
+    <p class="section-sub">End-to-end view of a SaaS marketing funnel — from ad spend to customer LTV. Built from dummy data modeled via DBT.</p>
+
+    <!-- KPIs -->
+    <div class="kpi-row">
+      <div class="kpi blue">
+        <div class="kpi-label">Total Revenue (2024)</div>
+        <div class="kpi-value">$812K</div>
+        <div class="kpi-delta up">↑ 34% vs prior year</div>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-label">New Customers</div>
+        <div class="kpi-value">88</div>
+        <div class="kpi-delta up">↑ 22% YoY</div>
+      </div>
+      <div class="kpi purple">
+        <div class="kpi-label">Avg LTV</div>
+        <div class="kpi-value">$2,140</div>
+        <div class="kpi-delta up">↑ 8% vs target</div>
+      </div>
+      <div class="kpi red">
+        <div class="kpi-label">Blended CAC</div>
+        <div class="kpi-value">$198</div>
+        <div class="kpi-delta down">LTV:CAC = 10.8x ✓</div>
+      </div>
+    </div>
+
+    <!-- Row 1: Revenue trend + Channel mix -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Monthly Revenue & Spend</h3>
+        <div class="chart-wrap tall"><canvas id="revenueChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Acquisition by Channel</h3>
+        <div class="chart-wrap tall"><canvas id="channelChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Row 2: ROAS + Funnel -->
+    <div class="charts-row2">
+      <div class="chart-card">
+        <h3>ROAS by Channel (2024)</h3>
+        <div class="chart-wrap"><canvas id="roasChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Acquisition Funnel</h3>
+        <div class="chart-wrap"><canvas id="funnelChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Campaign table -->
+    <div class="table-card">
+      <h3>Top Campaigns – Q4 2024</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Campaign</th>
+            <th>Platform</th>
+            <th>Spend</th>
+            <th>Conversions</th>
+            <th>CPA</th>
+            <th>ROAS</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Brand Search - Nov</td><td>Google</td><td>$2,808</td><td>94</td><td>$29.87</td><td>4.8x</td><td><span class="badge good">Top</span></td></tr>
+          <tr><td>Retargeting - Black Friday</td><td>Facebook</td><td>$1,890</td><td>28</td><td>$67.50</td><td>3.9x</td><td><span class="badge good">Top</span></td></tr>
+          <tr><td>Non-Brand Search - Nov</td><td>Google</td><td>$5,472</td><td>88</td><td>$62.18</td><td>3.6x</td><td><span class="badge good">Top</span></td></tr>
+          <tr><td>Lookalike - Q4</td><td>Facebook</td><td>$2,124</td><td>44</td><td>$48.27</td><td>3.2x</td><td><span class="badge ok">Avg</span></td></tr>
+          <tr><td>Display Remarketing - Dec</td><td>Google</td><td>$1,026</td><td>30</td><td>$34.20</td><td>2.8x</td><td><span class="badge ok">Avg</span></td></tr>
+          <tr><td>Prospecting - Cold Audience</td><td>Facebook</td><td>$2,628</td><td>20</td><td>$131.40</td><td>1.9x</td><td><span class="badge low">Review</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- DBT / ETL -->
+<section id="dbt">
+  <div class="container">
+    <p class="section-label">ETL Pipeline</p>
+    <h2>DBT Project Walkthrough</h2>
+    <p class="section-sub">All dashboard data flows through a modular DBT project with three clean layers — staging, intermediate, and mart.</p>
+
+    <div class="dbt-layout">
+      <!-- DAG -->
+      <div>
+        <div class="dag-wrap">
+          <div class="dag-title">Model Lineage (DAG)</div>
+          <div class="dag-layers">
+            <div class="dag-layer">
+              <div class="layer-label raw">Seeds (Raw CSV)</div>
+              <div class="layer-nodes">
+                <span class="dag-node raw">raw_google_ads</span>
+                <span class="dag-node raw">raw_facebook_ads</span>
+                <span class="dag-node raw">raw_crm_customers</span>
+              </div>
+            </div>
+            <div class="dag-arrow">↓</div>
+            <div class="dag-layer">
+              <div class="layer-label stg">Staging (Views)</div>
+              <div class="layer-nodes">
+                <span class="dag-node stg">stg_google_ads</span>
+                <span class="dag-node stg">stg_facebook_ads</span>
+                <span class="dag-node stg">stg_crm_customers</span>
+              </div>
+            </div>
+            <div class="dag-arrow">↓</div>
+            <div class="dag-layer">
+              <div class="layer-label int">Intermediate (Ephemeral)</div>
+              <div class="layer-nodes">
+                <span class="dag-node int">int_channel_attribution</span>
+              </div>
+            </div>
+            <div class="dag-arrow">↓</div>
+            <div class="dag-layer">
+              <div class="layer-label mart">Mart (Tables)</div>
+              <div class="layer-nodes">
+                <span class="dag-node mart">mart_campaign_performance</span>
+                <span class="dag-node mart">mart_marketing_overview</span>
+                <span class="dag-node mart">mart_customer_acquisition</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gh-cta">
+          <div>
+            <strong>Full source code on GitHub</strong>
+            <p>Browse all SQL models, seed data, macros, and schema tests.</p>
+          </div>
+          <a href="https://github.com/mikhwan89/marketing-analytics-dbt" target="_blank" class="btn btn-primary">
+            View Repo →
+          </a>
+        </div>
+      </div>
+
+      <!-- Code tabs -->
+      <div>
+        <div class="code-tabs">
+          <button class="tab-btn active" onclick="showTab('staging')">Staging</button>
+          <button class="tab-btn" onclick="showTab('intermediate')">Intermediate</button>
+          <button class="tab-btn" onclick="showTab('mart')">Mart</button>
+          <button class="tab-btn" onclick="showTab('macro')">Macro</button>
+        </div>
+
+        <div id="tab-staging" class="code-block active">
+<pre><span class="sql-cm">-- stg_google_ads.sql
+-- Standardize raw Google Ads data</span>
+
+<span class="sql-kw">with</span> source <span class="sql-kw">as</span> (
+  <span class="sql-kw">select</span> * <span class="sql-kw">from</span> <span class="sql-ref">{{ ref('raw_google_ads') }}</span>
+),
+
+renamed <span class="sql-kw">as</span> (
+  <span class="sql-kw">select</span>
+    campaign_id,
+    campaign_name,
+    <span class="sql-fn">cast</span>(date <span class="sql-kw">as</span> date)          <span class="sql-kw">as</span> date_day,
+    <span class="sql-fn">date_trunc</span>(<span class="sql-str">'month'</span>, <span class="sql-fn">cast</span>(date <span class="sql-kw">as</span> date))
+                                   <span class="sql-kw">as</span> date_month,
+    impressions,
+    clicks,
+    <span class="sql-fn">cast</span>(cost_usd <span class="sql-kw">as</span> numeric)      <span class="sql-kw">as</span> cost_usd,
+    <span class="sql-cm">-- derived metrics</span>
+    <span class="sql-fn">round</span>(clicks::<span class="sql-fn">numeric</span>
+      / <span class="sql-fn">nullif</span>(impressions, <span class="sql-num">0</span>) * <span class="sql-num">100</span>, <span class="sql-num">2</span>)
+                                   <span class="sql-kw">as</span> ctr_pct,
+    <span class="sql-fn">round</span>(cost_usd / <span class="sql-fn">nullif</span>(conversions, <span class="sql-num">0</span>), <span class="sql-num">2</span>)
+                                   <span class="sql-kw">as</span> cpa,
+    <span class="sql-str">'google_ads'</span>                   <span class="sql-kw">as</span> ad_platform
+  <span class="sql-kw">from</span> source
+)
+
+<span class="sql-kw">select</span> * <span class="sql-kw">from</span> renamed</pre>
+        </div>
+
+        <div id="tab-intermediate" class="code-block">
+<pre><span class="sql-cm">-- int_channel_attribution.sql
+-- Merge paid ads + CRM for blended view</span>
+
+<span class="sql-kw">with</span> google_monthly <span class="sql-kw">as</span> (
+  <span class="sql-kw">select</span>
+    date_month,
+    <span class="sql-str">'google_ads'</span> <span class="sql-kw">as</span> channel,
+    <span class="sql-fn">sum</span>(cost_usd) <span class="sql-kw">as</span> spend_usd,
+    <span class="sql-fn">sum</span>(conversions) <span class="sql-kw">as</span> paid_conversions
+  <span class="sql-kw">from</span> <span class="sql-ref">{{ ref('stg_google_ads') }}</span>
+  <span class="sql-kw">group by</span> <span class="sql-num">1</span>, <span class="sql-num">2</span>
+),
+
+crm_monthly <span class="sql-kw">as</span> (
+  <span class="sql-kw">select</span>
+    acquisition_month <span class="sql-kw">as</span> date_month,
+    acquisition_channel <span class="sql-kw">as</span> channel,
+    <span class="sql-fn">count</span>(customer_id) <span class="sql-kw">as</span> new_customers,
+    <span class="sql-fn">sum</span>(total_ltv_usd) <span class="sql-kw">as</span> total_ltv_usd
+  <span class="sql-kw">from</span> <span class="sql-ref">{{ ref('stg_crm_customers') }}</span>
+  <span class="sql-kw">group by</span> <span class="sql-num">1</span>, <span class="sql-num">2</span>
+),
+
+joined <span class="sql-kw">as</span> (
+  <span class="sql-kw">select</span>
+    <span class="sql-fn">coalesce</span>(p.date_month, c.date_month) <span class="sql-kw">as</span> date_month,
+    <span class="sql-fn">coalesce</span>(p.channel, c.channel)       <span class="sql-kw">as</span> channel,
+    p.spend_usd,
+    c.new_customers,
+    <span class="sql-cm">-- CAC calculation</span>
+    <span class="sql-fn">round</span>(p.spend_usd
+      / <span class="sql-fn">nullif</span>(c.new_customers, <span class="sql-num">0</span>), <span class="sql-num">2</span>)  <span class="sql-kw">as</span> cac_usd
+  <span class="sql-kw">from</span> google_monthly p
+  <span class="sql-kw">full outer join</span> crm_monthly c
+    <span class="sql-kw">using</span> (date_month, channel)
+)
+
+<span class="sql-kw">select</span> * <span class="sql-kw">from</span> joined</pre>
+        </div>
+
+        <div id="tab-mart" class="code-block">
+<pre><span class="sql-cm">-- mart_marketing_overview.sql
+-- Executive-level monthly summary</span>
+
+<span class="sql-kw">with</span> channel_data <span class="sql-kw">as</span> (
+  <span class="sql-kw">select</span> * <span class="sql-kw">from</span> <span class="sql-ref">{{ ref('int_channel_attribution') }}</span>
+),
+
+monthly_totals <span class="sql-kw">as</span> (
+  <span class="sql-kw">select</span>
+    date_month,
+    <span class="sql-fn">sum</span>(spend_usd)      <span class="sql-kw">as</span> total_spend_usd,
+    <span class="sql-fn">sum</span>(new_customers)  <span class="sql-kw">as</span> total_new_customers,
+    <span class="sql-fn">sum</span>(new_revenue_usd) <span class="sql-kw">as</span> total_revenue,
+    <span class="sql-fn">round</span>(<span class="sql-fn">sum</span>(new_revenue_usd)
+      / <span class="sql-fn">nullif</span>(<span class="sql-fn">sum</span>(spend_usd), <span class="sql-num">0</span>), <span class="sql-num">2</span>)
+                        <span class="sql-kw">as</span> blended_roas
+  <span class="sql-kw">from</span> channel_data
+  <span class="sql-kw">group by</span> <span class="sql-num">1</span>
+),
+
+with_growth <span class="sql-kw">as</span> (
+  <span class="sql-kw">select</span>
+    *,
+    <span class="sql-cm">-- month-over-month growth</span>
+    <span class="sql-fn">round</span>(
+      (total_revenue - <span class="sql-fn">lag</span>(total_revenue)
+        <span class="sql-kw">over</span> (<span class="sql-kw">order by</span> date_month))
+      / <span class="sql-fn">nullif</span>(<span class="sql-fn">lag</span>(total_revenue)
+        <span class="sql-kw">over</span> (<span class="sql-kw">order by</span> date_month), <span class="sql-num">0</span>) * <span class="sql-num">100</span>,
+    <span class="sql-num">2</span>) <span class="sql-kw">as</span> revenue_mom_pct
+  <span class="sql-kw">from</span> monthly_totals
+)
+
+<span class="sql-kw">select</span> * <span class="sql-kw">from</span> with_growth
+<span class="sql-kw">order by</span> date_month</pre>
+        </div>
+
+        <div id="tab-macro" class="code-block">
+<pre><span class="sql-cm">{# macros/calculate_roas.sql
+   Reusable metric macros for consistency
+   across all models #}</span>
+
+<span class="sql-ref">{% macro calculate_roas(</span>revenue_col,
+                       spend_col,
+                       decimals=<span class="sql-num">2</span>) <span class="sql-ref">%}</span>
+
+  <span class="sql-fn">round</span>(
+    <span class="sql-fn">cast</span>(<span class="sql-ref">{{ revenue_col }}</span> <span class="sql-kw">as</span> numeric)
+    / <span class="sql-fn">nullif</span>(
+        <span class="sql-fn">cast</span>(<span class="sql-ref">{{ spend_col }}</span> <span class="sql-kw">as</span> numeric),
+        <span class="sql-num">0</span>),
+    <span class="sql-ref">{{ decimals }}</span>
+  )
+
+<span class="sql-ref">{% endmacro %}</span>
+
+
+<span class="sql-ref">{% macro calculate_cac(</span>spend_col,
+                      customers_col,
+                      decimals=<span class="sql-num">2</span>) <span class="sql-ref">%}</span>
+
+  <span class="sql-fn">round</span>(
+    <span class="sql-fn">cast</span>(<span class="sql-ref">{{ spend_col }}</span> <span class="sql-kw">as</span> numeric)
+    / <span class="sql-fn">nullif</span>(
+        <span class="sql-fn">cast</span>(<span class="sql-ref">{{ customers_col }}</span> <span class="sql-kw">as</span> numeric),
+        <span class="sql-num">0</span>),
+    <span class="sql-ref">{{ decimals }}</span>
+  )
+
+<span class="sql-ref">{% endmacro %}</span>
+
+
+<span class="sql-cm">{# Usage in a model:
+   {{ calculate_roas('sum(revenue)', 'sum(spend)') }}
+   {{ calculate_cac('total_spend', 'new_customers') }}
+#}</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Built with plain HTML, Chart.js, and ❤️ for data &nbsp;·&nbsp;
+    <a href="https://github.com/mikhwan89" target="_blank">@mikhwan89</a> &nbsp;·&nbsp;
+    <a href="https://github.com/mikhwan89/marketing-analytics-dbt" target="_blank">DBT Project Source</a>
+  </p>
+</footer>
+
+<script>
+  // ─── Chart defaults ───────────────────────────────────────────────
+  Chart.defaults.color = '#8b949e';
+  Chart.defaults.borderColor = '#30363d';
+  Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+  Chart.defaults.font.size = 11;
+
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  // ─── Revenue + Spend ──────────────────────────────────────────────
+  new Chart(document.getElementById('revenueChart'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        {
+          label: 'Revenue ($K)',
+          data: [44, 48, 62, 57, 75, 88, 81, 98, 94, 112, 168, 155],
+          backgroundColor: 'rgba(88,166,255,0.2)',
+          borderColor: '#58a6ff',
+          borderWidth: 2,
+          borderRadius: 3,
+          order: 2
+        },
+        {
+          label: 'Ad Spend ($K)',
+          data: [6.5, 6.2, 7.5, 7.1, 8.5, 9.1, 8.7, 10.3, 10.2, 12.5, 16.2, 15.2],
+          type: 'line',
+          borderColor: '#f78166',
+          borderWidth: 2,
+          pointBackgroundColor: '#f78166',
+          pointRadius: 3,
+          tension: 0.4,
+          fill: false,
+          yAxisID: 'y2',
+          order: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        y: { grid: { color: '#21262d' }, ticks: { callback: v => '$' + v + 'K' } },
+        y2: {
+          position: 'right', grid: { display: false },
+          ticks: { callback: v => '$' + v + 'K' }
+        }
+      },
+      plugins: { legend: { labels: { boxWidth: 12, padding: 16 } } }
+    }
+  });
+
+  // ─── Channel donut ────────────────────────────────────────────────
+  new Chart(document.getElementById('channelChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Google Ads', 'Facebook Ads', 'Organic', 'Email', 'Direct'],
+      datasets: [{
+        data: [30, 24, 18, 16, 12],
+        backgroundColor: ['#58a6ff','#3fb950','#d2a8ff','#f2cc60','#f78166'],
+        borderColor: '#161b22',
+        borderWidth: 3,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '68%',
+      plugins: {
+        legend: { position: 'right', labels: { padding: 14, boxWidth: 10 } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } }
+      }
+    }
+  });
+
+  // ─── ROAS bar ─────────────────────────────────────────────────────
+  new Chart(document.getElementById('roasChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Brand Search', 'Non-Brand\nSearch', 'Display\nRemarketing', 'FB Retarget', 'FB Lookalike', 'FB Prospect'],
+      datasets: [{
+        label: 'ROAS',
+        data: [4.6, 3.4, 2.8, 3.9, 3.1, 1.9],
+        backgroundColor: ctx => {
+          const v = ctx.parsed.y;
+          return v >= 3.5 ? 'rgba(63,185,80,0.4)' : v >= 2.5 ? 'rgba(88,166,255,0.4)' : 'rgba(247,129,102,0.4)';
+        },
+        borderColor: ctx => {
+          const v = ctx.parsed.y;
+          return v >= 3.5 ? '#3fb950' : v >= 2.5 ? '#58a6ff' : '#f78166';
+        },
+        borderWidth: 2,
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      scales: {
+        x: { grid: { color: '#21262d' }, ticks: { callback: v => v + 'x' }, beginAtZero: true },
+        y: { grid: { display: false } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ROAS: ${ctx.parsed.x}x` } }
+      }
+    }
+  });
+
+  // ─── Funnel ───────────────────────────────────────────────────────
+  new Chart(document.getElementById('funnelChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Impressions', 'Clicks', 'Leads', 'Trials', 'Customers'],
+      datasets: [{
+        label: 'Count',
+        data: [1284000, 55200, 3840, 620, 88],
+        backgroundColor: [
+          'rgba(88,166,255,0.5)',
+          'rgba(88,166,255,0.6)',
+          'rgba(210,168,255,0.5)',
+          'rgba(210,168,255,0.65)',
+          'rgba(63,185,80,0.7)'
+        ],
+        borderColor: ['#58a6ff','#58a6ff','#d2a8ff','#d2a8ff','#3fb950'],
+        borderWidth: 2,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        x: { grid: { display: false } },
+        y: {
+          grid: { color: '#21262d' }, type: 'logarithmic',
+          ticks: { callback: v => v >= 1000 ? (v/1000)+'K' : v }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y.toLocaleString()}` } }
+      }
+    }
+  });
+
+  // ─── Tab switching ────────────────────────────────────────────────
+  function showTab(name) {
+    document.querySelectorAll('.code-block').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
