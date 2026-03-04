@@ -907,10 +907,6 @@ with_growth <span class="sql-kw">as</span> (
     <div class="opinion-list">
 
       <div class="opinion-card">
-        <div class="opinion-meta">
-          <span class="opinion-source">LinkedIn Article</span>
-          <span class="opinion-date">2024</span>
-        </div>
         <h3>Why Looker Stands Out: A Data Analyst's Journey Through BI Platforms</h3>
         <p class="opinion-preview">
           After a decade working with Tableau, Power BI, Holistics, Looker, Domo, Mode, and QlikView in professional settings,
@@ -985,6 +981,34 @@ with_growth <span class="sql-kw">as</span> (
             <li><strong>No extract failures.</strong> I've personally dealt with cryptic extract failures, inconsistencies between desktop and web applications, and data gateway services crashing after a Windows server auto-update mid-refresh. None of these exist in Looker or Holistics.</li>
           </ol>
 
+          <h4><span class="point-num">4</span>AI Readiness</h4>
+          <p>
+            This is the point that I believe will matter most over the next few years.
+            As AI becomes increasingly embedded in analytics workflows, <strong>the structure of your data model determines how much context AI can actually work with</strong>.
+          </p>
+          <p>
+            LookML and AMQL are code — plain text files that live in a Git repository. That makes them
+            <strong>natively digestible by AI</strong>. An LLM can read your entire semantic layer, understand how dimensions and measures are defined,
+            trace relationships between explores, and reason about your business logic — just as it would with any other codebase.
+            GUI-based data models from Tableau, Power BI, or Metabase are proprietary, often binary or JSON blobs, and were never designed to be
+            read by anything other than their own rendering engine. Feeding those to an AI assistant is either impossible or produces shallow results at best.
+          </p>
+          <p>
+            The Git history dimension makes this even more powerful. Because every change to a LookML or AMQL model is committed with a message,
+            an AI working with your data model doesn't just see the current state — <strong>it can access the full evolution of your data model</strong>:
+            what changed, when, why, and by whom. That context is invaluable for understanding intent behind specific metric definitions,
+            debugging unexpected results, or generating accurate data documentation automatically.
+          </p>
+          <p>
+            In contrast, if you've built your dashboards on a GUI-driven platform, that history simply doesn't exist in any structured, AI-accessible form.
+            You might have a changelog in a shared doc somewhere, but it's not connected to the model itself.
+          </p>
+          <p>
+            As AI-assisted analytics, natural language querying, and automated documentation become standard expectations rather than novelties,
+            teams running Looker or Holistics will have a structural head start.
+            The rest will be retrofitting — or rebuilding from scratch.
+          </p>
+
           <div class="article-conclusion">
             <p>
               After a decade across these platforms, Looker's architecture addresses the most persistent pain points in BI at an organizational level —
@@ -1008,6 +1032,8 @@ with_growth <span class="sql-kw">as</span> (
             <span class="tag">Power BI</span>
             <span class="tag">Data Governance</span>
             <span class="tag">Direct Query</span>
+            <span class="tag blue">AI Readiness</span>
+            <span class="tag">Semantic Layer</span>
           </div>
         </div>
       </div>
