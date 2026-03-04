@@ -204,6 +204,7 @@
       background: var(--bg3); border: 1px solid var(--border);
       border-radius: var(--radius); overflow: hidden;
     }
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .table-card h3 {
       font-size: 13px; font-weight: 600; color: var(--text-muted);
       padding: 16px 20px; border-bottom: 1px solid var(--border);
@@ -351,9 +352,27 @@
       h1 { font-size: 38px; }
     }
     @media (max-width: 600px) {
+      .container { padding: 0 16px; }
+      section { padding: 56px 0; }
       .skills-grid { grid-template-columns: 1fr; }
+      .career-grid { grid-template-columns: 1fr; }
       .nav-links { display: none; }
-      h2 { font-size: 26px; }
+      h1 { font-size: 30px; letter-spacing: -1px; }
+      h2 { font-size: 24px; }
+      .hero-desc { font-size: 15px; }
+      .kpi-value { font-size: 22px; }
+      .section-sub { margin-bottom: 32px; }
+      .ach-card { grid-template-columns: 1fr; gap: 12px; }
+      .ach-company { flex-direction: row; align-items: center; justify-content: flex-start; gap: 8px; }
+      .ach-company-name { text-align: left; }
+      .opinion-card { padding: 20px; }
+      .opinion-card > h3 { font-size: 17px; }
+      .code-tabs { flex-wrap: wrap; }
+      th { padding: 8px 12px; }
+      td { padding: 8px 12px; }
+    }
+    @media (max-width: 400px) {
+      .kpi-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -649,6 +668,7 @@
     <!-- Campaign table -->
     <div class="table-card">
       <h3>Top Campaigns – Q4 2024</h3>
+      <div class="table-scroll">
       <table>
         <thead>
           <tr>
@@ -670,6 +690,7 @@
           <tr><td>Prospecting - Cold Audience</td><td>Facebook</td><td>$2,628</td><td>20</td><td>$131.40</td><td>1.9x</td><td><span class="badge low">Review</span></td></tr>
         </tbody>
       </table>
+      </div>
     </div>
   </div>
 </section>
