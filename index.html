@@ -279,6 +279,59 @@
     .gh-cta p { font-size: 14px; color: var(--text-muted); }
     .gh-cta strong { color: var(--text); display: block; font-size: 15px; margin-bottom: 4px; }
 
+    /* ===== THOUGHTS ===== */
+    #thoughts { background: var(--bg); border-bottom: 1px solid var(--border); }
+    .opinion-list { display: flex; flex-direction: column; gap: 24px; }
+    .opinion-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px 32px;
+      transition: border-color .2s;
+    }
+    .opinion-card:hover { border-color: rgba(88,166,255,0.4); }
+    .opinion-meta {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+    }
+    .opinion-source {
+      font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+      background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.3); color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.6px;
+    }
+    .opinion-date { font-size: 12px; color: var(--text-muted); }
+    .opinion-card > h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; line-height: 1.3; }
+    .opinion-preview { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 20px; }
+    .opinion-toggle {
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--accent); font-size: 13px; font-weight: 600;
+      padding: 7px 16px; border-radius: 6px; cursor: pointer;
+      transition: all .2s; margin-bottom: 0;
+    }
+    .opinion-toggle:hover { background: rgba(88,166,255,0.1); border-color: var(--accent); }
+
+    /* Article body typography */
+    .article-body { margin-top: 28px; border-top: 1px solid var(--border); padding-top: 28px; }
+    .article-body p { font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-bottom: 16px; }
+    .article-body p strong { color: var(--text); }
+    .article-body h4 {
+      font-size: 16px; font-weight: 700; color: var(--text);
+      margin: 28px 0 10px; display: flex; align-items: center; gap: 10px;
+    }
+    .article-body h4 .point-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50%; font-size: 12px;
+      background: rgba(88,166,255,0.15); border: 1px solid rgba(88,166,255,0.3); color: var(--accent);
+      flex-shrink: 0;
+    }
+    .article-body h5 { font-size: 14px; font-weight: 700; color: var(--text-muted); margin: 16px 0 6px; }
+    .article-body ul, .article-body ol { padding-left: 20px; margin-bottom: 16px; }
+    .article-body li { font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-bottom: 8px; }
+    .article-body li strong { color: var(--text); }
+    .article-body .article-conclusion {
+      background: var(--bg3); border: 1px solid var(--border); border-left: 3px solid var(--accent);
+      border-radius: var(--radius); padding: 20px 24px; margin-top: 28px;
+    }
+    .article-body .article-conclusion p { margin-bottom: 0; }
+    .article-tags { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 6px; }
+
     /* ===== FOOTER ===== */
     footer {
       background: var(--bg); border-top: 1px solid var(--border);
@@ -314,6 +367,7 @@
     <li><a href="#achievements">Achievements</a></li>
     <li><a href="#dashboard">Dashboard</a></li>
     <li><a href="#dbt">ETL / DBT</a></li>
+    <li><a href="#thoughts">Thoughts</a></li>
     <li><a href="#career">Career</a></li>
   </ul>
   <a href="https://github.com/mikhwan89" target="_blank" class="nav-gh">
@@ -844,6 +898,124 @@ with_growth <span class="sql-kw">as</span> (
   </div>
 </section>
 
+<!-- THOUGHTS -->
+<section id="thoughts">
+  <div class="container">
+    <p class="section-label">Perspectives</p>
+    <h2>Opinions on Data & BI</h2>
+    <p class="section-sub">Professional takes shaped by a decade of hands-on work across BI platforms, data teams, and industries. These are my honest views — not vendor endorsements.</p>
+    <div class="opinion-list">
+
+      <div class="opinion-card">
+        <div class="opinion-meta">
+          <span class="opinion-source">LinkedIn Article</span>
+          <span class="opinion-date">2024</span>
+        </div>
+        <h3>Why Looker Stands Out: A Data Analyst's Journey Through BI Platforms</h3>
+        <p class="opinion-preview">
+          After a decade working with Tableau, Power BI, Holistics, Looker, Domo, Mode, and QlikView in professional settings,
+          one platform consistently rises above the rest — and the reasons come down to three architectural decisions that most tools
+          still haven't figured out.
+        </p>
+        <button class="opinion-toggle" onclick="toggleOpinion('opinion-looker', this)">Read full article ↓</button>
+
+        <div class="article-body" id="opinion-looker" style="display:none;">
+
+          <h4><span class="point-num">—</span>A Diverse Toolkit</h4>
+          <p>
+            Each platform has its unique strengths, and claiming one is superior in all aspects would be inaccurate.
+            Different businesses have varying priorities — some tools excel at stunning visualizations, others at ecosystem integrations,
+            cost-effectiveness, or scalability. That said, from my perspective having worn the hats of data analyst, Head of Data, and VP of Data,
+            <strong>Looker consistently stands out</strong>, with Holistics as the sole considerable alternative.
+            This comes down to three key differentiators:
+          </p>
+
+          <h4><span class="point-num">1</span>Code-Based Data Model Layer</h4>
+          <p>
+            Looker's LookML and Holistics' AMQL are the key to many downstream benefits. The core idea is a
+            <strong>single source of truth</strong> — one governed data model layer that all dashboards draw from, ensuring
+            consistency and reliability across the organization. I don't believe this goal is achievable without a code-based approach,
+            for two reasons:
+          </p>
+          <h5>Collaboration</h5>
+          <p>
+            LookML's Git integration enables team members to develop the data model simultaneously, merge changes, and maintain a
+            clear history of who changed what and when. Without this, every analyst ends up building their own version of the data model,
+            leading to the classic problem: the same metric shows different numbers on two dashboards created by two different analysts.
+            Git solves that. Code also allows inline comments that improve cross-team understanding — something a drag-and-drop interface simply can't replicate.
+          </p>
+          <h5>Gatekeeping</h5>
+          <p>
+            Power users given contributor roles can inadvertently connect unvetted sources — an Excel file pulled in here, a personal Google Sheet there.
+            That flexibility is a recipe for accumulating unverified data sources that silently erode data accuracy.
+            Looker's code-based model makes it straightforward to gate changes through a proper review process before anything hits production,
+            the same way software engineers manage code deployments.
+          </p>
+          <p>
+            And a small but real quality-of-life point: being able to use <strong>Ctrl+C, Ctrl+V, Ctrl+F</strong> to manage your data model —
+            instead of wrestling with a mouse-driven GUI — makes day-to-day work meaningfully faster and more enjoyable.
+          </p>
+
+          <h4><span class="point-num">2</span>Data Actions</h4>
+          <p>
+            I've watched dashboard users download data, open another platform, and manually upload it again just to act on what the dashboard showed them.
+            It's a workflow that breaks the analytical loop at the worst possible moment.
+          </p>
+          <p>
+            Looker's Data Actions — with native integrations to Segment, HubSpot, SendGrid, Firebase, Facebook Ads, Google Ads, Zapier, and others —
+            eliminate this entirely. Users can trigger an action <em>directly from a dashboard row</em>: send an email to a churning customer,
+            push a segment to an ad platform, fire a notification. The analysis and the operational response happen in one place.
+          </p>
+          <p>
+            Beyond efficiency, there's a <strong>data security benefit</strong> that's often overlooked: eliminating the need for sensitive data
+            to land on employees' laptops, in email attachments, or in shared drives.
+          </p>
+
+          <h4><span class="point-num">3</span>Direct Query Only</h4>
+          <p>
+            Most platforms offer two connection modes: direct query or data extract. Looker supports only direct query —
+            and I consider this a strength, not a limitation. Here's why:
+          </p>
+          <ol>
+            <li><strong>Reproducibility.</strong> Every dashboard component is an SQL query. You can view it directly in Looker or in your database query log — making it trivial for other data team members to reproduce results in a Jupyter notebook, another tool, or a pipeline. Extract-based platforms can't offer this cleanly.</li>
+            <li><strong>No extract lag.</strong> When your ETL finishes loading new data into the warehouse, a direct-query dashboard reflects it immediately. Extract-based dashboards make you wait for the next scheduled refresh — the bigger the data, the longer the delay.</li>
+            <li><strong>No extract vs. direct confusion.</strong> In Tableau and Power BI, certain features only work in extract mode, and others only in direct query. Teams end up making compromises or building hybrid setups that are hard to maintain. Looker removes this entirely — there is only one mode.</li>
+            <li><strong>Publish changes instantly.</strong> In Tableau or Power BI, if you want to apply a second improvement right after publishing one, you may need to re-extract data and wait again. In Looker, publish and it's live immediately, every time.</li>
+            <li><strong>No wasted extract cycles.</strong> Rarely-used LookML components only consume compute when actually queried. Extract-based platforms pull and refresh all components on every schedule, even the ones nobody opens — wasting time and money at scale.</li>
+            <li><strong>No extract failures.</strong> I've personally dealt with cryptic extract failures, inconsistencies between desktop and web applications, and data gateway services crashing after a Windows server auto-update mid-refresh. None of these exist in Looker or Holistics.</li>
+          </ol>
+
+          <div class="article-conclusion">
+            <p>
+              After a decade across these platforms, Looker's architecture addresses the most persistent pain points in BI at an organizational level —
+              not just for individual analysts, but for teams managing shared data models at scale.
+              The sole strong contender is <strong>Holistics</strong> with AMQL, and I'm watching <strong>Malloy</strong> as a promising open-source alternative.
+              Tableau and Power BI, in my view, are structurally left behind on this front — implementing a proper code-based data model layer
+              would require them to significantly rearchitect their core product.
+            </p>
+            <p>
+              Yes, this approach introduces a learning curve and reduces some flexibility. But it's a trade-off worth making for
+              the consistency, reliability, and governance that serious data organizations need.
+            </p>
+          </div>
+
+          <div class="article-tags">
+            <span class="tag blue">Looker</span>
+            <span class="tag blue">LookML</span>
+            <span class="tag blue">Holistics</span>
+            <span class="tag blue">BI Architecture</span>
+            <span class="tag">Tableau</span>
+            <span class="tag">Power BI</span>
+            <span class="tag">Data Governance</span>
+            <span class="tag">Direct Query</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- CAREER -->
 <section id="career">
   <div class="container">
@@ -1064,6 +1236,14 @@ with_growth <span class="sql-kw">as</span> (
       }
     }
   });
+
+  // ─── Opinion toggle ───────────────────────────────────────────────
+  function toggleOpinion(id, btn) {
+    const el = document.getElementById(id);
+    const isOpen = el.style.display !== 'none';
+    el.style.display = isOpen ? 'none' : 'block';
+    btn.textContent = isOpen ? 'Read full article ↓' : 'Collapse ↑';
+  }
 
   // ─── Tab switching ────────────────────────────────────────────────
   function showTab(name) {
