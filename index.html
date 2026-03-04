@@ -222,6 +222,24 @@
     .badge.ok   { background: rgba(88,166,255,0.15); color: var(--accent); }
     .badge.low  { background: rgba(247,129,102,0.15); color: var(--accent3); }
 
+    /* ===== DASHBOARD TABS ===== */
+    .dash-tab-bar {
+      display: flex; gap: 0; margin-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .dash-tab-bar::-webkit-scrollbar { display: none; }
+    .dash-tab-btn {
+      background: transparent; border: none; border-bottom: 2px solid transparent;
+      color: var(--text-muted); padding: 8px 18px; margin-bottom: -1px;
+      font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit;
+      transition: color .2s, border-color .2s; white-space: nowrap;
+    }
+    .dash-tab-btn:hover { color: var(--text); }
+    .dash-tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+    .dash-panel { display: none; }
+    .dash-panel.active { display: block; }
+
     /* ===== DBT SECTION ===== */
     #dbt { background: var(--bg); border-bottom: 1px solid var(--border); }
     .dbt-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
@@ -613,85 +631,205 @@
 <!-- DASHBOARD -->
 <section id="dashboard">
   <div class="container">
-    <p class="section-label">Sample Dashboard</p>
-    <h2>Marketing Analytics Dashboard</h2>
-    <p class="section-sub">End-to-end view of a SaaS marketing funnel — from ad spend to customer LTV. Built from dummy data modeled via DBT.</p>
+    <p class="section-label">Sample Dashboards</p>
+    <h2>Analytics Across Functions</h2>
+    <p class="section-sub">Six dashboard types demonstrating analytics applied to marketing, customer behavior, operations, finance, and supply chain — all from dummy data modeled via DBT.</p>
 
-    <!-- KPIs -->
-    <div class="kpi-row">
-      <div class="kpi blue">
-        <div class="kpi-label">Total Revenue (2024)</div>
-        <div class="kpi-value">$812K</div>
-        <div class="kpi-delta up">↑ 34% vs prior year</div>
+    <div class="dash-tab-bar">
+      <button class="dash-tab-btn active" onclick="showDash('marketing', this)">Marketing Analytics</button>
+      <button class="dash-tab-btn" onclick="showDash('segmentation', this)">Customer Segmentation</button>
+      <button class="dash-tab-btn" onclick="showDash('retention', this)">Customer Retention</button>
+      <button class="dash-tab-btn" onclick="showDash('operations', this)">Operations</button>
+      <button class="dash-tab-btn" onclick="showDash('finance', this)">Finance</button>
+      <button class="dash-tab-btn" onclick="showDash('supply', this)">Supply Chain</button>
+    </div>
+
+    <!-- ── 1. MARKETING ─────────────────────────────────────────── -->
+    <div class="dash-panel active" id="dash-marketing">
+      <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-label">Total Revenue (2024)</div><div class="kpi-value">$812K</div><div class="kpi-delta up">↑ 34% vs prior year</div></div>
+        <div class="kpi green"><div class="kpi-label">New Customers</div><div class="kpi-value">88</div><div class="kpi-delta up">↑ 22% YoY</div></div>
+        <div class="kpi purple"><div class="kpi-label">Avg LTV</div><div class="kpi-value">$2,140</div><div class="kpi-delta up">↑ 8% vs target</div></div>
+        <div class="kpi red"><div class="kpi-label">Blended CAC</div><div class="kpi-value">$198</div><div class="kpi-delta down">LTV:CAC = 10.8x ✓</div></div>
       </div>
-      <div class="kpi green">
-        <div class="kpi-label">New Customers</div>
-        <div class="kpi-value">88</div>
-        <div class="kpi-delta up">↑ 22% YoY</div>
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Monthly Revenue & Spend</h3><div class="chart-wrap tall"><canvas id="revenueChart"></canvas></div></div>
+        <div class="chart-card"><h3>Acquisition by Channel</h3><div class="chart-wrap tall"><canvas id="channelChart"></canvas></div></div>
       </div>
-      <div class="kpi purple">
-        <div class="kpi-label">Avg LTV</div>
-        <div class="kpi-value">$2,140</div>
-        <div class="kpi-delta up">↑ 8% vs target</div>
+      <div class="charts-row2">
+        <div class="chart-card"><h3>ROAS by Channel (2024)</h3><div class="chart-wrap"><canvas id="roasChart"></canvas></div></div>
+        <div class="chart-card"><h3>Acquisition Funnel</h3><div class="chart-wrap"><canvas id="funnelChart"></canvas></div></div>
       </div>
-      <div class="kpi red">
-        <div class="kpi-label">Blended CAC</div>
-        <div class="kpi-value">$198</div>
-        <div class="kpi-delta down">LTV:CAC = 10.8x ✓</div>
+      <div class="table-card">
+        <h3>Top Campaigns – Q4 2024</h3>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Campaign</th><th>Platform</th><th>Spend</th><th>Conversions</th><th>CPA</th><th>ROAS</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Brand Search - Nov</td><td>Google</td><td>$2,808</td><td>94</td><td>$29.87</td><td>4.8x</td><td><span class="badge good">Top</span></td></tr>
+            <tr><td>Retargeting - Black Friday</td><td>Facebook</td><td>$1,890</td><td>28</td><td>$67.50</td><td>3.9x</td><td><span class="badge good">Top</span></td></tr>
+            <tr><td>Non-Brand Search - Nov</td><td>Google</td><td>$5,472</td><td>88</td><td>$62.18</td><td>3.6x</td><td><span class="badge good">Top</span></td></tr>
+            <tr><td>Lookalike - Q4</td><td>Facebook</td><td>$2,124</td><td>44</td><td>$48.27</td><td>3.2x</td><td><span class="badge ok">Avg</span></td></tr>
+            <tr><td>Display Remarketing - Dec</td><td>Google</td><td>$1,026</td><td>30</td><td>$34.20</td><td>2.8x</td><td><span class="badge ok">Avg</span></td></tr>
+            <tr><td>Prospecting - Cold Audience</td><td>Facebook</td><td>$2,628</td><td>20</td><td>$131.40</td><td>1.9x</td><td><span class="badge low">Review</span></td></tr>
+          </tbody>
+        </table></div>
       </div>
     </div>
 
-    <!-- Row 1: Revenue trend + Channel mix -->
-    <div class="charts-grid">
-      <div class="chart-card">
-        <h3>Monthly Revenue & Spend</h3>
-        <div class="chart-wrap tall"><canvas id="revenueChart"></canvas></div>
+    <!-- ── 2. CUSTOMER SEGMENTATION ──────────────────────────────── -->
+    <div class="dash-panel" id="dash-segmentation">
+      <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-label">Total Active Customers</div><div class="kpi-value">1,240</div><div class="kpi-delta up">↑ 18% YoY</div></div>
+        <div class="kpi green"><div class="kpi-label">Champions (High Value)</div><div class="kpi-value">18%</div><div class="kpi-delta up">223 customers</div></div>
+        <div class="kpi red"><div class="kpi-label">At-Risk Segment</div><div class="kpi-value">22%</div><div class="kpi-delta down">↑ 3pp vs Q3 — action needed</div></div>
+        <div class="kpi purple"><div class="kpi-label">Revenue Concentration</div><div class="kpi-value">45%</div><div class="kpi-delta up">from top 18% of customers</div></div>
       </div>
-      <div class="chart-card">
-        <h3>Acquisition by Channel</h3>
-        <div class="chart-wrap tall"><canvas id="channelChart"></canvas></div>
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Revenue Contribution by Segment</h3><div class="chart-wrap tall"><canvas id="segRevenueChart"></canvas></div></div>
+        <div class="chart-card"><h3>Customer Count by Segment</h3><div class="chart-wrap tall"><canvas id="segSizeChart"></canvas></div></div>
+      </div>
+      <div class="charts-row2">
+        <div class="chart-card"><h3>Avg Order Value by Segment</h3><div class="chart-wrap"><canvas id="segAOVChart"></canvas></div></div>
+        <div class="chart-card"><h3>Segment Trend – Q4 (Champions vs At-Risk)</h3><div class="chart-wrap"><canvas id="segTrendChart"></canvas></div></div>
+      </div>
+      <div class="table-card">
+        <h3>Segment Summary</h3>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Segment</th><th>Customers</th><th>% Total</th><th>Avg Revenue</th><th>Avg Orders/yr</th><th>Recommended Action</th></tr></thead>
+          <tbody>
+            <tr><td>Champions</td><td>223</td><td>18%</td><td>$580</td><td>8.4</td><td><span class="badge good">Reward & Upsell</span></td></tr>
+            <tr><td>Loyal</td><td>298</td><td>24%</td><td>$320</td><td>5.1</td><td><span class="badge good">Cross-sell</span></td></tr>
+            <tr><td>Promising</td><td>260</td><td>21%</td><td>$145</td><td>2.7</td><td><span class="badge ok">Nurture</span></td></tr>
+            <tr><td>At-Risk</td><td>273</td><td>22%</td><td>$88</td><td>1.3</td><td><span class="badge low">Retain Now</span></td></tr>
+            <tr><td>Churned</td><td>186</td><td>15%</td><td>$12</td><td>0.2</td><td><span class="badge low">Win-back</span></td></tr>
+          </tbody>
+        </table></div>
       </div>
     </div>
 
-    <!-- Row 2: ROAS + Funnel -->
-    <div class="charts-row2">
-      <div class="chart-card">
-        <h3>ROAS by Channel (2024)</h3>
-        <div class="chart-wrap"><canvas id="roasChart"></canvas></div>
+    <!-- ── 3. CUSTOMER RETENTION ─────────────────────────────────── -->
+    <div class="dash-panel" id="dash-retention">
+      <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-label">M3 Retention Rate</div><div class="kpi-value">68%</div><div class="kpi-delta up">↑ 4pp vs prior cohort</div></div>
+        <div class="kpi red"><div class="kpi-label">Monthly Churn Rate</div><div class="kpi-value">4.2%</div><div class="kpi-delta down">↑ 0.3pp MoM — monitor</div></div>
+        <div class="kpi green"><div class="kpi-label">Net Revenue Retention</div><div class="kpi-value">112%</div><div class="kpi-delta up">Expansion outpacing churn</div></div>
+        <div class="kpi purple"><div class="kpi-label">Reactivated (Q4)</div><div class="kpi-value">34</div><div class="kpi-delta up">↑ 21% vs Q3</div></div>
       </div>
-      <div class="chart-card">
-        <h3>Acquisition Funnel</h3>
-        <div class="chart-wrap"><canvas id="funnelChart"></canvas></div>
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Cohort Retention Curves</h3><div class="chart-wrap tall"><canvas id="retCohortChart"></canvas></div></div>
+        <div class="chart-card"><h3>Monthly Churn Rate</h3><div class="chart-wrap tall"><canvas id="retChurnChart"></canvas></div></div>
+      </div>
+      <div class="charts-row2">
+        <div class="chart-card"><h3>Net Revenue Retention by Segment</h3><div class="chart-wrap"><canvas id="retNRRChart"></canvas></div></div>
+        <div class="chart-card"><h3>Monthly Active Customers</h3><div class="chart-wrap"><canvas id="retActiveChart"></canvas></div></div>
+      </div>
+      <div class="table-card">
+        <h3>Cohort Retention Summary</h3>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Cohort</th><th>Size</th><th>M1</th><th>M3</th><th>M6</th><th>M12</th><th>Cohort Revenue</th></tr></thead>
+          <tbody>
+            <tr><td>Jan 2024</td><td>68</td><td>85%</td><td>72%</td><td>61%</td><td>52%</td><td>$48K</td></tr>
+            <tr><td>Apr 2024</td><td>74</td><td>83%</td><td>69%</td><td>58%</td><td>—</td><td>$41K</td></tr>
+            <tr><td>Jul 2024</td><td>81</td><td>87%</td><td>74%</td><td>62%</td><td>—</td><td>$55K</td></tr>
+            <tr><td>Oct 2024</td><td>88</td><td>82%</td><td>70%</td><td>—</td><td>—</td><td>$39K</td></tr>
+          </tbody>
+        </table></div>
       </div>
     </div>
 
-    <!-- Campaign table -->
-    <div class="table-card">
-      <h3>Top Campaigns – Q4 2024</h3>
-      <div class="table-scroll">
-      <table>
-        <thead>
-          <tr>
-            <th>Campaign</th>
-            <th>Platform</th>
-            <th>Spend</th>
-            <th>Conversions</th>
-            <th>CPA</th>
-            <th>ROAS</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Brand Search - Nov</td><td>Google</td><td>$2,808</td><td>94</td><td>$29.87</td><td>4.8x</td><td><span class="badge good">Top</span></td></tr>
-          <tr><td>Retargeting - Black Friday</td><td>Facebook</td><td>$1,890</td><td>28</td><td>$67.50</td><td>3.9x</td><td><span class="badge good">Top</span></td></tr>
-          <tr><td>Non-Brand Search - Nov</td><td>Google</td><td>$5,472</td><td>88</td><td>$62.18</td><td>3.6x</td><td><span class="badge good">Top</span></td></tr>
-          <tr><td>Lookalike - Q4</td><td>Facebook</td><td>$2,124</td><td>44</td><td>$48.27</td><td>3.2x</td><td><span class="badge ok">Avg</span></td></tr>
-          <tr><td>Display Remarketing - Dec</td><td>Google</td><td>$1,026</td><td>30</td><td>$34.20</td><td>2.8x</td><td><span class="badge ok">Avg</span></td></tr>
-          <tr><td>Prospecting - Cold Audience</td><td>Facebook</td><td>$2,628</td><td>20</td><td>$131.40</td><td>1.9x</td><td><span class="badge low">Review</span></td></tr>
-        </tbody>
-      </table>
+    <!-- ── 4. OPERATIONS ──────────────────────────────────────────── -->
+    <div class="dash-panel" id="dash-operations">
+      <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-label">Orders This Month</div><div class="kpi-value">4,280</div><div class="kpi-delta up">↑ 12% MoM</div></div>
+        <div class="kpi green"><div class="kpi-label">SLA Hit Rate</div><div class="kpi-value">94.2%</div><div class="kpi-delta up">Target: 95% — close</div></div>
+        <div class="kpi purple"><div class="kpi-label">Avg Fulfillment Time</div><div class="kpi-value">1.8 days</div><div class="kpi-delta up">↓ 0.3d vs last month</div></div>
+        <div class="kpi red"><div class="kpi-label">Open Escalations</div><div class="kpi-value">12</div><div class="kpi-delta down">3 nearing SLA breach</div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Daily Order Volume (Last 30 Days)</h3><div class="chart-wrap tall"><canvas id="opsVolumeChart"></canvas></div></div>
+        <div class="chart-card"><h3>Issue Type Breakdown</h3><div class="chart-wrap tall"><canvas id="opsIssueChart"></canvas></div></div>
+      </div>
+      <div class="charts-row2">
+        <div class="chart-card"><h3>SLA Hit Rate by Category</h3><div class="chart-wrap"><canvas id="opsSLAChart"></canvas></div></div>
+        <div class="chart-card"><h3>Avg Fulfillment Time by Warehouse</h3><div class="chart-wrap"><canvas id="opsFulfillChart"></canvas></div></div>
+      </div>
+      <div class="table-card">
+        <h3>Open Escalations</h3>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Issue Type</th><th>Open</th><th>SLA Breached</th><th>Avg Age</th><th>Priority</th></tr></thead>
+          <tbody>
+            <tr><td>Delayed Shipment</td><td>5</td><td>3</td><td>4.2 days</td><td><span class="badge low">High</span></td></tr>
+            <tr><td>Wrong Item Delivered</td><td>3</td><td>1</td><td>2.8 days</td><td><span class="badge low">High</span></td></tr>
+            <tr><td>Damaged in Transit</td><td>2</td><td>0</td><td>1.5 days</td><td><span class="badge ok">Med</span></td></tr>
+            <tr><td>Missing Item</td><td>1</td><td>0</td><td>0.8 days</td><td><span class="badge ok">Med</span></td></tr>
+            <tr><td>Other</td><td>1</td><td>0</td><td>0.5 days</td><td><span class="badge good">Low</span></td></tr>
+          </tbody>
+        </table></div>
       </div>
     </div>
+
+    <!-- ── 5. FINANCE ─────────────────────────────────────────────── -->
+    <div class="dash-panel" id="dash-finance">
+      <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-label">Q4 Revenue</div><div class="kpi-value">$435K</div><div class="kpi-delta up">↑ 38% vs Q4 prior year</div></div>
+        <div class="kpi green"><div class="kpi-label">Gross Margin</div><div class="kpi-value">68.2%</div><div class="kpi-delta up">↑ 2.1pp YoY</div></div>
+        <div class="kpi purple"><div class="kpi-label">EBITDA (Q4)</div><div class="kpi-value">$113K</div><div class="kpi-delta up">26% margin</div></div>
+        <div class="kpi red"><div class="kpi-label">OpEx vs Budget</div><div class="kpi-value">−3%</div><div class="kpi-delta up">$3.8K under budget</div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Monthly Revenue vs COGS</h3><div class="chart-wrap tall"><canvas id="finPLChart"></canvas></div></div>
+        <div class="chart-card"><h3>OpEx Breakdown</h3><div class="chart-wrap tall"><canvas id="finExpChart"></canvas></div></div>
+      </div>
+      <div class="charts-row2">
+        <div class="chart-card"><h3>Budget vs Actuals by Dept</h3><div class="chart-wrap"><canvas id="finBudgetChart"></canvas></div></div>
+        <div class="chart-card"><h3>Cumulative Cash Position</h3><div class="chart-wrap"><canvas id="finCashChart"></canvas></div></div>
+      </div>
+      <div class="table-card">
+        <h3>P&L Summary – Q4 2024</h3>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Metric</th><th>Oct</th><th>Nov</th><th>Dec</th><th>Q4 Total</th><th>vs Budget</th></tr></thead>
+          <tbody>
+            <tr><td>Revenue</td><td>$112K</td><td>$168K</td><td>$155K</td><td>$435K</td><td><span class="badge good">+12%</span></td></tr>
+            <tr><td>COGS</td><td>$35K</td><td>$52K</td><td>$51K</td><td>$138K</td><td><span class="badge good">−3%</span></td></tr>
+            <tr><td>Gross Profit</td><td>$77K</td><td>$116K</td><td>$104K</td><td>$297K</td><td><span class="badge good">+18%</span></td></tr>
+            <tr><td>Total OpEx</td><td>$58K</td><td>$65K</td><td>$61K</td><td>$184K</td><td><span class="badge ok">−1%</span></td></tr>
+            <tr><td>EBITDA</td><td>$19K</td><td>$51K</td><td>$43K</td><td>$113K</td><td><span class="badge good">+31%</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ── 6. SUPPLY CHAIN ────────────────────────────────────────── -->
+    <div class="dash-panel" id="dash-supply">
+      <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-label">Avg Days of Inventory</div><div class="kpi-value">32 days</div><div class="kpi-delta up">Target: 30–45 ✓</div></div>
+        <div class="kpi green"><div class="kpi-label">Fill Rate</div><div class="kpi-value">96.4%</div><div class="kpi-delta up">↑ 1.2pp vs last month</div></div>
+        <div class="kpi red"><div class="kpi-label">Stockout SKUs</div><div class="kpi-value">8</div><div class="kpi-delta down">of 245 active SKUs</div></div>
+        <div class="kpi purple"><div class="kpi-label">On-Time Delivery</div><div class="kpi-value">91.3%</div><div class="kpi-delta down">↓ 1.8pp vs 93% target</div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Inventory Level Trend (12 Weeks)</h3><div class="chart-wrap tall"><canvas id="supInventoryChart"></canvas></div></div>
+        <div class="chart-card"><h3>Fill Rate by Category</h3><div class="chart-wrap tall"><canvas id="supFillChart"></canvas></div></div>
+      </div>
+      <div class="charts-row2">
+        <div class="chart-card"><h3>Avg Supplier Lead Time (Days)</h3><div class="chart-wrap"><canvas id="supLeadChart"></canvas></div></div>
+        <div class="chart-card"><h3>On-Time Delivery Trend</h3><div class="chart-wrap"><canvas id="supOTDChart"></canvas></div></div>
+      </div>
+      <div class="table-card">
+        <h3>Inventory Alert – Low Stock SKUs</h3>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Category</th><th>Stock (units)</th><th>Days Left</th><th>Reorder Status</th><th>Supplier</th></tr></thead>
+          <tbody>
+            <tr><td>Sports & Outdoors</td><td>420</td><td>8 days</td><td><span class="badge low">Urgent</span></td><td>SportCo</td></tr>
+            <tr><td>Apparel</td><td>850</td><td>14 days</td><td><span class="badge low">Reorder Now</span></td><td>FashionHub</td></tr>
+            <tr><td>Electronics</td><td>1,240</td><td>28 days</td><td><span class="badge ok">Reorder Soon</span></td><td>TechDist Co.</td></tr>
+            <tr><td>Beauty & Health</td><td>680</td><td>22 days</td><td><span class="badge ok">Monitor</span></td><td>BeautyWholesale</td></tr>
+            <tr><td>Home & Living</td><td>2,100</td><td>45 days</td><td><span class="badge good">Sufficient</span></td><td>HomeSupply</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1427,6 +1565,342 @@ with_growth <span class="sql-kw">as</span> (
       }
     }
   });
+
+  // ─── Dashboard tabs ───────────────────────────────────────────────
+  const dashInited = { marketing: true };
+  function showDash(name, btn) {
+    document.querySelectorAll('.dash-panel').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.dash-tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('dash-' + name).classList.add('active');
+    btn.classList.add('active');
+    if (!dashInited[name]) { dashInited[name] = true; initDash(name); }
+  }
+
+  function initDash(name) {
+    const G = '#21262d', NG = { display: false };
+
+    // ── Segmentation ──────────────────────────────────────────────
+    if (name === 'segmentation') {
+      new Chart(document.getElementById('segRevenueChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Champions','Loyal','Promising','At-Risk','Churned'],
+          datasets: [{ label: 'Total Revenue ($K)', data: [366,190,75,48,8],
+            backgroundColor: ['rgba(88,166,255,0.5)','rgba(63,185,80,0.4)','rgba(210,168,255,0.4)','rgba(242,204,96,0.4)','rgba(247,129,102,0.4)'],
+            borderColor: ['#58a6ff','#3fb950','#d2a8ff','#f2cc60','#f78166'],
+            borderWidth: 2, borderRadius: 4 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+          scales: { x: { grid: { color: G }, ticks: { callback: v => '$'+v+'K' }, beginAtZero: true }, y: { grid: NG } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` $${ctx.raw}K total revenue` } } }
+        }
+      });
+      new Chart(document.getElementById('segSizeChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Champions','Loyal','Promising','At-Risk','Churned'],
+          datasets: [{ data: [223,298,260,273,186],
+            backgroundColor: ['#58a6ff','#3fb950','#d2a8ff','#f2cc60','#f78166'],
+            borderColor: '#161b22', borderWidth: 3, hoverOffset: 6 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, cutout: '68%',
+          plugins: { legend: { position: 'right', labels: { padding: 14, boxWidth: 10 } },
+            tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} customers` } } }
+        }
+      });
+      new Chart(document.getElementById('segAOVChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Champions','Loyal','Promising','At-Risk','Churned'],
+          datasets: [{ label: 'Avg Order Value', data: [186,128,92,68,28],
+            backgroundColor: ctx => ctx.raw >= 150 ? 'rgba(63,185,80,0.4)' : ctx.raw >= 80 ? 'rgba(88,166,255,0.4)' : 'rgba(247,129,102,0.35)',
+            borderColor: ctx => ctx.raw >= 150 ? '#3fb950' : ctx.raw >= 80 ? '#58a6ff' : '#f78166',
+            borderWidth: 2, borderRadius: 4 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { grid: { color: G }, ticks: { callback: v => '$'+v }, beginAtZero: true }, x: { grid: NG } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` AOV: $${ctx.raw}` } } }
+        }
+      });
+      new Chart(document.getElementById('segTrendChart'), {
+        type: 'line',
+        data: {
+          labels: ['Oct','Nov','Dec'],
+          datasets: [
+            { label: 'Champions', data: [205,214,223], borderColor: '#58a6ff', backgroundColor: 'rgba(88,166,255,0.1)', tension: 0.4, fill: true, borderWidth: 2, pointRadius: 4 },
+            { label: 'At-Risk',   data: [248,261,273], borderColor: '#f78166', backgroundColor: 'rgba(247,129,102,0.08)', tension: 0.4, fill: true, borderWidth: 2, pointRadius: 4 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { grid: { color: G }, beginAtZero: false }, x: { grid: NG } },
+          plugins: { legend: { labels: { boxWidth: 10, padding: 14 } } }
+        }
+      });
+    }
+
+    // ── Retention ─────────────────────────────────────────────────
+    else if (name === 'retention') {
+      const rm = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'];
+      new Chart(document.getElementById('retCohortChart'), {
+        type: 'line',
+        data: {
+          labels: rm,
+          datasets: [
+            { label: 'Jan 2024', data: [100,91,85,79,75,72,68,66,64,61,59,52], borderColor: '#58a6ff', tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2 },
+            { label: 'Apr 2024', data: [100,89,83,76,72,69,65,62,60,58,null,null], borderColor: '#3fb950', tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2 },
+            { label: 'Jul 2024', data: [100,92,87,80,76,74,70,67,null,null,null,null], borderColor: '#d2a8ff', tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2 },
+            { label: 'Oct 2024', data: [100,90,82,70,null,null,null,null,null,null,null,null], borderColor: '#f2cc60', tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { grid: { color: G }, ticks: { callback: v => v+'%' }, min: 40, max: 100 }, x: { grid: NG } },
+          plugins: { legend: { labels: { boxWidth: 10, padding: 12 } },
+            tooltip: { callbacks: { label: ctx => ctx.raw != null ? ` ${ctx.dataset.label}: ${ctx.raw}%` : null } } }
+        }
+      });
+      new Chart(document.getElementById('retChurnChart'), {
+        type: 'bar',
+        data: {
+          labels: months,
+          datasets: [{ label: 'Churn Rate (%)', data: [5.1,4.9,4.7,4.4,4.2,4.0,3.9,3.8,4.0,4.1,4.3,4.2],
+            backgroundColor: ctx => ctx.raw >= 4.5 ? 'rgba(247,129,102,0.5)' : 'rgba(88,166,255,0.4)',
+            borderColor: ctx => ctx.raw >= 4.5 ? '#f78166' : '#58a6ff',
+            borderWidth: 2, borderRadius: 4 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { grid: { color: G }, ticks: { callback: v => v+'%' }, min: 3 }, x: { grid: NG } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` Churn: ${ctx.raw}%` } } }
+        }
+      });
+      new Chart(document.getElementById('retNRRChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Champions','Loyal','Promising','At-Risk'],
+          datasets: [{ label: 'NRR (%)', data: [138,121,104,82],
+            backgroundColor: ctx => ctx.raw >= 100 ? 'rgba(63,185,80,0.4)' : 'rgba(247,129,102,0.4)',
+            borderColor: ctx => ctx.raw >= 100 ? '#3fb950' : '#f78166',
+            borderWidth: 2, borderRadius: 4 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { grid: { color: G }, ticks: { callback: v => v+'%' }, min: 60 }, x: { grid: NG } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` NRR: ${ctx.raw}%` } } }
+        }
+      });
+      new Chart(document.getElementById('retActiveChart'), {
+        type: 'line',
+        data: {
+          labels: months,
+          datasets: [{ label: 'Active Customers', data: [1052,1069,1084,1098,1114,1131,1148,1162,1179,1196,1218,1240],
+            borderColor: '#3fb950', backgroundColor: 'rgba(63,185,80,0.08)', tension: 0.4, fill: true, borderWidth: 2, pointRadius: 3 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { grid: { color: G }, min: 1000 }, x: { grid: NG } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` Active: ${ctx.raw.toLocaleString()}` } } }
+        }
+      });
+    }
+
+    // ── Operations ────────────────────────────────────────────────
+    else if (name === 'operations') {
+      const days30 = Array.from({length:30}, (_,i) => i+1);
+      const vol = [128,142,155,139,161,148,172,145,158,163,170,141,154,168,175,149,162,178,155,171,184,148,165,180,168,175,192,158,171,186];
+      new Chart(document.getElementById('opsVolumeChart'), {
+        type: 'line',
+        data: {
+          labels: days30,
+          datasets: [{ label: 'Orders', data: vol,
+            borderColor: '#58a6ff', backgroundColor: 'rgba(88,166,255,0.1)', tension: 0.3, fill: true, borderWidth: 2, pointRadius: 0 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { grid: { color: G }, min: 100 }, x: { grid: NG, ticks: { maxTicksLimit: 10 } } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw} orders` } } }
+        }
+      });
+      new Chart(document.getElementById('opsIssueChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Delayed Shipment','Wrong Item','Damaged','Missing Item','Other'],
+          datasets: [{ data: [42,27,18,8,5],
+            backgroundColor: ['#f78166','#d2a8ff','#f2cc60','#58a6ff','#3fb950'],
+            borderColor: '#161b22', borderWidth: 3, hoverOffset: 6 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, cutout: '68%',
+          plugins: { legend: { position: 'right', labels: { padding: 12, boxWidth: 10 } } }
+        }
+      });
+      new Chart(document.getElementById('opsSLAChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Electronics','Apparel','Home & Living','Sports','Beauty'],
+          datasets: [{ label: 'SLA Hit Rate (%)', data: [97.2,95.1,96.4,90.8,93.5],
+            backgroundColor: ctx => ctx.raw >= 95 ? 'rgba(63,185,80,0.4)' : 'rgba(247,129,102,0.4)',
+            borderColor: ctx => ctx.raw >= 95 ? '#3fb950' : '#f78166',
+            borderWidth: 2, borderRadius: 4 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+          scales: { x: { grid: { color: G }, ticks: { callback: v => v+'%' }, min: 85, max: 100 }, y: { grid: NG } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` SLA: ${ctx.raw}%` } } }
+        }
+      });
+      new Chart(document.getElementById('opsFulfillChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Jakarta (WH1)','Surabaya (WH2)','Bandung (WH3)','Medan (WH4)'],
+          datasets: [{ label: 'Avg Days', data: [1.4,2.1,1.8,2.4],
+            backgroundColor: ctx => ctx.raw <= 2 ? 'rgba(63,185,80,0.4)' : 'rgba(247,129,102,0.4)',
+            borderColor: ctx => ctx.raw <= 2 ? '#3fb950' : '#f78166',
+            borderWidth: 2, borderRadius: 4 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { grid: { color: G }, ticks: { callback: v => v+'d' }, beginAtZero: true }, x: { grid: NG } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw} days avg` } } }
+        }
+      });
+    }
+
+    // ── Finance ───────────────────────────────────────────────────
+    else if (name === 'finance') {
+      const rev = [44,48,62,57,75,88,81,98,94,112,168,155];
+      const cogs = [14,15,20,18,24,28,26,31,30,35,52,51];
+      new Chart(document.getElementById('finPLChart'), {
+        type: 'bar',
+        data: {
+          labels: months,
+          datasets: [
+            { label: 'Revenue ($K)', data: rev, backgroundColor: 'rgba(88,166,255,0.3)', borderColor: '#58a6ff', borderWidth: 2, borderRadius: 3 },
+            { label: 'COGS ($K)',    data: cogs, backgroundColor: 'rgba(247,129,102,0.4)', borderColor: '#f78166', borderWidth: 2, borderRadius: 3 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { grid: { color: G }, ticks: { callback: v => '$'+v+'K' }, beginAtZero: true }, x: { grid: NG } },
+          plugins: { legend: { labels: { boxWidth: 12, padding: 14 } } }
+        }
+      });
+      new Chart(document.getElementById('finExpChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Salaries','Infrastructure','Marketing','G&A','R&D'],
+          datasets: [{ data: [48,18,14,12,8],
+            backgroundColor: ['#58a6ff','#3fb950','#d2a8ff','#f2cc60','#f78166'],
+            borderColor: '#161b22', borderWidth: 3, hoverOffset: 6 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, cutout: '68%',
+          plugins: { legend: { position: 'right', labels: { padding: 12, boxWidth: 10 } },
+            tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}%` } } }
+        }
+      });
+      new Chart(document.getElementById('finBudgetChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Engineering','Marketing','Sales','Customer Success','G&A'],
+          datasets: [
+            { label: 'Budget ($K)',  data: [62,38,44,22,18], backgroundColor: 'rgba(88,166,255,0.2)', borderColor: '#58a6ff', borderWidth: 2, borderRadius: 3 },
+            { label: 'Actuals ($K)', data: [61,35,46,21,17], backgroundColor: 'rgba(63,185,80,0.35)', borderColor: '#3fb950', borderWidth: 2, borderRadius: 3 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { grid: { color: G }, ticks: { callback: v => '$'+v+'K' }, beginAtZero: true }, x: { grid: NG } },
+          plugins: { legend: { labels: { boxWidth: 12, padding: 14 } } }
+        }
+      });
+      new Chart(document.getElementById('finCashChart'), {
+        type: 'line',
+        data: {
+          labels: months,
+          datasets: [{ label: 'Cash Position ($K)', data: [380,372,368,374,386,402,414,431,452,486,562,628],
+            borderColor: '#3fb950', backgroundColor: 'rgba(63,185,80,0.1)', tension: 0.4, fill: true, borderWidth: 2, pointRadius: 3 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { grid: { color: G }, ticks: { callback: v => '$'+v+'K' }, min: 300 }, x: { grid: NG } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` $${ctx.raw}K` } } }
+        }
+      });
+    }
+
+    // ── Supply Chain ──────────────────────────────────────────────
+    else if (name === 'supply') {
+      const wks = ['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12'];
+      new Chart(document.getElementById('supInventoryChart'), {
+        type: 'line',
+        data: {
+          labels: wks,
+          datasets: [
+            { label: 'Electronics', data: [1820,1740,1660,1580,1500,1430,1360,1300,1280,1260,1245,1240], borderColor: '#58a6ff', tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2 },
+            { label: 'Apparel',     data: [1200,1140,1080,1010,960,900,920,880,870,860,855,850], borderColor: '#3fb950', tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2 },
+            { label: 'Sports',      data: [680,640,610,580,560,520,500,478,460,445,432,420], borderColor: '#f78166', tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { grid: { color: G }, min: 300 }, x: { grid: NG } },
+          plugins: { legend: { labels: { boxWidth: 10, padding: 12 } },
+            tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw.toLocaleString()} units` } } }
+        }
+      });
+      new Chart(document.getElementById('supFillChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Electronics','Home & Living','Beauty','Apparel','Sports'],
+          datasets: [{ label: 'Fill Rate (%)', data: [98.2,97.8,97.1,95.4,91.8],
+            backgroundColor: ctx => ctx.raw >= 96 ? 'rgba(63,185,80,0.4)' : ctx.raw >= 93 ? 'rgba(88,166,255,0.4)' : 'rgba(247,129,102,0.4)',
+            borderColor: ctx => ctx.raw >= 96 ? '#3fb950' : ctx.raw >= 93 ? '#58a6ff' : '#f78166',
+            borderWidth: 2, borderRadius: 4 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+          scales: { x: { grid: { color: G }, ticks: { callback: v => v+'%' }, min: 85, max: 100 }, y: { grid: NG } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` Fill Rate: ${ctx.raw}%` } } }
+        }
+      });
+      new Chart(document.getElementById('supLeadChart'), {
+        type: 'bar',
+        data: {
+          labels: ['TechDist Co.','FashionHub','SportCo','HomeSupply','BeautyWholesale'],
+          datasets: [{ label: 'Lead Time (days)', data: [12,18,22,9,14],
+            backgroundColor: ctx => ctx.raw <= 14 ? 'rgba(63,185,80,0.4)' : ctx.raw <= 20 ? 'rgba(88,166,255,0.4)' : 'rgba(247,129,102,0.4)',
+            borderColor: ctx => ctx.raw <= 14 ? '#3fb950' : ctx.raw <= 20 ? '#58a6ff' : '#f78166',
+            borderWidth: 2, borderRadius: 4 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { grid: { color: G }, ticks: { callback: v => v+'d' }, beginAtZero: true }, x: { grid: NG } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw} day lead time` } } }
+        }
+      });
+      new Chart(document.getElementById('supOTDChart'), {
+        type: 'line',
+        data: {
+          labels: months,
+          datasets: [
+            { label: 'OTD %',        data: [88.4,89.1,90.2,91.8,93.1,93.4,92.8,93.0,92.5,91.9,91.5,91.3], borderColor: '#58a6ff', backgroundColor: 'rgba(88,166,255,0.1)', tension: 0.4, fill: true, borderWidth: 2, pointRadius: 3 },
+            { label: 'Target (93%)', data: Array(12).fill(93), borderColor: '#3fb950', borderDash: [6,3], borderWidth: 1.5, pointRadius: 0, fill: false }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { grid: { color: G }, ticks: { callback: v => v+'%' }, min: 85, max: 97 }, x: { grid: NG } },
+          plugins: { legend: { labels: { boxWidth: 10, padding: 14 } },
+            tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}%` } } }
+        }
+      });
+    }
+  }
 
   // ─── Opinion toggle ───────────────────────────────────────────────
   function toggleOpinion(id, btn) {
