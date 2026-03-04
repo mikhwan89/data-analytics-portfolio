@@ -243,6 +243,7 @@
     /* ===== DBT SECTION ===== */
     #dbt { background: var(--bg); border-bottom: 1px solid var(--border); }
     .dbt-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+    .dbt-layout > div { min-width: 0; } /* prevent grid blowout from wide <pre> content */
     .dag-wrap {
       background: var(--bg2); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 28px;
@@ -284,7 +285,8 @@
     .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #0d1117; font-weight: 600; }
     .code-block {
       background: var(--bg2); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 20px; overflow-x: auto; display: none;
+      border-radius: var(--radius); padding: 20px; overflow-x: auto;
+      -webkit-overflow-scrolling: touch; display: none;
     }
     .code-block.active { display: block; }
     pre { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 12px; line-height: 1.7; color: var(--text); }
@@ -394,6 +396,11 @@
       .code-tabs { flex-wrap: wrap; }
       th { padding: 8px 12px; }
       td { padding: 8px 12px; }
+      /* DBT section */
+      pre { font-size: 11px; line-height: 1.6; }
+      .code-block { padding: 14px; }
+      .gh-cta { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .dag-wrap { padding: 18px; }
     }
     @media (max-width: 400px) {
       .kpi-row { grid-template-columns: 1fr; }
@@ -983,6 +990,7 @@ joined <span class="sql-kw">as</span> (
     <span class="sql-fn">coalesce</span>(p.channel,    c.channel)    <span class="sql-kw">as</span> channel,
     p.spend_usd,
     c.new_customers,
+    c.total_ltv_usd                      <span class="sql-kw">as</span> new_revenue_usd,
     <span class="sql-cm">-- CAC via reusable macro (see Macro tab)</span>
     <span class="sql-ref">{{ calculate_cac('p.spend_usd', 'c.new_customers') }}</span> <span class="sql-kw">as</span> cac_usd
   <span class="sql-kw">from</span> google_monthly p
@@ -1033,13 +1041,13 @@ enriched <span class="sql-kw">as</span> (
   <span class="sql-kw">select</span>
     date_month,
     channel,
-    campaign_id,
-    <span class="sql-fn">sum</span>(spend_usd)          <span class="sql-kw">as</span> total_spend,
-    <span class="sql-fn">sum</span>(new_customers)      <span class="sql-kw">as</span> total_customers,
+    <span class="sql-fn">sum</span>(spend_usd)        <span class="sql-kw">as</span> total_spend,
+    <span class="sql-fn">sum</span>(new_customers)    <span class="sql-kw">as</span> total_customers,
+    <span class="sql-fn">sum</span>(new_revenue_usd)  <span class="sql-kw">as</span> total_revenue,
     <span class="sql-ref">{{ calculate_roas('sum(new_revenue_usd)', 'sum(spend_usd)') }}</span>
-                             <span class="sql-kw">as</span> roas,
+                           <span class="sql-kw">as</span> roas,
     <span class="sql-ref">{{ calculate_cac('sum(spend_usd)', 'sum(new_customers)') }}</span>
-                             <span class="sql-kw">as</span> cac_usd,
+                           <span class="sql-kw">as</span> cac_usd,
     <span class="sql-cm">-- rank channels by ROAS within each month-partition</span>
     <span class="sql-fn">rank</span>() <span class="sql-kw">over</span> (
       <span class="sql-kw">partition by</span> date_month
@@ -1047,7 +1055,7 @@ enriched <span class="sql-kw">as</span> (
         <span class="sql-fn">safe_divide</span>(<span class="sql-fn">sum</span>(new_revenue_usd), <span class="sql-fn">sum</span>(spend_usd)) <span class="sql-kw">desc</span>
     ) <span class="sql-kw">as</span> roas_rank
   <span class="sql-kw">from</span> source
-  <span class="sql-kw">group by</span> <span class="sql-num">1</span>, <span class="sql-num">2</span>, <span class="sql-num">3</span>
+  <span class="sql-kw">group by</span> <span class="sql-num">1</span>, <span class="sql-num">2</span>
 )
 
 <span class="sql-kw">select</span> * <span class="sql-kw">from</span> enriched</pre>
