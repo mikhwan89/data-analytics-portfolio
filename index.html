@@ -110,6 +110,45 @@
     .tag.green { background: rgba(63,185,80,0.1); border-color: rgba(63,185,80,0.3); color: var(--accent2); }
     .tag.purple { background: rgba(210,168,255,0.1); border-color: rgba(210,168,255,0.3); color: var(--accent4); }
 
+    /* ===== ACHIEVEMENTS ===== */
+    #achievements { background: var(--bg2); border-bottom: 1px solid var(--border); }
+    .ach-list { display: flex; flex-direction: column; gap: 16px; }
+    .ach-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px 28px;
+      display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: start;
+      transition: border-color .2s;
+    }
+    .ach-card:hover { border-color: var(--accent); }
+    .ach-company {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      min-width: 72px;
+    }
+    .ach-logo {
+      width: 40px; height: 40px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 800; letter-spacing: -1px;
+    }
+    .ach-logo.grab  { background: rgba(0,173,86,0.15); color: #00ad56; border: 1px solid rgba(0,173,86,0.3); }
+    .ach-logo.lazada { background: rgba(247,129,102,0.15); color: var(--accent3); border: 1px solid rgba(247,129,102,0.3); }
+    .ach-logo.linkaja { background: rgba(210,168,255,0.15); color: var(--accent4); border: 1px solid rgba(210,168,255,0.3); }
+    .ach-company-name { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; text-align: center; }
+    .ach-body h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+    .ach-body p { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+    .ach-impact {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
+    }
+    .impact-pill {
+      font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600;
+      background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.3); color: var(--accent2);
+    }
+    .impact-pill.blue {
+      background: rgba(88,166,255,0.1); border-color: rgba(88,166,255,0.3); color: var(--accent);
+    }
+    .impact-pill.purple {
+      background: rgba(210,168,255,0.1); border-color: rgba(210,168,255,0.3); color: var(--accent4);
+    }
+
     /* ===== DASHBOARD ===== */
     #dashboard { background: var(--bg2); border-bottom: 1px solid var(--border); }
     .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
@@ -252,6 +291,7 @@
   <span class="nav-brand">Ikhwan <span>Analytics</span></span>
   <ul class="nav-links">
     <li><a href="#skills">Skills</a></li>
+    <li><a href="#achievements">Achievements</a></li>
     <li><a href="#dashboard">Dashboard</a></li>
     <li><a href="#dbt">ETL / DBT</a></li>
   </ul>
@@ -354,6 +394,105 @@
           <span class="tag purple">Git</span>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="container">
+    <p class="section-label">Track Record</p>
+    <h2>Achievements & Impact</h2>
+    <p class="section-sub">Selected outcomes from work at Grab, Lazada, and LinkAja — where data directly moved the needle on cost, revenue, and operations.</p>
+    <div class="ach-list">
+
+      <!-- Grab: Fraud detection -->
+      <div class="ach-card">
+        <div class="ach-company">
+          <div class="ach-logo grab">G</div>
+          <div class="ach-company-name">Grab</div>
+        </div>
+        <div class="ach-body">
+          <h3>Reduced Driver Incentive Costs via Fraud Detection</h3>
+          <p>Identified fraudulent ride records and bad-actor drivers by analyzing behavioral patterns in trip data. Built a systematic detection pipeline that excluded these from incentive eligibility, directly cutting incentive spend without impacting legitimate driver earnings.</p>
+          <div class="ach-impact">
+            <span class="impact-pill">Cost Reduction</span>
+            <span class="impact-pill blue">Fraud Detection</span>
+            <span class="impact-pill blue">Driver Incentives</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grab: Incentive template -->
+      <div class="ach-card">
+        <div class="ach-company">
+          <div class="ach-logo grab">G</div>
+          <div class="ach-company-name">Grab</div>
+        </div>
+        <div class="ach-body">
+          <h3>Unified Incentive Framework Across GrabFood, GrabBike, GrabMart & GrabExpress</h3>
+          <p>Designed a structured incentive template for the operations team to align 2-wheel driver incentives across all four verticals. The framework made drivers vertical-agnostic — eliminating internal competition for driver supply — which improved fulfilment rates uniformly across verticals while simultaneously reducing overall incentive cost.</p>
+          <div class="ach-impact">
+            <span class="impact-pill">Fulfilment Rate ↑</span>
+            <span class="impact-pill">Incentive Cost ↓</span>
+            <span class="impact-pill blue">Cross-vertical Ops</span>
+            <span class="impact-pill purple">Strategic Framework</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lazada: Hidden gems -->
+      <div class="ach-card">
+        <div class="ach-company">
+          <div class="ach-logo lazada">L</div>
+          <div class="ach-company-name">Lazada</div>
+        </div>
+        <div class="ach-body">
+          <h3>Built "Hidden Gem" & "Unpolished Gem" Product Metrics</h3>
+          <p>Created two new metrics surfaced to the Commercial team on a regular cadence: <strong style="color:var(--text)">Hidden Gems</strong> — products with strong potential but low visibility — and <strong style="color:var(--text)">Unpolished Gems</strong> — high-traffic products with poor conversion rates. These classifications enabled targeted interventions (content fixes, promotions, repricing) to unlock latent GMV.</p>
+          <div class="ach-impact">
+            <span class="impact-pill">GMV Growth</span>
+            <span class="impact-pill blue">New Metric Design</span>
+            <span class="impact-pill purple">Product Analytics</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grab: Subcity mapping -->
+      <div class="ach-card">
+        <div class="ach-company">
+          <div class="ach-logo grab">G</div>
+          <div class="ach-company-name">Grab</div>
+        </div>
+        <div class="ach-body">
+          <h3>Built Grab's Subcity Location Mapping — 2nd Most Consumed Table Company-wide</h3>
+          <p>Designed and built a subcity geographic mapping layer that aggregated ride metrics at a hyperlocal level — below city, above individual coordinates. The table unlocked granular supply-demand analysis for ops and product teams. It became the <strong style="color:var(--text)">2nd most queried table across Grab's entire data warehouse</strong>.</p>
+          <div class="ach-impact">
+            <span class="impact-pill">Hyperlocal Analytics</span>
+            <span class="impact-pill blue">Data Infrastructure</span>
+            <span class="impact-pill purple">Company-wide Adoption</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LinkAja: BI build -->
+      <div class="ach-card">
+        <div class="ach-company">
+          <div class="ach-logo linkaja">LA</div>
+          <div class="ach-company-name">LinkAja</div>
+        </div>
+        <div class="ach-body">
+          <h3>Built LinkAja's BI Team & Infrastructure from the Ground Up</h3>
+          <p>Hired and grew the analytics team from zero, then implemented a clean, well-structured BI stack using <strong style="color:var(--text)">BigQuery + Airflow + Looker</strong>. By centralizing business logic in LookML as a shared data model layer, all dashboards across the company became consistent and governed — eliminating metric disagreements and enabling self-serve analytics at scale.</p>
+          <div class="ach-impact">
+            <span class="impact-pill">Team Building</span>
+            <span class="impact-pill blue">Looker + LookML</span>
+            <span class="impact-pill blue">BigQuery + Airflow</span>
+            <span class="impact-pill purple">BI Governance</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
