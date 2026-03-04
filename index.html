@@ -70,23 +70,15 @@
 
     /* ===== HERO ===== */
     #hero {
-      min-height: 88vh;
+      min-height: 52vh;
       display: flex; align-items: center;
       background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(88,166,255,0.12) 0%, transparent 70%);
       border-bottom: 1px solid var(--border);
     }
-    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.3);
-      padding: 4px 12px; border-radius: 20px;
-      font-size: 12px; color: var(--accent); margin-bottom: 20px;
-    }
-    .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--accent2); border-radius: 50%; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-    h1 { font-size: 52px; font-weight: 800; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 20px; }
+    .hero-inner { max-width: 680px; }
+    h1 { font-size: 48px; font-weight: 800; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 16px; }
     h1 span { color: var(--accent); }
-    .hero-desc { color: var(--text-muted); font-size: 17px; line-height: 1.7; margin-bottom: 32px; max-width: 480px; }
+    .hero-desc { color: var(--text-muted); font-size: 17px; line-height: 1.7; margin-bottom: 28px; }
     .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
     .btn {
       padding: 10px 22px; border-radius: 6px; font-size: 14px; font-weight: 600;
@@ -96,13 +88,6 @@
     .btn-primary:hover { background: #79c0ff; text-decoration: none; }
     .btn-outline { background: transparent; border-color: var(--border); color: var(--text); }
     .btn-outline:hover { border-color: var(--accent); text-decoration: none; }
-    .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .stat-card {
-      background: var(--bg2); border: 1px solid var(--border);
-      padding: 20px; border-radius: var(--radius); text-align: center;
-    }
-    .stat-card .num { font-size: 28px; font-weight: 800; color: var(--accent); }
-    .stat-card .lbl { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
 
     /* ===== SKILLS ===== */
     #skills { background: var(--bg); border-bottom: 1px solid var(--border); }
@@ -246,8 +231,6 @@
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 900px) {
-      .hero-inner { grid-template-columns: 1fr; gap: 40px; }
-      .hero-stats { grid-template-columns: repeat(3, 1fr); }
       .skills-grid { grid-template-columns: 1fr 1fr; }
       .kpi-row { grid-template-columns: 1fr 1fr; }
       .charts-grid { grid-template-columns: 1fr; }
@@ -282,25 +265,14 @@
 <section id="hero">
   <div class="container">
     <div class="hero-inner">
-      <div>
-        <div class="hero-badge">Available for Freelance Projects</div>
-        <h1>Turning Raw Data<br/>Into <span>Business Decisions</span></h1>
-        <p class="hero-desc">
-          Data Analyst with hands-on experience in end-to-end ETL pipelines, marketing analytics, and
-          building BI dashboards that actually get used. I turn messy data into clean, actionable insights.
-        </p>
-        <div class="hero-btns">
-          <a href="#dashboard" class="btn btn-primary">View Dashboard</a>
-          <a href="https://github.com/mikhwan89/marketing-analytics-dbt" target="_blank" class="btn btn-outline">DBT Project on GitHub</a>
-        </div>
-      </div>
-      <div class="hero-stats">
-        <div class="stat-card"><div class="num">4+</div><div class="lbl">Years Experience</div></div>
-        <div class="stat-card"><div class="num">SQL</div><div class="lbl">Primary Tool</div></div>
-        <div class="stat-card"><div class="num">DBT</div><div class="lbl">ETL Framework</div></div>
-        <div class="stat-card"><div class="num">88</div><div class="lbl">Sample Customers</div></div>
-        <div class="stat-card"><div class="num">3</div><div class="lbl">DBT Layers</div></div>
-        <div class="stat-card"><div class="num">5+</div><div class="lbl">Channels Modeled</div></div>
+      <h1>Turning Raw Data<br/>Into <span>Business Decisions</span></h1>
+      <p class="hero-desc">
+        End-to-end data work — from ETL pipelines and SQL modeling to dashboards
+        that actually drive decisions. Scroll down to see the work.
+      </p>
+      <div class="hero-btns">
+        <a href="#dashboard" class="btn btn-primary">View Dashboard</a>
+        <a href="https://github.com/mikhwan89/marketing-analytics-dbt" target="_blank" class="btn btn-outline">DBT Project on GitHub</a>
       </div>
     </div>
   </div>
@@ -351,12 +323,12 @@
       <div class="skill-card">
         <div class="skill-icon">📈</div>
         <h3>BI & Visualization</h3>
-        <p>Build dashboards that tell a story — with clear KPIs, trend lines, and drill-down capabilities for stakeholders at every level.</p>
+        <p>Specialized in <strong style="color:var(--text)">Looker</strong> and <strong style="color:var(--text)">Holistics.io</strong> — building governed, self-serve dashboards with clean data models underneath. Also experienced with Tableau for broader stakeholder reporting.</p>
         <div class="tags">
-          <span class="tag blue">Looker Studio</span>
+          <span class="tag blue" style="border-color:var(--accent);color:var(--accent);font-weight:700">Looker</span>
+          <span class="tag blue" style="border-color:var(--accent);color:var(--accent);font-weight:700">Holistics.io</span>
+          <span class="tag blue">Tableau</span>
           <span class="tag blue">Power BI</span>
-          <span class="tag blue">Metabase</span>
-          <span class="tag blue">Chart.js</span>
         </div>
       </div>
       <div class="skill-card">
