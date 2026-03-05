@@ -222,6 +222,58 @@
     .badge.ok   { background: rgba(88,166,255,0.15); color: var(--accent); }
     .badge.low  { background: rgba(247,129,102,0.15); color: var(--accent3); }
 
+    /* ===== DATA STORYTELLING PANEL ===== */
+    .story-hero-card {
+      background: linear-gradient(135deg, rgba(88,166,255,0.07) 0%, rgba(210,168,255,0.05) 100%);
+      border: 1px solid rgba(88,166,255,0.2);
+      border-radius: var(--radius); padding: 40px;
+      margin-bottom: 24px;
+    }
+    .story-live-pill {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      padding: 3px 10px; border-radius: 20px; margin-bottom: 16px;
+      background: rgba(63,185,80,0.15); border: 1px solid rgba(63,185,80,0.3);
+      color: var(--accent2); text-transform: uppercase; letter-spacing: 1px;
+    }
+    .story-title-line { font-size: 22px; font-weight: 800; margin-bottom: 14px; line-height: 1.3; }
+    .story-title-line span { color: var(--accent); }
+    .story-body-text { color: var(--text-muted); font-size: 14px; line-height: 1.75; margin-bottom: 24px; max-width: 640px; }
+    .story-cta-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .story-url-label { font-size: 12px; color: var(--text-muted); font-family: 'SF Mono', monospace; }
+    .story-url-label a { color: var(--accent); }
+
+    .story-points-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    .story-point {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px; transition: border-color .2s;
+    }
+    .story-point:hover { border-color: rgba(88,166,255,0.3); }
+    .story-point-num {
+      font-size: 10px; font-weight: 700; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+    }
+    .story-point strong { display: block; font-size: 13px; margin-bottom: 6px; }
+    .story-point p { font-size: 12px; color: var(--text-muted); line-height: 1.65; margin: 0; }
+
+    .story-metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .story-metric {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px 14px; text-align: center;
+    }
+    .story-metric-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+    .story-metric-value { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+    .story-metric-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+    .story-metric-note { font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 10px; font-style: italic; }
+
+    @media (max-width: 900px) {
+      .story-points-grid { grid-template-columns: 1fr 1fr; }
+      .story-metrics-row { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .story-points-grid { grid-template-columns: 1fr; }
+      .story-hero-card { padding: 24px; }
+    }
+
     /* ===== DASHBOARD TABS ===== */
     .dash-tab-bar {
       display: flex; gap: 0; margin-bottom: 32px;
@@ -646,7 +698,7 @@
   <div class="container">
     <p class="section-label">Sample Dashboards</p>
     <h2>Analytics Across Functions</h2>
-    <p class="section-sub">Six dashboard types demonstrating analytics applied to marketing, customer behavior, operations, finance, and supply chain — all from dummy data modeled via DBT.</p>
+    <p class="section-sub">Six functional dashboard types built from dummy DBT data, plus a live project showing how data can be structured to tell a story and guide someone to a conclusion.</p>
 
     <div class="dash-tab-bar">
       <button class="dash-tab-btn active" onclick="showDash('marketing', this)">Marketing Analytics</button>
@@ -655,6 +707,7 @@
       <button class="dash-tab-btn" onclick="showDash('operations', this)">Operations</button>
       <button class="dash-tab-btn" onclick="showDash('finance', this)">Finance</button>
       <button class="dash-tab-btn" onclick="showDash('supply', this)">Supply Chain</button>
+      <button class="dash-tab-btn" onclick="showDash('storytelling', this)">Data Storytelling</button>
     </div>
 
     <!-- ── 1. MARKETING ─────────────────────────────────────────── -->
@@ -841,6 +894,68 @@
           </tbody>
         </table></div>
       </div>
+    </div>
+
+    <!-- ── 7. DATA STORYTELLING ──────────────────────────────────── -->
+    <div class="dash-panel" id="dash-storytelling">
+
+      <div class="story-hero-card">
+        <span class="story-live-pill">Live Project</span>
+        <div class="story-title-line">Data doesn't just describe reality — it can be structured to <span>argue a point</span>.</div>
+        <p class="story-body-text">
+          <strong style="color:var(--text)">mystoreofvalue.com</strong> is a financial analytics platform I built that tracks long-term asset performance across cryptocurrencies, commodities, and market indices.
+          But it's more than a data display — it's an argument. The site is designed to take someone who asks
+          <em>"what should I hold to protect my wealth?"</em> and walk them, step by step, through the evidence that leads to a clear, data-backed answer.
+          Every metric shown, every chart drawn, every ranking presented serves that narrative.
+        </p>
+        <div class="story-cta-row">
+          <a href="https://mystoreofvalue.com" target="_blank" class="btn btn-primary">Visit mystoreofvalue.com →</a>
+          <span class="story-url-label">Live at <a href="https://mystoreofvalue.com" target="_blank">mystoreofvalue.com</a></span>
+        </div>
+      </div>
+
+      <div class="story-points-grid">
+        <div class="story-point">
+          <div class="story-point-num">Mechanism 01</div>
+          <strong>The question leads the data</strong>
+          <p>The site opens with a question real investors ask: <em>which assets actually hold value over time?</em> Every chart and table that follows is the answer to that question — not just data for its own sake.</p>
+        </div>
+        <div class="story-point">
+          <div class="story-point-num">Mechanism 02</div>
+          <strong>Metrics chosen to persuade</strong>
+          <p>CAGR, Sharpe ratio, max drawdown, and Sortino ratio aren't shown because they exist — each one is selected because it exposes a different dimension of the argument. Risk-adjusted returns tell a much stronger story than raw gains alone.</p>
+        </div>
+        <div class="story-point">
+          <div class="story-point-num">Mechanism 03</div>
+          <strong>Rankings close the argument</strong>
+          <p>The leaderboard lets the data state the conclusion itself. Visitors don't need to be told which assets win — sorting the table by any metric makes the answer self-evident. The analyst's job is done before the user even scrolls.</p>
+        </div>
+      </div>
+
+      <div class="story-metrics-row">
+        <div class="story-metric">
+          <div class="story-metric-label">BTC — 10Y CAGR</div>
+          <div class="story-metric-value" style="color:var(--accent2)">+79%</div>
+          <div class="story-metric-sub">annualised</div>
+        </div>
+        <div class="story-metric">
+          <div class="story-metric-label">Gold — 10Y CAGR</div>
+          <div class="story-metric-value" style="color:var(--accent)">+6.4%</div>
+          <div class="story-metric-sub">annualised</div>
+        </div>
+        <div class="story-metric">
+          <div class="story-metric-label">S&P 500 — 10Y CAGR</div>
+          <div class="story-metric-value" style="color:var(--accent)">+12.5%</div>
+          <div class="story-metric-sub">annualised</div>
+        </div>
+        <div class="story-metric">
+          <div class="story-metric-label">USD Purchasing Power</div>
+          <div class="story-metric-value" style="color:var(--accent3)">−26%</div>
+          <div class="story-metric-sub">10Y cumulative loss</div>
+        </div>
+      </div>
+      <p class="story-metric-note">Sample figures from the live site — visit for current calculated values across all holding periods and assets.</p>
+
     </div>
 
   </div>
