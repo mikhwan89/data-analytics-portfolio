@@ -148,7 +148,8 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 18px; font-weight: 800; letter-spacing: -1px;
     }
-    .ach-logo.grab  { background: rgba(0,173,86,0.15); color: #00ad56; border: 1px solid rgba(0,173,86,0.3); }
+    .ach-logo.camp   { background: rgba(242,204,96,0.15); color: #f2cc60; border: 1px solid rgba(242,204,96,0.3); }
+    .ach-logo.grab   { background: rgba(0,173,86,0.15); color: #00ad56; border: 1px solid rgba(0,173,86,0.3); }
     .ach-logo.lazada { background: rgba(247,129,102,0.15); color: var(--accent3); border: 1px solid rgba(247,129,102,0.3); }
     .ach-logo.linkaja { background: rgba(210,168,255,0.15); color: var(--accent4); border: 1px solid rgba(210,168,255,0.3); }
     .ach-company-name { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; text-align: center; }
@@ -487,10 +488,6 @@
         End-to-end data work across e-commerce, ride-hailing, and fintech —
         from ETL pipelines and SQL modeling to BI dashboards that drive real decisions.
       </p>
-      <div class="hero-btns">
-        <a href="#dashboard" class="btn btn-primary">View Dashboard</a>
-        <a href="https://github.com/mikhwan89/marketing-analytics-dbt" target="_blank" class="btn btn-outline">DBT Project on GitHub</a>
-      </div>
     </div>
   </div>
 </section>
@@ -582,8 +579,26 @@
   <div class="container">
     <p class="section-label">Track Record</p>
     <h2>Achievements & Impact</h2>
-    <p class="section-sub">Selected outcomes from work at Grab, Lazada, and LinkAja — where data directly moved the needle on cost, revenue, and operations.</p>
+    <p class="section-sub">Selected outcomes from work at CAMP, Grab, LinkAja, Alfacart, and Lazada — where data directly moved the needle on investment decisions, cost, revenue, and operations.</p>
     <div class="ach-list">
+
+      <!-- CAMP: Backtest simulation dashboard -->
+      <div class="ach-card">
+        <div class="ach-company">
+          <div class="ach-logo camp">C</div>
+          <div class="ach-company-name">CAMP</div>
+        </div>
+        <div class="ach-body">
+          <h3>Built Bitcoin Backtest Simulation Dashboard for Investment Clients</h3>
+          <p>Developed an interactive simulation dashboard that lets clients model real investment scenarios with Bitcoin. Clients can specify any entry and exit date to see historical return outcomes, and separately simulate the effect of adding a <strong style="color:var(--text)">1%, 5%, or 10% Bitcoin allocation</strong> to their existing portfolio — visualising the impact on both overall return and risk-adjusted metrics including Sharpe ratio, volatility, and max drawdown. Turns complex quantitative analysis into a self-serve tool accessible to non-technical investors.</p>
+          <div class="ach-impact">
+            <span class="impact-pill blue">Portfolio Simulation</span>
+            <span class="impact-pill blue">Backtest Engine</span>
+            <span class="impact-pill">Sharpe Ratio</span>
+            <span class="impact-pill purple">Client-facing Dashboard</span>
+          </div>
+        </div>
+      </div>
 
       <!-- Grab: Fraud detection -->
       <div class="ach-card">
@@ -602,7 +617,7 @@
         </div>
       </div>
 
-      <!-- Grab: Incentive template -->
+      <!-- Grab: Incentive framework -->
       <div class="ach-card">
         <div class="ach-company">
           <div class="ach-logo grab">G</div>
@@ -616,23 +631,6 @@
             <span class="impact-pill">Incentive Cost ↓</span>
             <span class="impact-pill blue">Cross-vertical Ops</span>
             <span class="impact-pill purple">Strategic Framework</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Lazada: Hidden gems -->
-      <div class="ach-card">
-        <div class="ach-company">
-          <div class="ach-logo lazada">L</div>
-          <div class="ach-company-name">Lazada</div>
-        </div>
-        <div class="ach-body">
-          <h3>Built "Hidden Gem" & "Unpolished Gem" Product Metrics</h3>
-          <p>Created two new metrics surfaced to the Commercial team on a regular cadence: <strong style="color:var(--text)">Hidden Gems</strong> — products with strong potential but low visibility — and <strong style="color:var(--text)">Unpolished Gems</strong> — high-traffic products with poor conversion rates. These classifications enabled targeted interventions (content fixes, promotions, repricing) to unlock latent GMV.</p>
-          <div class="ach-impact">
-            <span class="impact-pill">GMV Growth</span>
-            <span class="impact-pill blue">New Metric Design</span>
-            <span class="impact-pill purple">Product Analytics</span>
           </div>
         </div>
       </div>
@@ -654,6 +652,24 @@
         </div>
       </div>
 
+      <!-- LinkAja: BI build -->
+      <div class="ach-card">
+        <div class="ach-company">
+          <div class="ach-logo linkaja">LA</div>
+          <div class="ach-company-name">LinkAja</div>
+        </div>
+        <div class="ach-body">
+          <h3>Built LinkAja's BI Team & Infrastructure from the Ground Up</h3>
+          <p>Hired and grew the analytics team from zero, then implemented a clean, well-structured BI stack using <strong style="color:var(--text)">BigQuery + Airflow + Looker</strong>. By centralizing business logic in LookML as a shared data model layer, all dashboards across the company became consistent and governed — eliminating metric disagreements and enabling self-serve analytics at scale.</p>
+          <div class="ach-impact">
+            <span class="impact-pill">Team Building</span>
+            <span class="impact-pill blue">Looker + LookML</span>
+            <span class="impact-pill blue">BigQuery + Airflow</span>
+            <span class="impact-pill purple">BI Governance</span>
+          </div>
+        </div>
+      </div>
+
       <!-- Alfacart: Price algorithm -->
       <div class="ach-card">
         <div class="ach-company">
@@ -671,20 +687,19 @@
         </div>
       </div>
 
-      <!-- LinkAja: BI build -->
+      <!-- Lazada: Hidden gems -->
       <div class="ach-card">
         <div class="ach-company">
-          <div class="ach-logo linkaja">LA</div>
-          <div class="ach-company-name">LinkAja</div>
+          <div class="ach-logo lazada">L</div>
+          <div class="ach-company-name">Lazada</div>
         </div>
         <div class="ach-body">
-          <h3>Built LinkAja's BI Team & Infrastructure from the Ground Up</h3>
-          <p>Hired and grew the analytics team from zero, then implemented a clean, well-structured BI stack using <strong style="color:var(--text)">BigQuery + Airflow + Looker</strong>. By centralizing business logic in LookML as a shared data model layer, all dashboards across the company became consistent and governed — eliminating metric disagreements and enabling self-serve analytics at scale.</p>
+          <h3>Built "Hidden Gem" & "Unpolished Gem" Product Metrics</h3>
+          <p>Created two new metrics surfaced to the Commercial team on a regular cadence: <strong style="color:var(--text)">Hidden Gems</strong> — products with strong potential but low visibility — and <strong style="color:var(--text)">Unpolished Gems</strong> — high-traffic products with poor conversion rates. These classifications enabled targeted interventions (content fixes, promotions, repricing) to unlock latent GMV.</p>
           <div class="ach-impact">
-            <span class="impact-pill">Team Building</span>
-            <span class="impact-pill blue">Looker + LookML</span>
-            <span class="impact-pill blue">BigQuery + Airflow</span>
-            <span class="impact-pill purple">BI Governance</span>
+            <span class="impact-pill">GMV Growth</span>
+            <span class="impact-pill blue">New Metric Design</span>
+            <span class="impact-pill purple">Product Analytics</span>
           </div>
         </div>
       </div>
