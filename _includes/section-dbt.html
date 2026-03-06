@@ -1,0 +1,328 @@
+<!-- DBT / ETL -->
+<section id="dbt">
+  <div class="container">
+    <p class="section-label">DBT Flow Sample</p>
+    <h2>DBT Project Walkthrough</h2>
+    <p class="section-sub">A modular DBT project with three clean layers, built with BigQuery cost-efficiency in mind — partition pruning on large source tables, and incremental materialization so mart models never rebuild the full table on every run.</p>
+
+    <div class="dbt-layout">
+      <!-- DAG -->
+      <div>
+        <div class="dag-wrap">
+          <div class="dag-title">Model Lineage (DAG)</div>
+          <div class="dag-layers">
+            <div class="dag-layer">
+              <div class="layer-label src">Sources & Seeds</div>
+              <div class="layer-nodes">
+                <span class="dag-node raw">ga_events<span class="dag-badge">partitioned</span></span>
+                <span class="dag-node raw">fb_ads_raw<span class="dag-badge">partitioned</span></span>
+                <span class="dag-node raw">raw_crm_customers</span>
+              </div>
+            </div>
+            <div class="dag-arrow">↓</div>
+            <div class="dag-layer">
+              <div class="layer-label stg">Staging (Views)</div>
+              <div class="layer-nodes">
+                <span class="dag-node stg">stg_google_ads</span>
+                <span class="dag-node stg">stg_facebook_ads</span>
+                <span class="dag-node stg">stg_crm_customers</span>
+              </div>
+            </div>
+            <div class="dag-arrow">↓</div>
+            <div class="dag-layer">
+              <div class="layer-label int">Intermediate (Ephemeral)</div>
+              <div class="layer-nodes">
+                <span class="dag-node int">int_channel_attribution</span>
+              </div>
+            </div>
+            <div class="dag-arrow">↓</div>
+            <div class="dag-layer">
+              <div class="layer-label mart">Mart (Incremental Tables)</div>
+              <div class="layer-nodes">
+                <span class="dag-node mart">mart_campaign_performance<span class="dag-badge">↻</span></span>
+                <span class="dag-node mart">mart_marketing_overview<span class="dag-badge">↻</span></span>
+                <span class="dag-node mart">mart_customer_acquisition<span class="dag-badge">↻</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gh-cta">
+          <div>
+            <strong>Full source code on GitHub</strong>
+            <p>Browse all SQL models, seed data, macros, and schema tests.</p>
+          </div>
+          <a href="https://github.com/mikhwan89/marketing-analytics-dbt" target="_blank" class="btn btn-primary">
+            View Repo →
+          </a>
+        </div>
+      </div>
+
+      <!-- Code tabs -->
+      <div>
+        <div class="code-tabs">
+          <button class="tab-btn active" onclick="showTab('staging')">Staging</button>
+          <button class="tab-btn" onclick="showTab('intermediate')">Intermediate</button>
+          <button class="tab-btn" onclick="showTab('mart')">Mart</button>
+          <button class="tab-btn" onclick="showTab('macro')">Macro</button>
+          <button class="tab-btn" onclick="showTab('partition')">Partition</button>
+        </div>
+
+        {% raw %}
+        <!-- ── Staging ─────────────────────────────────────────── -->
+        <div id="tab-staging" class="code-block active">
+<pre><span class="sql-cm">-- stg_google_ads.sql
+-- Source: ga_events (partitioned by event_date, ~500M rows, grows 1.5M/day)
+-- Full table scan ≈ $3/query  →  with partition filter ≈ $0.03/query</span>
+
+<span class="sql-ref">{{ config(materialized = 'view') }}</span>
+
+<span class="sql-kw">with</span> source <span class="sql-kw">as</span> (
+
+  <span class="sql-kw">select</span> *
+  <span class="sql-kw">from</span> <span class="sql-ref">{{ source('raw', 'ga_events') }}</span>
+  <span class="sql-kw">where</span>
+    <span class="sql-cm">-- PARTITION PRUNING
+    -- BigQuery only reads the date partitions matching this filter.
+    -- Without it, every query referencing this view scans the full
+    -- table — including every incremental mart refresh downstream.</span>
+    event_date >= <span class="sql-fn">date_sub</span>(<span class="sql-fn">current_date</span>(), <span class="sql-kw">interval</span> <span class="sql-num">90</span> day)
+    <span class="sql-kw">and</span> event_date  &lt;  <span class="sql-fn">current_date</span>()
+
+),
+
+renamed <span class="sql-kw">as</span> (
+  <span class="sql-kw">select</span>
+    campaign_id,
+    campaign_name,
+    event_date                                        <span class="sql-kw">as</span> date_day,
+    <span class="sql-fn">date_trunc</span>(event_date, month)                     <span class="sql-kw">as</span> date_month,
+    impressions,
+    clicks,
+    <span class="sql-fn">cast</span>(cost_usd <span class="sql-kw">as</span> numeric)                         <span class="sql-kw">as</span> cost_usd,
+    <span class="sql-cm">-- derived metrics</span>
+    <span class="sql-fn">round</span>(<span class="sql-fn">safe_divide</span>(clicks, impressions) * <span class="sql-num">100</span>, <span class="sql-num">2</span>)  <span class="sql-kw">as</span> ctr_pct,
+    <span class="sql-fn">round</span>(<span class="sql-fn">safe_divide</span>(cost_usd, conversions), <span class="sql-num">2</span>)      <span class="sql-kw">as</span> cpa,
+    <span class="sql-str">'google_ads'</span>                                      <span class="sql-kw">as</span> ad_platform
+  <span class="sql-kw">from</span> source
+)
+
+<span class="sql-kw">select</span> * <span class="sql-kw">from</span> renamed</pre>
+        </div>
+
+        <!-- ── Intermediate ────────────────────────────────────── -->
+        <div id="tab-intermediate" class="code-block">
+<pre><span class="sql-cm">-- int_channel_attribution.sql
+-- Ephemeral: no storage cost, executes inline during mart builds.
+-- Staging views already enforce partition filters — this model
+-- inherits cost-efficiency without needing additional WHERE clauses.</span>
+
+<span class="sql-kw">with</span> google_monthly <span class="sql-kw">as</span> (
+  <span class="sql-kw">select</span>
+    date_month,
+    <span class="sql-str">'google_ads'</span>          <span class="sql-kw">as</span> channel,
+    <span class="sql-fn">sum</span>(cost_usd)         <span class="sql-kw">as</span> spend_usd,
+    <span class="sql-fn">sum</span>(conversions)      <span class="sql-kw">as</span> paid_conversions
+  <span class="sql-kw">from</span> <span class="sql-ref">{{ ref('stg_google_ads') }}</span>
+  <span class="sql-kw">group by</span> <span class="sql-num">1</span>, <span class="sql-num">2</span>
+),
+
+crm_monthly <span class="sql-kw">as</span> (
+  <span class="sql-kw">select</span>
+    acquisition_month   <span class="sql-kw">as</span> date_month,
+    acquisition_channel <span class="sql-kw">as</span> channel,
+    <span class="sql-fn">count</span>(customer_id)  <span class="sql-kw">as</span> new_customers,
+    <span class="sql-fn">sum</span>(total_ltv_usd)  <span class="sql-kw">as</span> total_ltv_usd
+  <span class="sql-kw">from</span> <span class="sql-ref">{{ ref('stg_crm_customers') }}</span>
+  <span class="sql-kw">group by</span> <span class="sql-num">1</span>, <span class="sql-num">2</span>
+),
+
+joined <span class="sql-kw">as</span> (
+  <span class="sql-kw">select</span>
+    <span class="sql-fn">coalesce</span>(p.date_month, c.date_month) <span class="sql-kw">as</span> date_month,
+    <span class="sql-fn">coalesce</span>(p.channel,    c.channel)    <span class="sql-kw">as</span> channel,
+    p.spend_usd,
+    c.new_customers,
+    c.total_ltv_usd                      <span class="sql-kw">as</span> new_revenue_usd,
+    <span class="sql-cm">-- CAC via reusable macro (see Macro tab)</span>
+    <span class="sql-ref">{{ calculate_cac('p.spend_usd', 'c.new_customers') }}</span> <span class="sql-kw">as</span> cac_usd
+  <span class="sql-kw">from</span> google_monthly p
+  <span class="sql-kw">full outer join</span> crm_monthly c
+    <span class="sql-kw">using</span> (date_month, channel)
+)
+
+<span class="sql-kw">select</span> * <span class="sql-kw">from</span> joined</pre>
+        </div>
+
+        <!-- ── Mart ───────────────────────────────────────────── -->
+        <div id="tab-mart" class="code-block">
+<pre><span class="sql-cm">-- mart_campaign_performance.sql
+-- Incremental model: on each dbt run, only rewrites the two most
+-- recent month-partitions instead of rebuilding the full table.
+-- BigQuery INSERT OVERWRITE replaces exactly those partitions.
+-- Full history rebuild: dbt run --full-refresh</span>
+
+<span class="sql-ref">{{
+  config(
+    materialized         = 'incremental',
+    partition_by         = {
+      'field'       : 'date_month',
+      'data_type'   : 'date',
+      'granularity' : 'month'
+    },
+    cluster_by           = ['channel', 'campaign_id'],
+    incremental_strategy = 'insert_overwrite'
+  )
+}}</span>
+
+<span class="sql-kw">with</span> source <span class="sql-kw">as</span> (
+
+  <span class="sql-kw">select</span> * <span class="sql-kw">from</span> <span class="sql-ref">{{ ref('int_channel_attribution') }}</span>
+
+  <span class="sql-ref">{% if is_incremental() %}</span>
+  <span class="sql-cm">  -- Incremental run: scope to current + prior month only.
+  -- BigQuery overwrites exactly those two date-month partitions.
+  -- Staging partition filters already cap the upstream scan window.</span>
+  <span class="sql-kw">where</span> date_month >= <span class="sql-fn">date_trunc</span>(
+    <span class="sql-fn">date_sub</span>(<span class="sql-fn">current_date</span>(), <span class="sql-kw">interval</span> <span class="sql-num">1</span> month), month
+  )
+  <span class="sql-ref">{% endif %}</span>
+
+),
+
+enriched <span class="sql-kw">as</span> (
+  <span class="sql-kw">select</span>
+    date_month,
+    channel,
+    <span class="sql-fn">sum</span>(spend_usd)        <span class="sql-kw">as</span> total_spend,
+    <span class="sql-fn">sum</span>(new_customers)    <span class="sql-kw">as</span> total_customers,
+    <span class="sql-fn">sum</span>(new_revenue_usd)  <span class="sql-kw">as</span> total_revenue,
+    <span class="sql-ref">{{ calculate_roas('sum(new_revenue_usd)', 'sum(spend_usd)') }}</span>
+                           <span class="sql-kw">as</span> roas,
+    <span class="sql-ref">{{ calculate_cac('sum(spend_usd)', 'sum(new_customers)') }}</span>
+                           <span class="sql-kw">as</span> cac_usd,
+    <span class="sql-cm">-- rank channels by ROAS within each month-partition</span>
+    <span class="sql-fn">rank</span>() <span class="sql-kw">over</span> (
+      <span class="sql-kw">partition by</span> date_month
+      <span class="sql-kw">order by</span>
+        <span class="sql-fn">safe_divide</span>(<span class="sql-fn">sum</span>(new_revenue_usd), <span class="sql-fn">sum</span>(spend_usd)) <span class="sql-kw">desc</span>
+    ) <span class="sql-kw">as</span> roas_rank
+  <span class="sql-kw">from</span> source
+  <span class="sql-kw">group by</span> <span class="sql-num">1</span>, <span class="sql-num">2</span>
+)
+
+<span class="sql-kw">select</span> * <span class="sql-kw">from</span> enriched</pre>
+        </div>
+
+        <!-- ── Macro ──────────────────────────────────────────── -->
+        <div id="tab-macro" class="code-block">
+<pre><span class="sql-cm">{# macros/get_partition_window.sql
+   Centralizes the lookback window so full-refresh vs incremental
+   automatically gets the right partition scope.
+   Full refresh  → scans 90 days of partitions
+   Incremental   → scans only the last 3 days   #}</span>
+
+<span class="sql-ref">{% macro get_partition_window(</span>
+    date_col,
+    lookback_days    = <span class="sql-num">90</span>,
+    incremental_days = <span class="sql-num">3</span>
+) <span class="sql-ref">%}</span>
+
+  <span class="sql-ref">{% if is_incremental() %}</span>
+    <span class="sql-ref">{{ date_col }}</span> >= <span class="sql-fn">date_sub</span>(<span class="sql-fn">current_date</span>(), <span class="sql-kw">interval</span> <span class="sql-ref">{{ incremental_days }}</span> day)
+  <span class="sql-ref">{% else %}</span>
+    <span class="sql-ref">{{ date_col }}</span> >= <span class="sql-fn">date_sub</span>(<span class="sql-fn">current_date</span>(), <span class="sql-kw">interval</span> <span class="sql-ref">{{ lookback_days }}</span> day)
+  <span class="sql-ref">{% endif %}</span>
+
+<span class="sql-ref">{% endmacro %}</span>
+
+<span class="sql-cm">{# Usage in a staging model:
+   where {{ get_partition_window('event_date') }}  #}</span>
+
+
+<span class="sql-cm">{# macros/calculate_roas.sql + calculate_cac.sql
+   Reusable metric macros — one definition used in every model  #}</span>
+
+<span class="sql-ref">{% macro calculate_roas(</span>revenue_col,
+                        spend_col,
+                        decimals=<span class="sql-num">2</span>) <span class="sql-ref">%}</span>
+  <span class="sql-fn">round</span>(
+    <span class="sql-fn">cast</span>(<span class="sql-ref">{{ revenue_col }}</span> <span class="sql-kw">as</span> numeric)
+    / <span class="sql-fn">nullif</span>(<span class="sql-fn">cast</span>(<span class="sql-ref">{{ spend_col }}</span> <span class="sql-kw">as</span> numeric), <span class="sql-num">0</span>),
+    <span class="sql-ref">{{ decimals }}</span>
+  )
+<span class="sql-ref">{% endmacro %}</span>
+
+<span class="sql-ref">{% macro calculate_cac(</span>spend_col,
+                       customers_col,
+                       decimals=<span class="sql-num">2</span>) <span class="sql-ref">%}</span>
+  <span class="sql-fn">round</span>(
+    <span class="sql-fn">cast</span>(<span class="sql-ref">{{ spend_col }}</span> <span class="sql-kw">as</span> numeric)
+    / <span class="sql-fn">nullif</span>(<span class="sql-fn">cast</span>(<span class="sql-ref">{{ customers_col }}</span> <span class="sql-kw">as</span> numeric), <span class="sql-num">0</span>),
+    <span class="sql-ref">{{ decimals }}</span>
+  )
+<span class="sql-ref">{% endmacro %}</span></pre>
+        </div>
+
+        <!-- ── Partition ──────────────────────────────────────── -->
+        <div id="tab-partition" class="code-block">
+<pre><span class="sql-cm">-- stg_combined_ads.sql
+-- PARTITION DEEP DIVE: BigQuery has two partition types, each
+-- requiring a different filter syntax to trigger partition pruning.
+--
+-- Type 1 — Physical column:   table partitioned on a DATE column
+--           Filter:           WHERE event_date >= ...
+--
+-- Type 2 — Ingestion-time:    table partitioned on load timestamp
+--           Filter:           WHERE _PARTITIONDATE >= ...
+--
+-- Filtering fb_ads_raw on event_ts (a regular row column) will NOT
+-- prune ingestion-time partitions — a common and costly mistake.</span>
+
+<span class="sql-ref">{{ config(materialized = 'view') }}</span>
+
+<span class="sql-kw">with</span> google <span class="sql-kw">as</span> (
+
+  <span class="sql-kw">select</span> event_date, campaign_id,
+         impressions, clicks, cost_usd, conversions
+  <span class="sql-kw">from</span> <span class="sql-ref">{{ source('raw', 'google_ads_events') }}</span>
+  <span class="sql-kw">where</span>
+    <span class="sql-cm">-- Type 1: filter on the physical partition column</span>
+    event_date >= <span class="sql-fn">date_sub</span>(<span class="sql-fn">current_date</span>(),
+                    <span class="sql-kw">interval</span> <span class="sql-ref">{{ var('lookback_days', 90) }}</span> day)
+
+),
+
+facebook <span class="sql-kw">as</span> (
+
+  <span class="sql-kw">select</span>
+    <span class="sql-fn">date</span>(event_ts)  <span class="sql-kw">as</span> event_date,
+    ad_id           <span class="sql-kw">as</span> campaign_id,
+    reach           <span class="sql-kw">as</span> impressions,
+    link_clicks     <span class="sql-kw">as</span> clicks,
+    spend           <span class="sql-kw">as</span> cost_usd,
+    purchases       <span class="sql-kw">as</span> conversions
+  <span class="sql-kw">from</span> <span class="sql-ref">{{ source('raw', 'fb_ads_raw') }}</span>
+  <span class="sql-kw">where</span>
+    <span class="sql-cm">-- Type 2: must filter on _PARTITIONDATE pseudo-column.
+    -- Using event_ts here scans ALL partitions regardless of
+    -- the date range — identical values, completely different cost.</span>
+    _PARTITIONDATE >= <span class="sql-fn">date_sub</span>(<span class="sql-fn">current_date</span>(),
+                        <span class="sql-kw">interval</span> <span class="sql-ref">{{ var('lookback_days', 90) }}</span> day)
+
+),
+
+unioned <span class="sql-kw">as</span> (
+  <span class="sql-kw">select</span> *, <span class="sql-str">'google_ads'</span>   <span class="sql-kw">as</span> ad_platform <span class="sql-kw">from</span> google
+  <span class="sql-kw">union all</span>
+  <span class="sql-kw">select</span> *, <span class="sql-str">'facebook_ads'</span> <span class="sql-kw">as</span> ad_platform <span class="sql-kw">from</span> facebook
+)
+
+<span class="sql-kw">select</span> * <span class="sql-kw">from</span> unioned</pre>
+        </div>
+        {% endraw %}
+
+      </div>
+    </div>
+  </div>
+</section>

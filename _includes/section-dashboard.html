@@ -1,0 +1,267 @@
+<!-- DASHBOARD -->
+<section id="dashboard">
+  <div class="container">
+    <p class="section-label">Sample Dashboards</p>
+    <h2>Analytics Across Functions</h2>
+    <p class="section-sub">Six functional dashboard types built from dummy DBT data, plus a live project showing how data can be structured to tell a story and guide someone to a conclusion.</p>
+
+    <div class="dash-tab-bar">
+      <button class="dash-tab-btn active" onclick="showDash('marketing', this)">Marketing Analytics</button>
+      <button class="dash-tab-btn" onclick="showDash('segmentation', this)">Customer Segmentation</button>
+      <button class="dash-tab-btn" onclick="showDash('retention', this)">Customer Retention</button>
+      <button class="dash-tab-btn" onclick="showDash('operations', this)">Operations</button>
+      <button class="dash-tab-btn" onclick="showDash('finance', this)">Finance</button>
+      <button class="dash-tab-btn" onclick="showDash('supply', this)">Supply Chain</button>
+      <button class="dash-tab-btn" onclick="showDash('storytelling', this)">Data Storytelling</button>
+    </div>
+
+    <!-- ── 1. MARKETING ─────────────────────────────────────────── -->
+    <div class="dash-panel active" id="dash-marketing">
+      <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-label">Total Revenue (2024)</div><div class="kpi-value">$812K</div><div class="kpi-delta up">↑ 34% vs prior year</div></div>
+        <div class="kpi green"><div class="kpi-label">New Customers</div><div class="kpi-value">88</div><div class="kpi-delta up">↑ 22% YoY</div></div>
+        <div class="kpi purple"><div class="kpi-label">Avg LTV</div><div class="kpi-value">$2,140</div><div class="kpi-delta up">↑ 8% vs target</div></div>
+        <div class="kpi red"><div class="kpi-label">Blended CAC</div><div class="kpi-value">$198</div><div class="kpi-delta down">LTV:CAC = 10.8x ✓</div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Monthly Revenue & Spend</h3><div class="chart-wrap tall"><canvas id="revenueChart"></canvas></div></div>
+        <div class="chart-card"><h3>Acquisition by Channel</h3><div class="chart-wrap tall"><canvas id="channelChart"></canvas></div></div>
+      </div>
+      <div class="charts-row2">
+        <div class="chart-card"><h3>ROAS by Channel (2024)</h3><div class="chart-wrap"><canvas id="roasChart"></canvas></div></div>
+        <div class="chart-card"><h3>Acquisition Funnel</h3><div class="chart-wrap"><canvas id="funnelChart"></canvas></div></div>
+      </div>
+      <div class="table-card">
+        <h3>Top Campaigns – Q4 2024</h3>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Campaign</th><th>Platform</th><th>Spend</th><th>Conversions</th><th>CPA</th><th>ROAS</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Brand Search - Nov</td><td>Google</td><td>$2,808</td><td>94</td><td>$29.87</td><td>4.8x</td><td><span class="badge good">Top</span></td></tr>
+            <tr><td>Retargeting - Black Friday</td><td>Facebook</td><td>$1,890</td><td>28</td><td>$67.50</td><td>3.9x</td><td><span class="badge good">Top</span></td></tr>
+            <tr><td>Non-Brand Search - Nov</td><td>Google</td><td>$5,472</td><td>88</td><td>$62.18</td><td>3.6x</td><td><span class="badge good">Top</span></td></tr>
+            <tr><td>Lookalike - Q4</td><td>Facebook</td><td>$2,124</td><td>44</td><td>$48.27</td><td>3.2x</td><td><span class="badge ok">Avg</span></td></tr>
+            <tr><td>Display Remarketing - Dec</td><td>Google</td><td>$1,026</td><td>30</td><td>$34.20</td><td>2.8x</td><td><span class="badge ok">Avg</span></td></tr>
+            <tr><td>Prospecting - Cold Audience</td><td>Facebook</td><td>$2,628</td><td>20</td><td>$131.40</td><td>1.9x</td><td><span class="badge low">Review</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ── 2. CUSTOMER SEGMENTATION ──────────────────────────────── -->
+    <div class="dash-panel" id="dash-segmentation">
+      <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-label">Total Active Customers</div><div class="kpi-value">1,240</div><div class="kpi-delta up">↑ 18% YoY</div></div>
+        <div class="kpi green"><div class="kpi-label">Champions (High Value)</div><div class="kpi-value">18%</div><div class="kpi-delta up">223 customers</div></div>
+        <div class="kpi red"><div class="kpi-label">At-Risk Segment</div><div class="kpi-value">22%</div><div class="kpi-delta down">↑ 3pp vs Q3 — action needed</div></div>
+        <div class="kpi purple"><div class="kpi-label">Revenue Concentration</div><div class="kpi-value">45%</div><div class="kpi-delta up">from top 18% of customers</div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Revenue Contribution by Segment</h3><div class="chart-wrap tall"><canvas id="segRevenueChart"></canvas></div></div>
+        <div class="chart-card"><h3>Customer Count by Segment</h3><div class="chart-wrap tall"><canvas id="segSizeChart"></canvas></div></div>
+      </div>
+      <div class="charts-row2">
+        <div class="chart-card"><h3>Avg Order Value by Segment</h3><div class="chart-wrap"><canvas id="segAOVChart"></canvas></div></div>
+        <div class="chart-card"><h3>Segment Trend – Q4 (Champions vs At-Risk)</h3><div class="chart-wrap"><canvas id="segTrendChart"></canvas></div></div>
+      </div>
+      <div class="table-card">
+        <h3>Segment Summary</h3>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Segment</th><th>Customers</th><th>% Total</th><th>Avg Revenue</th><th>Avg Orders/yr</th><th>Recommended Action</th></tr></thead>
+          <tbody>
+            <tr><td>Champions</td><td>223</td><td>18%</td><td>$580</td><td>8.4</td><td><span class="badge good">Reward & Upsell</span></td></tr>
+            <tr><td>Loyal</td><td>298</td><td>24%</td><td>$320</td><td>5.1</td><td><span class="badge good">Cross-sell</span></td></tr>
+            <tr><td>Promising</td><td>260</td><td>21%</td><td>$145</td><td>2.7</td><td><span class="badge ok">Nurture</span></td></tr>
+            <tr><td>At-Risk</td><td>273</td><td>22%</td><td>$88</td><td>1.3</td><td><span class="badge low">Retain Now</span></td></tr>
+            <tr><td>Churned</td><td>186</td><td>15%</td><td>$12</td><td>0.2</td><td><span class="badge low">Win-back</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ── 3. CUSTOMER RETENTION ─────────────────────────────────── -->
+    <div class="dash-panel" id="dash-retention">
+      <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-label">M3 Retention Rate</div><div class="kpi-value">68%</div><div class="kpi-delta up">↑ 4pp vs prior cohort</div></div>
+        <div class="kpi red"><div class="kpi-label">Monthly Churn Rate</div><div class="kpi-value">4.2%</div><div class="kpi-delta down">↑ 0.3pp MoM — monitor</div></div>
+        <div class="kpi green"><div class="kpi-label">Net Revenue Retention</div><div class="kpi-value">112%</div><div class="kpi-delta up">Expansion outpacing churn</div></div>
+        <div class="kpi purple"><div class="kpi-label">Reactivated (Q4)</div><div class="kpi-value">34</div><div class="kpi-delta up">↑ 21% vs Q3</div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Cohort Retention Curves</h3><div class="chart-wrap tall"><canvas id="retCohortChart"></canvas></div></div>
+        <div class="chart-card"><h3>Monthly Churn Rate</h3><div class="chart-wrap tall"><canvas id="retChurnChart"></canvas></div></div>
+      </div>
+      <div class="charts-row2">
+        <div class="chart-card"><h3>Net Revenue Retention by Segment</h3><div class="chart-wrap"><canvas id="retNRRChart"></canvas></div></div>
+        <div class="chart-card"><h3>Monthly Active Customers</h3><div class="chart-wrap"><canvas id="retActiveChart"></canvas></div></div>
+      </div>
+      <div class="table-card">
+        <h3>Cohort Retention Summary</h3>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Cohort</th><th>Size</th><th>M1</th><th>M3</th><th>M6</th><th>M12</th><th>Cohort Revenue</th></tr></thead>
+          <tbody>
+            <tr><td>Jan 2024</td><td>68</td><td>85%</td><td>72%</td><td>61%</td><td>52%</td><td>$48K</td></tr>
+            <tr><td>Apr 2024</td><td>74</td><td>83%</td><td>69%</td><td>58%</td><td>—</td><td>$41K</td></tr>
+            <tr><td>Jul 2024</td><td>81</td><td>87%</td><td>74%</td><td>62%</td><td>—</td><td>$55K</td></tr>
+            <tr><td>Oct 2024</td><td>88</td><td>82%</td><td>70%</td><td>—</td><td>—</td><td>$39K</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ── 4. OPERATIONS ──────────────────────────────────────────── -->
+    <div class="dash-panel" id="dash-operations">
+      <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-label">Orders This Month</div><div class="kpi-value">4,280</div><div class="kpi-delta up">↑ 12% MoM</div></div>
+        <div class="kpi green"><div class="kpi-label">SLA Hit Rate</div><div class="kpi-value">94.2%</div><div class="kpi-delta up">Target: 95% — close</div></div>
+        <div class="kpi purple"><div class="kpi-label">Avg Fulfillment Time</div><div class="kpi-value">1.8 days</div><div class="kpi-delta up">↓ 0.3d vs last month</div></div>
+        <div class="kpi red"><div class="kpi-label">Open Escalations</div><div class="kpi-value">12</div><div class="kpi-delta down">3 nearing SLA breach</div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Daily Order Volume (Last 30 Days)</h3><div class="chart-wrap tall"><canvas id="opsVolumeChart"></canvas></div></div>
+        <div class="chart-card"><h3>Issue Type Breakdown</h3><div class="chart-wrap tall"><canvas id="opsIssueChart"></canvas></div></div>
+      </div>
+      <div class="charts-row2">
+        <div class="chart-card"><h3>SLA Hit Rate by Category</h3><div class="chart-wrap"><canvas id="opsSLAChart"></canvas></div></div>
+        <div class="chart-card"><h3>Avg Fulfillment Time by Warehouse</h3><div class="chart-wrap"><canvas id="opsFulfillChart"></canvas></div></div>
+      </div>
+      <div class="table-card">
+        <h3>Open Escalations</h3>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Issue Type</th><th>Open</th><th>SLA Breached</th><th>Avg Age</th><th>Priority</th></tr></thead>
+          <tbody>
+            <tr><td>Delayed Shipment</td><td>5</td><td>3</td><td>4.2 days</td><td><span class="badge low">High</span></td></tr>
+            <tr><td>Wrong Item Delivered</td><td>3</td><td>1</td><td>2.8 days</td><td><span class="badge low">High</span></td></tr>
+            <tr><td>Damaged in Transit</td><td>2</td><td>0</td><td>1.5 days</td><td><span class="badge ok">Med</span></td></tr>
+            <tr><td>Missing Item</td><td>1</td><td>0</td><td>0.8 days</td><td><span class="badge ok">Med</span></td></tr>
+            <tr><td>Other</td><td>1</td><td>0</td><td>0.5 days</td><td><span class="badge good">Low</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ── 5. FINANCE ─────────────────────────────────────────────── -->
+    <div class="dash-panel" id="dash-finance">
+      <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-label">Q4 Revenue</div><div class="kpi-value">$435K</div><div class="kpi-delta up">↑ 38% vs Q4 prior year</div></div>
+        <div class="kpi green"><div class="kpi-label">Gross Margin</div><div class="kpi-value">68.2%</div><div class="kpi-delta up">↑ 2.1pp YoY</div></div>
+        <div class="kpi purple"><div class="kpi-label">EBITDA (Q4)</div><div class="kpi-value">$113K</div><div class="kpi-delta up">26% margin</div></div>
+        <div class="kpi red"><div class="kpi-label">OpEx vs Budget</div><div class="kpi-value">−3%</div><div class="kpi-delta up">$3.8K under budget</div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Monthly Revenue vs COGS</h3><div class="chart-wrap tall"><canvas id="finPLChart"></canvas></div></div>
+        <div class="chart-card"><h3>OpEx Breakdown</h3><div class="chart-wrap tall"><canvas id="finExpChart"></canvas></div></div>
+      </div>
+      <div class="charts-row2">
+        <div class="chart-card"><h3>Budget vs Actuals by Dept</h3><div class="chart-wrap"><canvas id="finBudgetChart"></canvas></div></div>
+        <div class="chart-card"><h3>Cumulative Cash Position</h3><div class="chart-wrap"><canvas id="finCashChart"></canvas></div></div>
+      </div>
+      <div class="table-card">
+        <h3>P&L Summary – Q4 2024</h3>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Metric</th><th>Oct</th><th>Nov</th><th>Dec</th><th>Q4 Total</th><th>vs Budget</th></tr></thead>
+          <tbody>
+            <tr><td>Revenue</td><td>$112K</td><td>$168K</td><td>$155K</td><td>$435K</td><td><span class="badge good">+12%</span></td></tr>
+            <tr><td>COGS</td><td>$35K</td><td>$52K</td><td>$51K</td><td>$138K</td><td><span class="badge good">−3%</span></td></tr>
+            <tr><td>Gross Profit</td><td>$77K</td><td>$116K</td><td>$104K</td><td>$297K</td><td><span class="badge good">+18%</span></td></tr>
+            <tr><td>Total OpEx</td><td>$58K</td><td>$65K</td><td>$61K</td><td>$184K</td><td><span class="badge ok">−1%</span></td></tr>
+            <tr><td>EBITDA</td><td>$19K</td><td>$51K</td><td>$43K</td><td>$113K</td><td><span class="badge good">+31%</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ── 6. SUPPLY CHAIN ────────────────────────────────────────── -->
+    <div class="dash-panel" id="dash-supply">
+      <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-label">Avg Days of Inventory</div><div class="kpi-value">32 days</div><div class="kpi-delta up">Target: 30–45 ✓</div></div>
+        <div class="kpi green"><div class="kpi-label">Fill Rate</div><div class="kpi-value">96.4%</div><div class="kpi-delta up">↑ 1.2pp vs last month</div></div>
+        <div class="kpi red"><div class="kpi-label">Stockout SKUs</div><div class="kpi-value">8</div><div class="kpi-delta down">of 245 active SKUs</div></div>
+        <div class="kpi purple"><div class="kpi-label">On-Time Delivery</div><div class="kpi-value">91.3%</div><div class="kpi-delta down">↓ 1.8pp vs 93% target</div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Inventory Level Trend (12 Weeks)</h3><div class="chart-wrap tall"><canvas id="supInventoryChart"></canvas></div></div>
+        <div class="chart-card"><h3>Fill Rate by Category</h3><div class="chart-wrap tall"><canvas id="supFillChart"></canvas></div></div>
+      </div>
+      <div class="charts-row2">
+        <div class="chart-card"><h3>Avg Supplier Lead Time (Days)</h3><div class="chart-wrap"><canvas id="supLeadChart"></canvas></div></div>
+        <div class="chart-card"><h3>On-Time Delivery Trend</h3><div class="chart-wrap"><canvas id="supOTDChart"></canvas></div></div>
+      </div>
+      <div class="table-card">
+        <h3>Inventory Alert – Low Stock SKUs</h3>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Category</th><th>Stock (units)</th><th>Days Left</th><th>Reorder Status</th><th>Supplier</th></tr></thead>
+          <tbody>
+            <tr><td>Sports & Outdoors</td><td>420</td><td>8 days</td><td><span class="badge low">Urgent</span></td><td>SportCo</td></tr>
+            <tr><td>Apparel</td><td>850</td><td>14 days</td><td><span class="badge low">Reorder Now</span></td><td>FashionHub</td></tr>
+            <tr><td>Electronics</td><td>1,240</td><td>28 days</td><td><span class="badge ok">Reorder Soon</span></td><td>TechDist Co.</td></tr>
+            <tr><td>Beauty & Health</td><td>680</td><td>22 days</td><td><span class="badge ok">Monitor</span></td><td>BeautyWholesale</td></tr>
+            <tr><td>Home & Living</td><td>2,100</td><td>45 days</td><td><span class="badge good">Sufficient</span></td><td>HomeSupply</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ── 7. DATA STORYTELLING ──────────────────────────────────── -->
+    <div class="dash-panel" id="dash-storytelling">
+
+      <div class="story-hero-card">
+        <span class="story-live-pill">Live Project</span>
+        <div class="story-title-line">Data doesn't just describe reality — it can be structured to <span>argue a point</span>.</div>
+        <p class="story-body-text">
+          <strong style="color:var(--text)">mystoreofvalue.com</strong> is a financial analytics platform I built that tracks long-term asset performance across cryptocurrencies, commodities, and market indices.
+          But it's more than a data display — it's an argument. The site is designed to take someone who asks
+          <em>"what should I hold to protect my wealth?"</em> and walk them, step by step, through the evidence that leads to a clear, data-backed answer.
+          Every metric shown, every chart drawn, every ranking presented serves that narrative.
+        </p>
+        <div class="story-cta-row">
+          <a href="https://mystoreofvalue.com" target="_blank" class="btn btn-primary">Visit mystoreofvalue.com →</a>
+          <span class="story-url-label">Live at <a href="https://mystoreofvalue.com" target="_blank">mystoreofvalue.com</a></span>
+        </div>
+      </div>
+
+      <div class="story-points-grid">
+        <div class="story-point">
+          <div class="story-point-num">Mechanism 01</div>
+          <strong>The question leads the data</strong>
+          <p>The site opens with a question real investors ask: <em>which assets actually hold value over time?</em> Every chart and table that follows is the answer to that question — not just data for its own sake.</p>
+        </div>
+        <div class="story-point">
+          <div class="story-point-num">Mechanism 02</div>
+          <strong>Metrics chosen to persuade</strong>
+          <p>CAGR, Sharpe ratio, max drawdown, and Sortino ratio aren't shown because they exist — each one is selected because it exposes a different dimension of the argument. Risk-adjusted returns tell a much stronger story than raw gains alone.</p>
+        </div>
+        <div class="story-point">
+          <div class="story-point-num">Mechanism 03</div>
+          <strong>Rankings close the argument</strong>
+          <p>The leaderboard lets the data state the conclusion itself. Visitors don't need to be told which assets win — sorting the table by any metric makes the answer self-evident. The analyst's job is done before the user even scrolls.</p>
+        </div>
+      </div>
+
+      <div class="story-metrics-row">
+        <div class="story-metric">
+          <div class="story-metric-label">BTC — 10Y CAGR</div>
+          <div class="story-metric-value" style="color:var(--accent2)">+79%</div>
+          <div class="story-metric-sub">annualised</div>
+        </div>
+        <div class="story-metric">
+          <div class="story-metric-label">Gold — 10Y CAGR</div>
+          <div class="story-metric-value" style="color:var(--accent)">+6.4%</div>
+          <div class="story-metric-sub">annualised</div>
+        </div>
+        <div class="story-metric">
+          <div class="story-metric-label">S&P 500 — 10Y CAGR</div>
+          <div class="story-metric-value" style="color:var(--accent)">+12.5%</div>
+          <div class="story-metric-sub">annualised</div>
+        </div>
+        <div class="story-metric">
+          <div class="story-metric-label">USD Purchasing Power</div>
+          <div class="story-metric-value" style="color:var(--accent3)">−26%</div>
+          <div class="story-metric-sub">10Y cumulative loss</div>
+        </div>
+      </div>
+      <p class="story-metric-note">Sample figures from the live site — visit for current calculated values across all holding periods and assets.</p>
+
+    </div>
+
+  </div>
+</section>

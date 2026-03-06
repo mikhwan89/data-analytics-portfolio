@@ -1,0 +1,358 @@
+<!-- THOUGHTS -->
+<section id="thoughts">
+  <div class="container">
+    <p class="section-label">Perspectives</p>
+    <h2>Opinions on Data & BI</h2>
+    <p class="section-sub">Professional takes shaped by a decade of hands-on work across BI platforms, data teams, and industries. These are my honest views — not vendor endorsements.</p>
+    <div class="opinion-list">
+
+      <div class="opinion-card">
+        <h3>Why Looker Stands Out: A Data Analyst's Journey Through BI Platforms</h3>
+        <p class="opinion-preview">
+          After a decade working with Tableau, Power BI, Holistics, Looker, Domo, Mode, and QlikView in professional settings,
+          one platform consistently rises above the rest — and the reasons come down to three architectural decisions that most tools
+          still haven't figured out.
+        </p>
+        <button class="opinion-toggle" onclick="toggleOpinion('opinion-looker', this)">Read full article ↓</button>
+
+        <div class="article-body" id="opinion-looker" style="display:none;">
+
+          <h4><span class="point-num">—</span>A Diverse Toolkit</h4>
+          <p>
+            Each platform has its unique strengths, and claiming one is superior in all aspects would be inaccurate.
+            Different businesses have varying priorities — some tools excel at stunning visualizations, others at ecosystem integrations,
+            cost-effectiveness, or scalability. That said, from my perspective having worn the hats of data analyst, Head of Data, and VP of Data,
+            <strong>Looker consistently stands out</strong>, with Holistics as the sole considerable alternative.
+            This comes down to three key differentiators:
+          </p>
+
+          <h4><span class="point-num">1</span>Code-Based Data Model Layer</h4>
+          <p>
+            Looker's LookML and Holistics' AMQL are the key to many downstream benefits. The core idea is a
+            <strong>single source of truth</strong> — one governed data model layer that all dashboards draw from, ensuring
+            consistency and reliability across the organization. I don't believe this goal is achievable without a code-based approach,
+            for two reasons:
+          </p>
+          <h5>Collaboration</h5>
+          <p>
+            LookML's Git integration enables team members to develop the data model simultaneously, merge changes, and maintain a
+            clear history of who changed what and when. Without this, every analyst ends up building their own version of the data model,
+            leading to the classic problem: the same metric shows different numbers on two dashboards created by two different analysts.
+            Git solves that. Code also allows inline comments that improve cross-team understanding — something a drag-and-drop interface simply can't replicate.
+          </p>
+          <h5>Gatekeeping</h5>
+          <p>
+            Power users given contributor roles can inadvertently connect unvetted sources — an Excel file pulled in here, a personal Google Sheet there.
+            That flexibility is a recipe for accumulating unverified data sources that silently erode data accuracy.
+            Looker's code-based model makes it straightforward to gate changes through a proper review process before anything hits production,
+            the same way software engineers manage code deployments.
+          </p>
+          <p>
+            And a small but real quality-of-life point: being able to use <strong>Ctrl+C, Ctrl+V, Ctrl+F</strong> to manage your data model —
+            instead of wrestling with a mouse-driven GUI — makes day-to-day work meaningfully faster and more enjoyable.
+          </p>
+
+          <h4><span class="point-num">2</span>Data Actions</h4>
+          <p>
+            I've watched dashboard users download data, open another platform, and manually upload it again just to act on what the dashboard showed them.
+            It's a workflow that breaks the analytical loop at the worst possible moment.
+          </p>
+          <p>
+            Looker's Data Actions — with native integrations to Segment, HubSpot, SendGrid, Firebase, Facebook Ads, Google Ads, Zapier, and others —
+            eliminate this entirely. Users can trigger an action <em>directly from a dashboard row</em>: send an email to a churning customer,
+            push a segment to an ad platform, fire a notification. The analysis and the operational response happen in one place.
+          </p>
+          <p>
+            Beyond efficiency, there's a <strong>data security benefit</strong> that's often overlooked: eliminating the need for sensitive data
+            to land on employees' laptops, in email attachments, or in shared drives.
+          </p>
+
+          <h4><span class="point-num">3</span>Direct Query Only</h4>
+          <p>
+            Most platforms offer two connection modes: direct query or data extract. Looker supports only direct query —
+            and I consider this a strength, not a limitation. Here's why:
+          </p>
+          <ol>
+            <li><strong>Reproducibility.</strong> Every dashboard component is an SQL query. You can view it directly in Looker or in your database query log — making it trivial for other data team members to reproduce results in a Jupyter notebook, another tool, or a pipeline. Extract-based platforms can't offer this cleanly.</li>
+            <li><strong>No extract lag.</strong> When your ETL finishes loading new data into the warehouse, a direct-query dashboard reflects it immediately. Extract-based dashboards make you wait for the next scheduled refresh — the bigger the data, the longer the delay.</li>
+            <li><strong>No extract vs. direct confusion.</strong> In Tableau and Power BI, certain features only work in extract mode, and others only in direct query. Teams end up making compromises or building hybrid setups that are hard to maintain. Looker removes this entirely — there is only one mode.</li>
+            <li><strong>Publish changes instantly.</strong> In Tableau or Power BI, if you want to apply a second improvement right after publishing one, you may need to re-extract data and wait again. In Looker, publish and it's live immediately, every time.</li>
+            <li><strong>No wasted extract cycles.</strong> Rarely-used LookML components only consume compute when actually queried. Extract-based platforms pull and refresh all components on every schedule, even the ones nobody opens — wasting time and money at scale.</li>
+            <li><strong>No extract failures.</strong> I've personally dealt with cryptic extract failures, inconsistencies between desktop and web applications, and data gateway services crashing after a Windows server auto-update mid-refresh. None of these exist in Looker or Holistics.</li>
+          </ol>
+
+          <h4><span class="point-num">4</span>AI Readiness</h4>
+          <p>
+            This is the point that I believe will matter most over the next few years.
+            As AI becomes increasingly embedded in analytics workflows, <strong>the structure of your data model determines how much context AI can actually work with</strong>.
+          </p>
+          <p>
+            LookML and AMQL are code — plain text files that live in a Git repository. That makes them
+            <strong>natively digestible by AI</strong>. An LLM can read your entire semantic layer, understand how dimensions and measures are defined,
+            trace relationships between explores, and reason about your business logic — just as it would with any other codebase.
+            GUI-based data models from Tableau, Power BI, or Metabase are proprietary, often binary or JSON blobs, and were never designed to be
+            read by anything other than their own rendering engine. Feeding those to an AI assistant is either impossible or produces shallow results at best.
+          </p>
+          <p>
+            The Git history dimension makes this even more powerful. Because every change to a LookML or AMQL model is committed with a message,
+            an AI working with your data model doesn't just see the current state — <strong>it can access the full evolution of your data model</strong>:
+            what changed, when, why, and by whom. That context is invaluable for understanding intent behind specific metric definitions,
+            debugging unexpected results, or generating accurate data documentation automatically.
+          </p>
+          <p>
+            In contrast, if you've built your dashboards on a GUI-driven platform, that history simply doesn't exist in any structured, AI-accessible form.
+            You might have a changelog in a shared doc somewhere, but it's not connected to the model itself.
+          </p>
+          <p>
+            As AI-assisted analytics, natural language querying, and automated documentation become standard expectations rather than novelties,
+            teams running Looker or Holistics will have a structural head start.
+            The rest will be retrofitting — or rebuilding from scratch.
+          </p>
+
+          <div class="article-conclusion">
+            <p>
+              After a decade across these platforms, Looker's architecture addresses the most persistent pain points in BI at an organizational level —
+              not just for individual analysts, but for teams managing shared data models at scale.
+              The sole strong contender is <strong>Holistics</strong> with AMQL, and I'm watching <strong>Malloy</strong> as a promising open-source alternative.
+              Tableau and Power BI, in my view, are structurally left behind on this front — implementing a proper code-based data model layer
+              would require them to significantly rearchitect their core product.
+            </p>
+            <p>
+              Yes, this approach introduces a learning curve and reduces some flexibility. But it's a trade-off worth making for
+              the consistency, reliability, and governance that serious data organizations need.
+            </p>
+          </div>
+
+          <div class="article-tags">
+            <span class="tag blue">Looker</span>
+            <span class="tag blue">LookML</span>
+            <span class="tag blue">Holistics</span>
+            <span class="tag blue">BI Architecture</span>
+            <span class="tag">Tableau</span>
+            <span class="tag">Power BI</span>
+            <span class="tag">Data Governance</span>
+            <span class="tag">Direct Query</span>
+            <span class="tag blue">AI Readiness</span>
+            <span class="tag">Semantic Layer</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="opinion-card">
+        <h3>The Modern Data Stack: Why BigQuery + DBT + Looker Is the Architecture I Keep Coming Back To</h3>
+        <p class="opinion-preview">
+          The modern data stack isn't just a buzzword — it's a genuine architectural shift in how data teams build and operate.
+          After working across traditional warehouses, monolithic ETL pipelines, and legacy BI tools, I've settled on a view:
+          BigQuery, DBT, and Looker (or Holistics.io) represent the cleanest, most scalable pattern available today — and the reasons
+          are structural, not cosmetic.
+        </p>
+        <button class="opinion-toggle" onclick="toggleOpinion('opinion-mds', this)">Read full article ↓</button>
+
+        <div class="article-body" id="opinion-mds" style="display:none;">
+
+          <h4><span class="point-num">—</span>The Stack in One Sentence</h4>
+          <p>
+            <strong>BigQuery stores and scales your data. DBT transforms it into trusted, documented models. Looker or Holistics turns those models
+            into governed, self-service analytics.</strong> Each layer does one thing well. Each layer is replaceable independently.
+            That modularity is the whole point.
+          </p>
+          <p>
+            Most data stacks I've inherited were built differently: a monolithic ETL tool that both moved and transformed data,
+            a BI tool that also stored its own extract of the data, and no clear separation between raw source, business logic, and presentation.
+            Debugging a metric discrepancy meant tracing logic across three tools in three different languages. With the modern stack,
+            every layer has a clear owner, a clear language, and a clear responsibility.
+          </p>
+
+          <h4><span class="point-num">1</span>BigQuery: The Warehouse That Scales With You</h4>
+          <p>
+            BigQuery sits at the foundation. It's a fully managed, serverless data warehouse — meaning no cluster provisioning,
+            no index tuning, no capacity planning guesswork. You query terabytes the same way you query megabytes.
+          </p>
+          <p>
+            The separation of compute and storage is key. You pay for the storage you use and the queries you run — not for a cluster
+            that idles overnight. For most analytics workloads, this is dramatically more cost-efficient than traditional provisioned warehouses.
+          </p>
+          <p>
+            BigQuery also integrates natively with the rest of the GCP ecosystem: Pub/Sub for streaming ingestion, Dataflow for complex pipelines,
+            Looker for direct-query BI, and Vertex AI for ML workflows. If your organization is building toward a data-driven future on GCP,
+            BigQuery is the obvious center of gravity. But the arguments for BigQuery as the warehouse layer generalize to Snowflake or Redshift —
+            the modern data stack pattern holds regardless of which managed warehouse you pick.
+          </p>
+
+          <h4><span class="point-num">2</span>DBT: Bringing Software Engineering to SQL</h4>
+          <p>
+            DBT is where the paradigm shift really becomes visible. Before DBT, SQL transformations lived in stored procedures,
+            inside ETL tools, in ad-hoc scripts, or — most commonly — spread across all three with no coordination. DBT introduces
+            a structured, version-controlled, testable approach to SQL that data engineers had been asking for since the beginning.
+          </p>
+          <h5>One Language, One Place</h5>
+          <p>
+            Every transformation is a <code>.sql</code> file. Your raw source lands in the warehouse, and DBT transforms it in layers —
+            staging models clean and standardize, intermediate models apply business logic, mart models produce BI-ready tables.
+            Anyone on the team can open a model file and immediately understand what it does. There's no proprietary GUI to learn,
+            no drag-and-drop visual you have to reverse-engineer.
+          </p>
+          <h5>Tests as First-Class Citizens</h5>
+          <p>
+            DBT treats data quality tests the same way software engineers treat unit tests: they're built into the project, not an afterthought.
+            You define that a customer ID must be unique, that revenue must never be null, that channel must be one of a set of known values —
+            and DBT enforces those assertions on every run. When something breaks upstream, you catch it at the transformation layer,
+            not when a confused stakeholder asks why two dashboards disagree.
+          </p>
+          <h5>Documentation That Doesn't Rot</h5>
+          <p>
+            DBT generates a full data catalog from the same files that define your models. Column descriptions, lineage graphs, test coverage —
+            all maintained alongside the transformation code. Contrast this with every other documentation approach I've seen: a Confluence page
+            nobody updates, a spreadsheet with a "last updated: 2021" header, or simply nothing. DBT documentation is <em>co-located with the logic</em>,
+            so it either gets updated or the model doesn't merge.
+          </p>
+
+          <h4><span class="point-num">3</span>Looker (or Holistics): The Governed Semantic Layer</h4>
+          <p>
+            DBT gives you clean, tested tables in your warehouse. The final layer is the semantic model — a single definition of your business
+            metrics that every dashboard and ad-hoc query draws from. This is where Looker's LookML and Holistics' AMQL come in.
+          </p>
+          <p>
+            The core problem they solve: even with clean DBT mart tables, if two analysts write their own SQL queries against those tables,
+            they'll eventually define <code>revenue</code> slightly differently. One includes refunds. One doesn't. The metric diverges.
+            A governed semantic layer forces a single, auditable definition that everyone queries through — not around.
+          </p>
+          <p>
+            This is also why I believe <strong>Looker and Holistics.io are genuinely interchangeable</strong> in this stack.
+            Both treat the semantic layer as code — LookML for Looker, AMQL for Holistics. Both support Git-based workflows.
+            Both connect via direct query to the warehouse, not via data extract.
+            The philosophy is identical: define your metrics once, in code, in version control, and serve them to every consumer.
+          </p>
+          <p>
+            The choice between them often comes down to scale and budget. Looker is enterprise-grade, built for large organizations with complex
+            permission hierarchies and a heavy emphasis on data governance. Holistics is leaner, faster to set up, and more accessible for
+            smaller teams — while still offering the same code-based semantic layer that makes it a serious platform.
+            Either works. The architecture is the same.
+          </p>
+
+          <h4><span class="point-num">4</span>Why the Layers Fit Together So Well</h4>
+          <p>
+            The stack isn't just a collection of good tools — it's a coherent design. Each layer's output is the next layer's input,
+            and the handoffs are clean:
+          </p>
+          <ol>
+            <li><strong>Ingestion tools</strong> (Fivetran, Supermetrics, Airbyte) load raw data into BigQuery. No transformation yet — just raw source fidelity.</li>
+            <li><strong>DBT</strong> transforms raw data into mart tables: clean, tested, documented, with a full lineage graph from source to mart.</li>
+            <li><strong>Looker or Holistics</strong> connects directly to those mart tables via the semantic layer — adding business metric definitions, row-level security, and self-service exploration on top of already-trusted data.</li>
+          </ol>
+          <p>
+            Critically, every layer is independently replaceable. Switch from Fivetran to Airbyte — your DBT models don't change.
+            Switch from BigQuery to Snowflake — your LookML connection string changes, your business logic doesn't.
+            Switch from Looker to Holistics — your mart tables stay exactly the same. This is what a well-designed stack looks like:
+            <em>changes at one layer don't cascade unpredictably into other layers</em>.
+          </p>
+          <p>
+            There's also a cultural benefit that's easy to overlook. When SQL transformations live in Git (DBT) and the semantic layer
+            lives in Git (LookML/AMQL), the entire analytics codebase is reviewable, versionable, and deployable the same way
+            application code is. Data engineers and analytics engineers speak the same language. Pull requests for metric changes
+            go through the same review process as production code. That discipline compounds over time — it's the difference between
+            a data team that operates like a software team and one that operates like a spreadsheet team.
+          </p>
+
+          <div class="article-conclusion">
+            <p>
+              The modern data stack isn't the cheapest option, and it's not the simplest to set up. It requires a team willing to treat
+              data work as engineering work — with version control, testing, documentation, and code review as non-negotiables.
+            </p>
+            <p>
+              But once it's in place, the return is substantial: faster iteration, fewer metric disputes, cleaner handoffs between roles,
+              and a foundation that scales with your data volume and team size without a rewrite.
+              BigQuery handles the scale. DBT handles the logic. Looker or Holistics handles the governance.
+              That's the stack — and I haven't seen a more coherent alternative for organizations serious about data.
+            </p>
+          </div>
+
+          <div class="article-tags">
+            <span class="tag blue">BigQuery</span>
+            <span class="tag blue">DBT</span>
+            <span class="tag blue">Looker</span>
+            <span class="tag blue">Holistics</span>
+            <span class="tag blue">Modern Data Stack</span>
+            <span class="tag">LookML</span>
+            <span class="tag">AMQL</span>
+            <span class="tag">Data Warehouse</span>
+            <span class="tag">Semantic Layer</span>
+            <span class="tag">Data Engineering</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="opinion-card">
+        <h3>Claude Code Gave Me the Same Feeling Tableau Did 10 Years Ago</h3>
+        <p class="opinion-preview">
+          The more I use Claude Code, the more it reminds me of the feeling I had when I first used Tableau a decade ago.
+          Both lowered the barrier to something previously gated behind technical expertise — and both revealed that the
+          foundation you built before still matters more than the tool itself.
+        </p>
+        <button class="opinion-toggle" onclick="toggleOpinion('opinion-claudecode', this)">Read full article ↓</button>
+
+        <div class="article-body" id="opinion-claudecode" style="display:none;">
+
+          <h4><span class="point-num">—</span>A Familiar Feeling</h4>
+          <p>
+            The more I use Claude Code, the more it reminds me of the feeling I had when I first used Tableau 10 years ago.
+            Both lowered the barrier to something that was previously gated behind technical expertise. Tableau allowed analysts
+            without a CS background to build professional dashboards that once required a developer. Claude Code allows people to
+            ship things that once required a programmer.
+          </p>
+
+          <h4><span class="point-num">1</span>The Foundation Still Matters</h4>
+          <p>
+            But here's what I've also observed — just as with BI tools, the foundation still matters.
+          </p>
+          <p>
+            The analyst who worked through Excel beyond just formulas — actually using pivot tables, Power Pivot, VBA,
+            connecting spreadsheets to databases like MS Access — picked up Tableau and Power BI faster than most, and did
+            significantly more with it. The tools amplified what they already understood, not replaced it.
+          </p>
+          <p>
+            The same dynamic is playing out with AI. Systems thinking, architectural intuition, knowing how components fit together —
+            these still translate into a tangible edge when vibe coding. AI doesn't eliminate the advantage of strong fundamentals;
+            it just shifts where that advantage surfaces.
+          </p>
+
+          <h4><span class="point-num">2</span>There Is a Natural Progression</h4>
+          <p>
+            There's also a natural progression in both domains.
+          </p>
+          <p>
+            In BI: Looker Studio → Tableau/Power BI → Looker/Holistics (as they require a code-based data model layer).
+          </p>
+          <p>
+            In AI: ChatGPT → Perplexity → Claude → Claude Code → Claude API/Openclaw.
+          </p>
+          <p>
+            The ceiling keeps rising with each step. Those who follow the progression — rather than staying at the entry point —
+            compound their capability over time.
+          </p>
+
+          <h4><span class="point-num">3</span>Democratization, Again</h4>
+          <p>
+            BI platforms enabled data democratization — putting analytical capability in the hands of people who weren't data engineers.
+            AI tools are enabling creation democratization — putting the ability to build software in the hands of people who aren't programmers.
+          </p>
+          <p>
+            The underlying dynamic is the same. The domain has simply changed.
+          </p>
+
+          <div class="article-tags">
+            <span class="tag blue">Claude Code</span>
+            <span class="tag blue">AI Tools</span>
+            <span class="tag blue">Vibe Coding</span>
+            <span class="tag">Tableau</span>
+            <span class="tag">Power BI</span>
+            <span class="tag">BI Tools</span>
+            <span class="tag">Data Democratization</span>
+            <span class="tag blue">Fundamentals</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
