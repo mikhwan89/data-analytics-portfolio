@@ -89,20 +89,29 @@
     .btn-outline { background: transparent; border-color: var(--border); color: var(--text); }
     .btn-outline:hover { border-color: var(--accent); text-decoration: none; }
 
-    /* ===== CAREER ===== */
+    /* ===== CAREER TIMELINE ===== */
     #career { background: var(--bg2); border-bottom: 1px solid var(--border); }
-    .career-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .career-item {
-      background: var(--bg3); border: 1px solid var(--border);
-      border-left: 3px solid var(--border);
-      border-radius: var(--radius); padding: 18px 20px;
-      transition: border-left-color .2s, transform .2s;
+    .career-timeline { position: relative; padding-left: 36px; max-width: 680px; }
+    .career-timeline::before {
+      content: ''; position: absolute; left: 6px; top: 8px; bottom: 0;
+      width: 2px; background: var(--border);
     }
-    .career-item:hover { border-left-color: var(--accent); transform: translateY(-1px); }
-    .career-item.current { border-left-color: var(--accent2); }
-    .career-dates { font-size: 11px; color: var(--text-muted); font-family: 'SF Mono', monospace; margin-bottom: 6px; }
+    .career-entry { position: relative; margin-bottom: 36px; }
+    .career-entry:last-child { margin-bottom: 0; }
+    .career-dot {
+      position: absolute; left: -33px; top: 5px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--bg2); border: 2px solid var(--border);
+      transition: border-color .2s;
+    }
+    .career-entry.current .career-dot {
+      border-color: var(--accent2);
+      box-shadow: 0 0 0 3px rgba(63,185,80,0.15);
+    }
+    .career-entry:hover .career-dot { border-color: var(--accent); }
+    .career-dates { font-size: 11px; color: var(--text-muted); font-family: 'SF Mono', monospace; margin-bottom: 5px; }
     .career-company { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
-    .career-role { font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 10px; }
+    .career-role { font-size: 13px; color: var(--text-muted); line-height: 1.4; margin-bottom: 8px; }
     .career-sector {
       display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 4px;
       background: var(--bg); border: 1px solid var(--border); color: var(--text-muted);
@@ -422,7 +431,6 @@
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 900px) {
-      .career-grid { grid-template-columns: 1fr 1fr; }
       .skills-grid { grid-template-columns: 1fr 1fr; }
       .kpi-row { grid-template-columns: 1fr 1fr; }
       .charts-grid { grid-template-columns: 1fr; }
@@ -434,7 +442,6 @@
       .container { padding: 0 16px; }
       section { padding: 56px 0; }
       .skills-grid { grid-template-columns: 1fr; }
-      .career-grid { grid-template-columns: 1fr; }
       .nav-links { display: none; }
       h1 { font-size: 30px; letter-spacing: -1px; }
       h2 { font-size: 24px; }
@@ -1596,58 +1603,66 @@ unioned <span class="sql-kw">as</span> (
     <p class="section-label">Experience</p>
     <h2>Career</h2>
     <p class="section-sub">Data leadership roles across Southeast Asia's most prominent tech and startup companies — from market research to building analytics teams from scratch.</p>
-    <div class="career-grid">
+    <div class="career-timeline">
 
-      <div class="career-item current">
+      <div class="career-entry current">
+        <div class="career-dot"></div>
         <div class="career-dates">Jan 2024 – Present</div>
         <div class="career-company">CAMP Investment Technologies</div>
-        <div class="career-role">VP of Data & Strategy</div>
+        <div class="career-role">VP of Data &amp; Strategy</div>
         <span class="career-sector">Fintech · Investment</span>
       </div>
 
-      <div class="career-item">
+      <div class="career-entry">
+        <div class="career-dot"></div>
         <div class="career-dates">Jan 2022 – Dec 2023</div>
         <div class="career-company">Tokenomy</div>
         <div class="career-role">Head of Analytics → VP of Growth</div>
         <span class="career-sector">Crypto · Web3</span>
       </div>
 
-      <div class="career-item">
+      <div class="career-entry">
+        <div class="career-dot"></div>
         <div class="career-dates">Jun 2021 – Dec 2021</div>
         <div class="career-company">Grab</div>
         <div class="career-role">Head of Strategic Planning, Grabmart</div>
         <span class="career-sector">Ride-hailing · Super App</span>
       </div>
 
-      <div class="career-item">
+      <div class="career-entry">
+        <div class="career-dot"></div>
         <div class="career-dates">Aug 2019 – Jun 2021</div>
         <div class="career-company">LinkAja</div>
-        <div class="career-role">Head of Data Analytics & BI Group</div>
+        <div class="career-role">Head of Data Analytics &amp; BI Group</div>
         <span class="career-sector">Fintech · Digital Payments</span>
       </div>
 
-      <div class="career-item">
+      <div class="career-entry">
+        <div class="career-dot"></div>
         <div class="career-dates">Jun 2017 – Aug 2019</div>
         <div class="career-company">Grab</div>
-        <div class="career-role">Country Lead Business Analytics → Acting Head of Economics & Analytics</div>
+        <div class="career-role">Country Lead Business Analytics → Acting Head of Economics &amp; Analytics</div>
         <span class="career-sector">Ride-hailing · Super App</span>
       </div>
 
-      <div class="career-item">
+      <div class="career-entry">
+        <div class="career-dot"></div>
         <div class="career-dates">Jan 2015 – Dec 2016</div>
         <div class="career-company">Alfacart</div>
-        <div class="career-role">Head of BI & Data Management</div>
+        <div class="career-role">Head of BI &amp; Data Management</div>
         <span class="career-sector">E-commerce · Retail</span>
       </div>
 
-      <div class="career-item">
+      <div class="career-entry">
+        <div class="career-dot"></div>
         <div class="career-dates">Apr 2014 – Dec 2014</div>
         <div class="career-company">Lazada Indonesia</div>
-        <div class="career-role">Business Planner & Analyst</div>
+        <div class="career-role">Business Planner &amp; Analyst</div>
         <span class="career-sector">E-commerce · Marketplace</span>
       </div>
 
-      <div class="career-item">
+      <div class="career-entry">
+        <div class="career-dot"></div>
         <div class="career-dates">Feb 2011 – Apr 2014</div>
         <div class="career-company">IDC</div>
         <div class="career-role">Market Analyst</div>
