@@ -1,0 +1,354 @@
+<!-- DATA ACTIONS & INTEGRATION -->
+<section id="actions">
+  <div class="container">
+    <p class="section-label">Data Actions & Integration</p>
+    <h2>From Insight to Action — Without Leaving the Dashboard</h2>
+    <p class="section-sub">Looker's Data Actions and webhook-based integrations let analysts trigger real-world changes directly from a dashboard row — no CSV download, no manual re-upload, no sensitive data landing on a laptop.</p>
+
+    <div class="dbt-layout">
+
+      <!-- Left: Flow diagrams -->
+      <div>
+        <div class="dag-wrap">
+          <div class="dag-title">Data Action Flow</div>
+          <div class="dag-layers">
+            <div class="dag-layer">
+              <div class="layer-label mart">Warehouse Mart Tables</div>
+              <div class="layer-nodes">
+                <span class="dag-node mart">mart_churn_risk</span>
+                <span class="dag-node mart">mart_leads_scored</span>
+                <span class="dag-node mart">mart_campaign_perf</span>
+              </div>
+            </div>
+            <div class="dag-arrow">↓</div>
+            <div class="dag-layer">
+              <div class="layer-label int">BI Dashboard</div>
+              <div class="layer-nodes">
+                <span class="dag-node int">Dashboard Row<span class="dag-badge">direct query</span></span>
+              </div>
+            </div>
+            <div class="dag-arrow">↓</div>
+            <div class="dag-layer">
+              <div class="layer-label action-label">One-Click Data Action</div>
+              <div class="layer-nodes">
+                <span class="dag-node trigger">Trigger<span class="dag-badge">no export</span></span>
+              </div>
+            </div>
+            <div class="dag-arrow">↓</div>
+            <div class="dag-layer">
+              <div class="layer-label stg">CRM &amp; Marketing Platforms</div>
+              <div class="layer-nodes">
+                <span class="dag-node crm">Salesforce</span>
+                <span class="dag-node crm">HubSpot</span>
+                <span class="dag-node mkt-tool">Marketo</span>
+                <span class="dag-node mkt-tool">Facebook Ads</span>
+                <span class="dag-node mkt-tool">Google Ads</span>
+                <span class="dag-node notify">SendGrid</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dag-wrap" style="margin-top: 20px;">
+          <div class="dag-title">Alert &amp; Block Flow</div>
+          <div class="dag-layers">
+            <div class="dag-layer">
+              <div class="layer-label src">Scheduled Metric Check</div>
+              <div class="layer-nodes">
+                <span class="dag-node raw">Daily dbt Run<span class="dag-badge">post-hook</span></span>
+                <span class="dag-node raw">Anomaly Check</span>
+              </div>
+            </div>
+            <div class="dag-arrow">↓</div>
+            <div class="dag-layer">
+              <div class="layer-label int">Condition Evaluation</div>
+              <div class="layer-nodes">
+                <span class="dag-node int">Threshold Crossed?</span>
+              </div>
+            </div>
+            <div class="dag-arrow">↓</div>
+            <div class="dag-layer">
+              <div class="action-branch-labels">
+                <span class="branch-label alert">Alert</span>
+                <span class="branch-label block">Block / Pause</span>
+              </div>
+              <div class="layer-nodes">
+                <span class="dag-node notify">Slack</span>
+                <span class="dag-node notify">Email</span>
+                <span class="dag-node notify">PagerDuty</span>
+                <span class="dag-node block">Pause Campaign</span>
+                <span class="dag-node block">Block Billing</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-security-note">
+          <strong>Data never leaves the warehouse</strong>
+          <p>No CSV attachments, no shared drives, no sensitive records on employee laptops — every action is a governed API call from a sanctioned system to another.</p>
+        </div>
+      </div>
+
+      <!-- Right: Integration code tabs -->
+      <div>
+        <div class="code-tabs">
+          <button class="tab-btn action-tab-btn active" onclick="showActionTab('salesforce')">Salesforce</button>
+          <button class="tab-btn action-tab-btn" onclick="showActionTab('hubspot')">HubSpot</button>
+          <button class="tab-btn action-tab-btn" onclick="showActionTab('marketo')">Marketo</button>
+          <button class="tab-btn action-tab-btn" onclick="showActionTab('slack')">Slack Alert</button>
+          <button class="tab-btn action-tab-btn" onclick="showActionTab('autopause')">Auto-Pause</button>
+        </div>
+
+        {% raw %}
+        <!-- ── Salesforce ──────────────────────────────────────────── -->
+        <div id="action-tab-salesforce" class="code-block action-code-block active">
+<pre><span class="sql-cm">{# LookML — churn_risk.explore.lkml
+   Analyst spots a churn-risk customer, clicks the action,
+   picks a due date. Zapier/n8n receives the webhook payload
+   and creates a Salesforce follow-up task for the account manager.  #}</span>
+
+<span class="sql-fn">dimension</span>: customer_id {
+  <span class="sql-kw">type</span>:  string
+  <span class="sql-kw">sql</span>:   ${TABLE}.customer_id ;;
+
+  <span class="sql-fn">action</span>: {
+    <span class="sql-kw">label</span>: <span class="sql-str">"Create Salesforce Task"</span>
+    <span class="sql-kw">url</span>:   <span class="sql-ref">"https://hooks.zapier.com/hooks/catch/xxx/salesforce-task"</span>
+
+    <span class="sql-fn">form_param</span>: {
+      <span class="sql-kw">name</span>:    <span class="sql-str">"subject"</span>
+      <span class="sql-kw">label</span>:   <span class="sql-str">"Task subject"</span>
+      <span class="sql-kw">default</span>: <span class="sql-str">"Follow up — Churn Risk"</span>
+    }
+    <span class="sql-fn">form_param</span>: {
+      <span class="sql-kw">name</span>:  <span class="sql-str">"due_in_days"</span>
+      <span class="sql-kw">label</span>: <span class="sql-str">"Due in"</span>
+      <span class="sql-kw">type</span>:  select
+      <span class="sql-fn">option</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"1"</span>  <span class="sql-kw">label</span>: <span class="sql-str">"Tomorrow"</span>  }
+      <span class="sql-fn">option</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"3"</span>  <span class="sql-kw">label</span>: <span class="sql-str">"3 days"</span>    }
+      <span class="sql-fn">option</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"7"</span>  <span class="sql-kw">label</span>: <span class="sql-str">"Next week"</span> }
+    }
+
+    <span class="sql-fn">param</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"customer_id"</span>  <span class="sql-kw">value</span>: <span class="sql-ref">"{{ churn_risk.customer_id._value }}"</span>           }
+    <span class="sql-fn">param</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"churn_score"</span>   <span class="sql-kw">value</span>: <span class="sql-ref">"{{ churn_risk.churn_score._value }}"</span>            }
+    <span class="sql-fn">param</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"owner_email"</span>   <span class="sql-kw">value</span>: <span class="sql-ref">"{{ churn_risk.account_manager_email._value }}"</span>  }
+  }
+}
+
+<span class="sql-cm">{# Webhook payload:
+   { "customer_id": "CUST-0042", "churn_score": "87",
+     "owner_email": "sarah@company.com",
+     "subject": "Follow up — Churn Risk", "due_in_days": "3" }
+
+   n8n then calls Salesforce REST API:
+   POST /services/data/v59.0/sobjects/Task
+   → OwnerId: lookup_user(owner_email)
+   → WhoId:   lookup_contact(customer_id)
+   → Priority: "High", ActivityDate: today + due_in_days  #}</span></pre>
+        </div>
+
+        <!-- ── HubSpot ─────────────────────────────────────────────── -->
+        <div id="action-tab-hubspot" class="code-block action-code-block">
+<pre><span class="sql-cm">{# LookML — leads.explore.lkml
+   From a lead-scoring dashboard, push a qualified lead into
+   the HubSpot sales pipeline and assign to a rep — one click.  #}</span>
+
+<span class="sql-fn">dimension</span>: lead_id {
+  <span class="sql-kw">type</span>: string
+  <span class="sql-kw">sql</span>:  ${TABLE}.lead_id ;;
+
+  <span class="sql-fn">action</span>: {
+    <span class="sql-kw">label</span>: <span class="sql-str">"Push to HubSpot Pipeline"</span>
+    <span class="sql-kw">url</span>:   <span class="sql-ref">"https://hooks.zapier.com/hooks/catch/xxx/hubspot-lead"</span>
+
+    <span class="sql-fn">form_param</span>: {
+      <span class="sql-kw">name</span>:  <span class="sql-str">"pipeline_stage"</span>
+      <span class="sql-kw">label</span>: <span class="sql-str">"Pipeline Stage"</span>
+      <span class="sql-kw">type</span>:  select
+      <span class="sql-fn">option</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"appointmentscheduled"</span>   <span class="sql-kw">label</span>: <span class="sql-str">"Demo Scheduled"</span>  }
+      <span class="sql-fn">option</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"qualifiedtobuy"</span>         <span class="sql-kw">label</span>: <span class="sql-str">"Qualified"</span>        }
+      <span class="sql-fn">option</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"presentationscheduled"</span>  <span class="sql-kw">label</span>: <span class="sql-str">"Proposal Sent"</span>   }
+    }
+    <span class="sql-fn">form_param</span>: {
+      <span class="sql-kw">name</span>:  <span class="sql-str">"assign_to"</span>
+      <span class="sql-kw">label</span>: <span class="sql-str">"Assign to rep (email)"</span>
+      <span class="sql-kw">type</span>:  string
+    }
+
+    <span class="sql-fn">param</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"hubspot_contact_id"</span>  <span class="sql-kw">value</span>: <span class="sql-ref">"{{ leads.hubspot_contact_id._value }}"</span>        }
+    <span class="sql-fn">param</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"lead_score"</span>          <span class="sql-kw">value</span>: <span class="sql-ref">"{{ leads.lead_score._value }}"</span>                }
+    <span class="sql-fn">param</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"top_channel"</span>         <span class="sql-kw">value</span>: <span class="sql-ref">"{{ leads.top_acquisition_channel._value }}"</span>   }
+  }
+}
+
+<span class="sql-cm">{# n8n calls HubSpot API:
+   PATCH /crm/v3/objects/contacts/{hubspot_contact_id}
+   body: {
+     "properties": {
+       "lifecyclestage":   "salesqualifiedlead",
+       "hs_lead_status":   "IN_PROGRESS",
+       "hubspot_owner_id": lookup_owner(assign_to)
+     }
+   }
+   Then POST /crm/v3/objects/deals  →  creates deal in pipeline_stage  #}</span></pre>
+        </div>
+
+        <!-- ── Marketo ─────────────────────────────────────────────── -->
+        <div id="action-tab-marketo" class="code-block action-code-block">
+<pre><span class="sql-cm">{# LookML — engagement.explore.lkml
+   From a campaign engagement dashboard, enroll a contact
+   in a Marketo nurture program — directly from the row.
+   No marketing ops ticket. No spreadsheet handoff.  #}</span>
+
+<span class="sql-fn">dimension</span>: contact_email {
+  <span class="sql-kw">type</span>: string
+  <span class="sql-kw">sql</span>:  ${TABLE}.contact_email ;;
+
+  <span class="sql-fn">action</span>: {
+    <span class="sql-kw">label</span>: <span class="sql-str">"Enroll in Nurture Sequence"</span>
+    <span class="sql-kw">url</span>:   <span class="sql-ref">"https://hooks.zapier.com/hooks/catch/xxx/marketo-enroll"</span>
+
+    <span class="sql-fn">form_param</span>: {
+      <span class="sql-kw">name</span>:  <span class="sql-str">"program"</span>
+      <span class="sql-kw">label</span>: <span class="sql-str">"Nurture Program"</span>
+      <span class="sql-kw">type</span>:  select
+      <span class="sql-fn">option</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"churning_winback"</span>      <span class="sql-kw">label</span>: <span class="sql-str">"Win-Back (Churn Risk)"</span>     }
+      <span class="sql-fn">option</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"cold_lead_reactivation"</span> <span class="sql-kw">label</span>: <span class="sql-str">"Reactivation (Cold Lead)"</span>  }
+      <span class="sql-fn">option</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"trial_conversion"</span>      <span class="sql-kw">label</span>: <span class="sql-str">"Trial → Paid Conversion"</span>   }
+      <span class="sql-fn">option</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"high_intent_fast_track"</span> <span class="sql-kw">label</span>: <span class="sql-str">"High-Intent Fast Track"</span>    }
+    }
+
+    <span class="sql-fn">param</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"marketo_lead_id"</span>  <span class="sql-kw">value</span>: <span class="sql-ref">"{{ engagement.marketo_lead_id._value }}"</span>  }
+    <span class="sql-fn">param</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"lead_score"</span>       <span class="sql-kw">value</span>: <span class="sql-ref">"{{ engagement.lead_score._value }}"</span>        }
+    <span class="sql-fn">param</span>: { <span class="sql-kw">name</span>: <span class="sql-str">"trigger_source"</span>   <span class="sql-kw">value</span>: <span class="sql-str">"looker_engagement_dashboard"</span>              }
+  }
+}
+
+<span class="sql-cm">{# Marketo REST API call:
+   POST /rest/v1/leads/programs/{programId}/status.json
+   body: { "input": [{ "leadId": marketo_lead_id, "status": "Enrolled" }] }
+
+   Marketo fires the program's email cadence from here —
+   fully automated, zero manual handoff.  #}</span></pre>
+        </div>
+
+        <!-- ── Slack Alert ────────────────────────────────────────── -->
+        <div id="action-tab-slack" class="code-block action-code-block">
+<pre><span class="sql-cm"># dbt/analyses/alerts/marketing_thresholds.yml
+# Post-run hook: evaluates KPIs after the daily mart build.
+# Fires Slack alerts when metrics cross configured thresholds.
+# Set SLACK_WEBHOOK_MARKETING_OPS in dbt Cloud env vars.</span>
+
+<span class="sql-kw">version</span>: <span class="sql-num">2</span>
+
+<span class="sql-kw">alerts</span>:
+
+  - <span class="sql-kw">name</span>: <span class="sql-str">cac_spike</span>
+    <span class="sql-kw">description</span>: <span class="sql-str">CAC exceeds 2× the 30-day rolling average</span>
+    <span class="sql-kw">model</span>: <span class="sql-str">mart_campaign_performance</span>
+    <span class="sql-kw">schedule</span>: <span class="sql-str">"0 9 * * *"</span>   <span class="sql-cm"># 09:00 daily, after dbt run</span>
+    <span class="sql-kw">condition</span>:
+      <span class="sql-kw">sql</span>: <span class="sql-ref">|</span>
+        <span class="sql-ref">select</span> channel, cac_usd,
+               <span class="sql-ref">avg</span>(cac_usd) <span class="sql-ref">over</span> (
+                 <span class="sql-ref">order by</span> date_month
+                 <span class="sql-ref">rows between</span> <span class="sql-num">29</span> preceding <span class="sql-ref">and</span> current row
+               ) <span class="sql-ref">as</span> cac_30d_avg
+        <span class="sql-ref">from</span> mart_campaign_performance
+        <span class="sql-ref">where</span> date_month = date_trunc(current_date(), month)
+          <span class="sql-ref">and</span> cac_usd &gt; cac_30d_avg * <span class="sql-num">2.0</span>
+    <span class="sql-kw">channels</span>:
+      <span class="sql-kw">slack</span>:
+        <span class="sql-kw">webhook_env</span>: <span class="sql-str">SLACK_WEBHOOK_MARKETING_OPS</span>
+        <span class="sql-kw">message</span>: <span class="sql-ref">|</span>
+          <span class="sql-str">:warning: *CAC Spike — {{ channel }}*</span>
+          <span class="sql-str">CAC today:   *${{ cac_usd | round(0) }}*</span>
+          <span class="sql-str">30-day avg:  ${{ cac_30d_avg | round(0) }}</span>
+          <span class="sql-str">Ratio:       {{ (cac_usd / cac_30d_avg) | round(1) }}×</span>
+
+  - <span class="sql-kw">name</span>: <span class="sql-str">roas_floor_breach</span>
+    <span class="sql-kw">description</span>: <span class="sql-str">ROAS drops below 1.5× on any active channel</span>
+    <span class="sql-kw">model</span>: <span class="sql-str">mart_campaign_performance</span>
+    <span class="sql-kw">condition</span>:
+      <span class="sql-kw">sql</span>: <span class="sql-ref">|</span>
+        <span class="sql-ref">select</span> channel, roas, spend_usd
+        <span class="sql-ref">from</span> mart_campaign_performance
+        <span class="sql-ref">where</span> date_month = date_trunc(current_date(), month)
+          <span class="sql-ref">and</span> roas &lt; <span class="sql-num">1.5</span> <span class="sql-ref">and</span> spend_usd &gt; <span class="sql-num">500</span>
+    <span class="sql-kw">channels</span>:
+      <span class="sql-kw">slack</span>:
+        <span class="sql-kw">webhook_env</span>: <span class="sql-str">SLACK_WEBHOOK_MARKETING_OPS</span>
+        <span class="sql-kw">message</span>: <span class="sql-ref">|</span>
+          <span class="sql-str">:red_circle: *Low ROAS — {{ channel }}*</span>
+          <span class="sql-str">ROAS: *{{ roas }}×*  (floor: 1.5×)</span>
+          <span class="sql-str">Spend at risk: ${{ spend_usd | round(0) }}</span>
+          <span class="sql-str">→ Auto-pause script will run at next check.</span></pre>
+        </div>
+
+        <!-- ── Auto-Pause ─────────────────────────────────────────── -->
+        <div id="action-tab-autopause" class="code-block action-code-block">
+<pre><span class="sql-cm"># scripts/auto_pause_campaigns.py
+# Triggered by Airflow after the daily dbt run completes.
+# Queries mart_campaign_performance, pauses Google Ads campaigns
+# with ROAS below the configured floor, posts a Slack summary.</span>
+
+<span class="sql-kw">from</span> google.ads.googleads.client <span class="sql-kw">import</span> <span class="sql-fn">GoogleAdsClient</span>
+<span class="sql-kw">from</span> google.cloud <span class="sql-kw">import</span> bigquery
+<span class="sql-kw">import</span> requests, os
+
+ROAS_FLOOR = <span class="sql-num">1.5</span>
+BQ_PROJECT = <span class="sql-str">"prod-warehouse"</span>
+SLACK_HOOK  = os.<span class="sql-fn">environ</span>[<span class="sql-str">"SLACK_WEBHOOK_MARKETING_OPS"</span>]
+ADS_CID    = os.<span class="sql-fn">environ</span>[<span class="sql-str">"GOOGLE_ADS_CUSTOMER_ID"</span>]
+
+<span class="sql-kw">def</span> <span class="sql-fn">fetch_low_roas</span>(bq):
+    <span class="sql-kw">return</span> bq.<span class="sql-fn">query</span>(<span class="sql-str">"""
+        select campaign_id, channel, roas, spend_usd
+        from `prod-warehouse.mart.mart_campaign_performance`
+        where date_month = date_trunc(current_date(), month)
+          and roas      < @roas_floor
+          and spend_usd > 500    -- ignore micro-tests
+    """</span>, job_config=bigquery.<span class="sql-fn">QueryJobConfig</span>(
+        query_parameters=[
+            bigquery.<span class="sql-fn">ScalarQueryParameter</span>(<span class="sql-str">"roas_floor"</span>, <span class="sql-str">"FLOAT64"</span>, ROAS_FLOOR)
+        ]
+    )).<span class="sql-fn">result</span>()
+
+<span class="sql-kw">def</span> <span class="sql-fn">pause_campaign</span>(ads, campaign_id):
+    svc      = ads.<span class="sql-fn">get_service</span>(<span class="sql-str">"CampaignService"</span>)
+    campaign = ads.<span class="sql-fn">get_type</span>(<span class="sql-str">"Campaign"</span>)
+    campaign.resource_name = svc.<span class="sql-fn">campaign_path</span>(ADS_CID, campaign_id)
+    campaign.status = ads.enums.CampaignStatusEnum.<span class="sql-ref">PAUSED</span>
+    op = ads.<span class="sql-fn">get_type</span>(<span class="sql-str">"CampaignOperation"</span>)
+    op.update.<span class="sql-fn">CopyFrom</span>(campaign)
+    op.update_mask.paths.<span class="sql-fn">append</span>(<span class="sql-str">"status"</span>)
+    svc.<span class="sql-fn">mutate_campaigns</span>(customer_id=ADS_CID, operations=[op])
+
+<span class="sql-kw">def</span> <span class="sql-fn">notify_slack</span>(paused):
+    lines = [<span class="sql-fn">f</span><span class="sql-str">":pause_button: *Auto-paused {len(paused)} campaign(s)*"</span>]
+    <span class="sql-kw">for</span> c <span class="sql-kw">in</span> paused:
+        lines.<span class="sql-fn">append</span>(<span class="sql-fn">f</span><span class="sql-str">"  • `{c['id']}` — ROAS {c['roas']:.1f}× "</span>
+                     <span class="sql-fn">f</span><span class="sql-str">"(floor: {ROAS_FLOOR}×) | spend: ${c['spend']:,.0f}"</span>)
+    requests.<span class="sql-fn">post</span>(SLACK_HOOK, json={<span class="sql-str">"text"</span>: <span class="sql-str">"\n"</span>.<span class="sql-fn">join</span>(lines)})
+
+<span class="sql-kw">if</span> __name__ == <span class="sql-str">"__main__"</span>:
+    bq     = bigquery.<span class="sql-fn">Client</span>(project=BQ_PROJECT)
+    ads    = GoogleAdsClient.<span class="sql-fn">load_from_storage</span>()
+    paused = []
+
+    <span class="sql-kw">for</span> row <span class="sql-kw">in</span> <span class="sql-fn">fetch_low_roas</span>(bq):
+        <span class="sql-fn">pause_campaign</span>(ads, row.campaign_id)
+        paused.<span class="sql-fn">append</span>({<span class="sql-str">"id"</span>: row.campaign_id,
+                       <span class="sql-str">"roas"</span>: row.roas, <span class="sql-str">"spend"</span>: row.spend_usd})
+
+    <span class="sql-kw">if</span> paused:
+        <span class="sql-fn">notify_slack</span>(paused)
+    <span class="sql-kw">else</span>:
+        <span class="sql-fn">print</span>(<span class="sql-str">"All campaigns above ROAS floor — no action taken."</span>)</pre>
+        </div>
+        {% endraw %}
+
+      </div>
+    </div>
+  </div>
+</section>

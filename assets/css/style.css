@@ -327,8 +327,31 @@ tr:hover td { background: rgba(88,166,255,0.04); }
 .dag-node.raw  { background: var(--bg3); border: 1px solid var(--border); color: var(--text-muted); }
 .dag-node.stg  { background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.3); color: var(--accent2); }
 .dag-node.int  { background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.3); color: var(--accent); }
-.dag-node.mart { background: rgba(210,168,255,0.1); border: 1px solid rgba(210,168,255,0.3); color: var(--accent4); }
+.dag-node.mart    { background: rgba(210,168,255,0.1); border: 1px solid rgba(210,168,255,0.3); color: var(--accent4); }
+.dag-node.trigger { background: rgba(247,129,102,0.1); border: 1px solid rgba(247,129,102,0.3); color: var(--accent3); }
+.dag-node.crm     { background: rgba(88,166,255,0.1);  border: 1px solid rgba(88,166,255,0.3);  color: var(--accent); }
+.dag-node.mkt-tool{ background: rgba(63,185,80,0.1);   border: 1px solid rgba(63,185,80,0.3);   color: var(--accent2); }
+.dag-node.notify  { background: rgba(242,204,96,0.1);  border: 1px solid rgba(242,204,96,0.3);  color: #f2cc60; }
+.dag-node.block   { background: rgba(248,81,73,0.1);   border: 1px solid rgba(248,81,73,0.3);   color: #f85149; }
 .dag-arrow { text-align: center; color: var(--border); padding: 6px 0; font-size: 18px; }
+
+/* ===== DATA ACTIONS ===== */
+#actions { background: var(--bg2); border-bottom: 1px solid var(--border); }
+.layer-label.action-label { color: var(--accent3); }
+.action-branch-labels {
+  display: flex; gap: 40px; justify-content: center;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+  text-transform: uppercase; margin-bottom: 8px; width: 100%;
+}
+.branch-label.alert { color: var(--accent3); }
+.branch-label.block { color: #f85149; }
+.action-security-note {
+  margin-top: 20px; background: var(--bg3); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent2); border-radius: var(--radius);
+  padding: 16px 20px;
+}
+.action-security-note strong { color: var(--text); display: block; font-size: 14px; margin-bottom: 6px; }
+.action-security-note p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin: 0; }
 
 .code-tabs { margin-bottom: 12px; display: flex; gap: 6px; }
 .tab-btn {

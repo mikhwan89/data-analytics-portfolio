@@ -6,10 +6,18 @@ function toggleOpinion(id, btn) {
   btn.textContent = isOpen ? 'Read full article ↓' : 'Collapse ↑';
 }
 
-// ─── Tab switching ────────────────────────────────────────────────
+// ─── Tab switching (DBT section) ──────────────────────────────────
 function showTab(name) {
-  document.querySelectorAll('.code-block').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('#dbt .code-block').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('#dbt .tab-btn').forEach(el => el.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ─── Tab switching (Actions section) ──────────────────────────────
+function showActionTab(name) {
+  document.querySelectorAll('#actions .code-block').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('#actions .tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('action-tab-' + name).classList.add('active');
   event.target.classList.add('active');
 }
