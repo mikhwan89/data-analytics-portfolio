@@ -516,11 +516,9 @@ pre { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 12p
 .proj-card:hover { border-color: var(--accent); }
 .proj-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
 .proj-logo {
-  width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800;
+  width: 56px; height: 56px; border-radius: 14px; flex-shrink: 0;
+  object-fit: cover; border: 1px solid var(--border);
 }
-.proj-logo.mandarin { background: rgba(247,129,102,0.15); color: var(--accent3); border: 1px solid rgba(247,129,102,0.3); }
-.proj-logo.tanukeys { background: rgba(242,204,96,0.15); color: #f2cc60; border: 1px solid rgba(242,204,96,0.3); }
 .proj-head h3 { font-size: 18px; font-weight: 700; line-height: 1.2; margin-bottom: 4px; }
 .proj-status {
   display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 9px; border-radius: 20px;
