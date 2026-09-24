@@ -1,6 +1,6 @@
 # Data Analytics Portfolio
 
-Personal portfolio showcasing data analytics skills, work experience, and sample dashboards.
+Portfolio of Muhammad Ikhwan: data leadership, work experience, a sample dashboard, and side projects.
 
 Live site: https://mikhwan89.github.io/data-analytics-portfolio/
 
@@ -11,14 +11,15 @@ Live site: https://mikhwan89.github.io/data-analytics-portfolio/
 ├── _config.yml                       # Jekyll config (title, description)
 ├── _includes/                        # Section partials — edit individual sections here
 │   ├── section-nav.html
-│   ├── section-hero.html
-│   ├── section-skills.html
+│   ├── section-hero.html             # Name, positioning, proof figures, LinkedIn + CV
 │   ├── section-achievements.html
-│   ├── section-dashboard.html
-│   ├── section-dbt.html              # DBT Jinja syntax wrapped in {% raw %}
-│   ├── section-thoughts.html         # Add new opinion pieces here
+│   ├── section-dashboard.html        # Interactive sales-portal sample (synthetic data)
 │   ├── section-career.html
+│   ├── section-skills.html
+│   ├── section-thoughts.html         # Add new opinion pieces here (newest first)
+│   ├── section-build.html            # How I Build: stack, dbt walkthrough ({% raw %}), data actions
 │   └── section-projects.html         # Side projects (apps)
+├── _resume/resume.html               # CV source (not published); print to assets/Muhammad-Ikhwan-Resume-2026.pdf
 ├── assets/
 │   ├── css/
 │   │   └── style.css                 # All styles and responsive layout

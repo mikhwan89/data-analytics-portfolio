@@ -21,3 +21,17 @@ function showActionTab(name) {
   document.getElementById('action-tab-' + name).classList.add('active');
   event.target.classList.add('active');
 }
+
+// ─── Tab switching (How I Build section) ──────────────────────────
+function showBuild(name, btn) {
+  document.querySelectorAll('.build-panel').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.build-tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ─── Open an article from a link elsewhere on the page ────────────
+function openArticle(id) {
+  const el = document.getElementById(id);
+  if (el.style.display === 'none') toggleOpinion(id, el.parentElement.querySelector('.opinion-toggle'));
+}
