@@ -1,479 +1,346 @@
 // ─── Chart defaults ───────────────────────────────────────────────
-Chart.defaults.color = '#8b949e';
-Chart.defaults.borderColor = '#30363d';
+Chart.defaults.color = '#7a82a0';
+Chart.defaults.borderColor = '#2e3350';
 Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
 Chart.defaults.font.size = 11;
 
-const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+// Sales portal palette — the live portal's own tokens
+const P = {
+  accent: '#4f7ef0', accent2: '#6ec6a8', warning: '#e0a84c', purple: '#b48ef0',
+  muted: '#7a82a0', positive: '#4caf88', negative: '#e05c5c', grid: '#262b40', surface: '#1a1d27'
+};
+const PRODUCT_COLORS = [P.accent, P.accent2, P.warning, P.purple, P.muted];
 
-// ─── Revenue + Spend ──────────────────────────────────────────────
-new Chart(document.getElementById('revenueChart'), {
-  type: 'bar',
-  data: {
-    labels: months,
-    datasets: [
-      {
-        label: 'Revenue ($K)',
-        data: [44, 48, 62, 57, 75, 88, 81, 98, 94, 112, 168, 155],
-        backgroundColor: 'rgba(88,166,255,0.2)',
-        borderColor: '#58a6ff',
-        borderWidth: 2,
-        borderRadius: 3,
-        order: 2
-      },
-      {
-        label: 'Ad Spend ($K)',
-        data: [6.5, 6.2, 7.5, 7.1, 8.5, 9.1, 8.7, 10.3, 10.2, 12.5, 16.2, 15.2],
-        type: 'line',
-        borderColor: '#f78166',
-        borderWidth: 2,
-        pointBackgroundColor: '#f78166',
-        pointRadius: 3,
-        tension: 0.4,
-        fill: false,
-        yAxisID: 'y2',
-        order: 1
-      }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    interaction: { mode: 'index', intersect: false },
-    scales: {
-      y: { grid: { color: '#21262d' }, ticks: { callback: v => '$' + v + 'K' } },
-      y2: {
-        position: 'right', grid: { display: false },
-        ticks: { callback: v => '$' + v + 'K' }
-      }
-    },
-    plugins: { legend: { labels: { boxWidth: 12, padding: 16 } } }
-  }
-});
+// Every figure on this page is synthetic. A seeded generator keeps them
+// identical on every load, so the charts don't reshuffle on refresh.
+function rng(seed) {
+  return function () {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function gauss(r) { return Math.sqrt(-2 * Math.log(1 - r())) * Math.cos(2 * Math.PI * r()); }
 
-// ─── Channel donut ────────────────────────────────────────────────
-new Chart(document.getElementById('channelChart'), {
-  type: 'doughnut',
-  data: {
-    labels: ['Google Ads', 'Facebook Ads', 'Organic', 'Email', 'Direct'],
-    datasets: [{
-      data: [30, 24, 18, 16, 12],
-      backgroundColor: ['#58a6ff','#3fb950','#d2a8ff','#f2cc60','#f78166'],
-      borderColor: '#161b22',
-      borderWidth: 3,
-      hoverOffset: 6
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    cutout: '68%',
-    plugins: {
-      legend: { position: 'right', labels: { padding: 14, boxWidth: 10 } },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } }
-    }
-  }
-});
+const fmtUSD = v => '$' + (Math.abs(v) >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : Math.abs(v) >= 1e3 ? (v / 1e3).toFixed(0) + 'K' : v.toFixed(0));
+const fmtNum = v => Math.round(v).toLocaleString('en-US');
+const fmtPct = v => (v >= 0 ? '+' : '') + (v * 100).toFixed(1) + '%';
+const gridOpts = { grid: { color: P.grid } };
+const legendOpts = { labels: { boxWidth: 10, padding: 12 } };
 
-// ─── ROAS bar ─────────────────────────────────────────────────────
-new Chart(document.getElementById('roasChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Brand Search', 'Non-Brand\nSearch', 'Display\nRemarketing', 'FB Retarget', 'FB Lookalike', 'FB Prospect'],
-    datasets: [{
-      label: 'ROAS',
-      data: [4.6, 3.4, 2.8, 3.9, 3.1, 1.9],
-      backgroundColor: ctx => {
-        const v = ctx.parsed.y;
-        return v >= 3.5 ? 'rgba(63,185,80,0.4)' : v >= 2.5 ? 'rgba(88,166,255,0.4)' : 'rgba(247,129,102,0.4)';
-      },
-      borderColor: ctx => {
-        const v = ctx.parsed.y;
-        return v >= 3.5 ? '#3fb950' : v >= 2.5 ? '#58a6ff' : '#f78166';
-      },
-      borderWidth: 2,
-      borderRadius: 4,
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-    scales: {
-      x: { grid: { color: '#21262d' }, ticks: { callback: v => v + 'x' }, beginAtZero: true },
-      y: { grid: { display: false } }
-    },
-    plugins: {
-      legend: { display: false },
-      tooltip: { callbacks: { label: ctx => ` ROAS: ${ctx.parsed.x}x` } }
-    }
-  }
-});
-
-// ─── Funnel ───────────────────────────────────────────────────────
-new Chart(document.getElementById('funnelChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Impressions', 'Clicks', 'Leads', 'Trials', 'Customers'],
-    datasets: [{
-      label: 'Count',
-      data: [1284000, 55200, 3840, 620, 88],
-      backgroundColor: [
-        'rgba(88,166,255,0.5)',
-        'rgba(88,166,255,0.6)',
-        'rgba(210,168,255,0.5)',
-        'rgba(210,168,255,0.65)',
-        'rgba(63,185,80,0.7)'
-      ],
-      borderColor: ['#58a6ff','#58a6ff','#d2a8ff','#d2a8ff','#3fb950'],
-      borderWidth: 2,
-      borderRadius: 4
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    scales: {
-      x: { grid: { display: false } },
-      y: {
-        grid: { color: '#21262d' }, type: 'logarithmic',
-        ticks: { callback: v => v >= 1000 ? (v/1000)+'K' : v }
-      }
-    },
-    plugins: {
-      legend: { display: false },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y.toLocaleString()}` } }
-    }
-  }
-});
-
-// ─── Dashboard tabs ───────────────────────────────────────────────
-const dashInited = { marketing: true };
-function showDash(name, btn) {
-  document.querySelectorAll('.dash-panel').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.dash-tab-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById('dash-' + name).classList.add('active');
+// ─── Tab switching ────────────────────────────────────────────────
+// Charts in a hidden panel measure 0px, so each panel is drawn the first
+// time it is opened.
+const portalInited = {};
+function showPortal(name, btn) {
+  document.querySelectorAll('.pt-panel').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.pt-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('pt-' + name).classList.add('active');
   btn.classList.add('active');
-  if (!dashInited[name]) { dashInited[name] = true; initDash(name); }
+  if (!portalInited[name]) { portalInited[name] = true; (PORTAL_INIT[name] || (() => {}))(); }
 }
 
-function initDash(name) {
-  const G = '#21262d', NG = { display: false };
+const PORTAL_INIT = {
+  dashboard: initDashboard,
+  overview: initOverview,
+  profit: renderProfit,
+  dca: renderDca,
+  impact: renderImpact,
+  structured: renderSharkfin
+};
 
-  // ── Segmentation ──────────────────────────────────────────────
-  if (name === 'segmentation') {
-    new Chart(document.getElementById('segRevenueChart'), {
-      type: 'bar',
-      data: {
-        labels: ['Champions','Loyal','Promising','At-Risk','Churned'],
-        datasets: [{ label: 'Total Revenue ($K)', data: [366,190,75,48,8],
-          backgroundColor: ['rgba(88,166,255,0.5)','rgba(63,185,80,0.4)','rgba(210,168,255,0.4)','rgba(242,204,96,0.4)','rgba(247,129,102,0.4)'],
-          borderColor: ['#58a6ff','#3fb950','#d2a8ff','#f2cc60','#f78166'],
-          borderWidth: 2, borderRadius: 4 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-        scales: { x: { grid: { color: G }, ticks: { callback: v => '$'+v+'K' }, beginAtZero: true }, y: { grid: NG } },
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` $${ctx.raw}K total revenue` } } }
-      }
-    });
-    new Chart(document.getElementById('segSizeChart'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Champions','Loyal','Promising','At-Risk','Churned'],
-        datasets: [{ data: [223,298,260,273,186],
-          backgroundColor: ['#58a6ff','#3fb950','#d2a8ff','#f2cc60','#f78166'],
-          borderColor: '#161b22', borderWidth: 3, hoverOffset: 6 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false, cutout: '68%',
-        plugins: { legend: { position: 'right', labels: { padding: 14, boxWidth: 10 } },
-          tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} customers` } } }
-      }
-    });
-    new Chart(document.getElementById('segAOVChart'), {
-      type: 'bar',
-      data: {
-        labels: ['Champions','Loyal','Promising','At-Risk','Churned'],
-        datasets: [{ label: 'Avg Order Value', data: [186,128,92,68,28],
-          backgroundColor: ctx => ctx.raw >= 150 ? 'rgba(63,185,80,0.4)' : ctx.raw >= 80 ? 'rgba(88,166,255,0.4)' : 'rgba(247,129,102,0.35)',
-          borderColor: ctx => ctx.raw >= 150 ? '#3fb950' : ctx.raw >= 80 ? '#58a6ff' : '#f78166',
-          borderWidth: 2, borderRadius: 4 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { grid: { color: G }, ticks: { callback: v => '$'+v }, beginAtZero: true }, x: { grid: NG } },
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` AOV: $${ctx.raw}` } } }
-      }
-    });
-    new Chart(document.getElementById('segTrendChart'), {
-      type: 'line',
-      data: {
-        labels: ['Oct','Nov','Dec'],
-        datasets: [
-          { label: 'Champions', data: [205,214,223], borderColor: '#58a6ff', backgroundColor: 'rgba(88,166,255,0.1)', tension: 0.4, fill: true, borderWidth: 2, pointRadius: 4 },
-          { label: 'At-Risk',   data: [248,261,273], borderColor: '#f78166', backgroundColor: 'rgba(247,129,102,0.08)', tension: 0.4, fill: true, borderWidth: 2, pointRadius: 4 }
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { grid: { color: G }, beginAtZero: false }, x: { grid: NG } },
-        plugins: { legend: { labels: { boxWidth: 10, padding: 14 } } }
-      }
-    });
+// ─── 1. Dashboard ─────────────────────────────────────────────────
+function initDashboard() {
+  const r = rng(7);
+  const days = [];
+  const d0 = new Date(Date.UTC(2026, 7, 25));
+  for (let i = 0; i < 30; i++) {
+    const d = new Date(d0.getTime() + i * 864e5);
+    days.push(d.getUTCDate() + ' ' + ['Aug', 'Sep'][d.getUTCMonth() - 7]);
   }
 
-  // ── Retention ─────────────────────────────────────────────────
-  else if (name === 'retention') {
-    const rm = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'];
-    new Chart(document.getElementById('retCohortChart'), {
-      type: 'line',
-      data: {
-        labels: rm,
-        datasets: [
-          { label: 'Jan 2024', data: [100,91,85,79,75,72,68,66,64,61,59,52], borderColor: '#58a6ff', tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2 },
-          { label: 'Apr 2024', data: [100,89,83,76,72,69,65,62,60,58,null,null], borderColor: '#3fb950', tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2 },
-          { label: 'Jul 2024', data: [100,92,87,80,76,74,70,67,null,null,null,null], borderColor: '#d2a8ff', tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2 },
-          { label: 'Oct 2024', data: [100,90,82,70,null,null,null,null,null,null,null,null], borderColor: '#f2cc60', tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2 }
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { grid: { color: G }, ticks: { callback: v => v+'%' }, min: 40, max: 100 }, x: { grid: NG } },
-        plugins: { legend: { labels: { boxWidth: 10, padding: 12 } },
-          tooltip: { callbacks: { label: ctx => ctx.raw != null ? ` ${ctx.dataset.label}: ${ctx.raw}%` : null } } }
-      }
-    });
-    new Chart(document.getElementById('retChurnChart'), {
-      type: 'bar',
-      data: {
-        labels: months,
-        datasets: [{ label: 'Churn Rate (%)', data: [5.1,4.9,4.7,4.4,4.2,4.0,3.9,3.8,4.0,4.1,4.3,4.2],
-          backgroundColor: ctx => ctx.raw >= 4.5 ? 'rgba(247,129,102,0.5)' : 'rgba(88,166,255,0.4)',
-          borderColor: ctx => ctx.raw >= 4.5 ? '#f78166' : '#58a6ff',
-          borderWidth: 2, borderRadius: 4 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { grid: { color: G }, ticks: { callback: v => v+'%' }, min: 3 }, x: { grid: NG } },
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` Churn: ${ctx.raw}%` } } }
-      }
-    });
-    new Chart(document.getElementById('retNRRChart'), {
-      type: 'bar',
-      data: {
-        labels: ['Champions','Loyal','Promising','At-Risk'],
-        datasets: [{ label: 'NRR (%)', data: [138,121,104,82],
-          backgroundColor: ctx => ctx.raw >= 100 ? 'rgba(63,185,80,0.4)' : 'rgba(247,129,102,0.4)',
-          borderColor: ctx => ctx.raw >= 100 ? '#3fb950' : '#f78166',
-          borderWidth: 2, borderRadius: 4 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { grid: { color: G }, ticks: { callback: v => v+'%' }, min: 60 }, x: { grid: NG } },
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` NRR: ${ctx.raw}%` } } }
-      }
-    });
-    new Chart(document.getElementById('retActiveChart'), {
-      type: 'line',
-      data: {
-        labels: months,
-        datasets: [{ label: 'Active Customers', data: [1052,1069,1084,1098,1114,1131,1148,1162,1179,1196,1218,1240],
-          borderColor: '#3fb950', backgroundColor: 'rgba(63,185,80,0.08)', tension: 0.4, fill: true, borderWidth: 2, pointRadius: 3 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { grid: { color: G }, min: 1000 }, x: { grid: NG } },
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` Active: ${ctx.raw.toLocaleString()}` } } }
-      }
-    });
-  }
+  // Daily AUS by asset — random walks ending near the $48.6M KPI
+  const assets = [['BTC', 21.4, 0.018], ['ETH', 8.6, 0.022], ['USDT', 13.4, 0.004], ['Others', 5.2, 0.02]];
+  const ausSets = assets.map(([label, end, vol], i) => {
+    const s = [end];
+    for (let k = 1; k < 30; k++) s.unshift(s[0] / (1 + vol * gauss(r) + 0.002));
+    return { label, data: s, fill: true, borderColor: PRODUCT_COLORS[i], backgroundColor: PRODUCT_COLORS[i] + '55', borderWidth: 1.5, pointRadius: 0, tension: 0.3 };
+  });
+  new Chart(document.getElementById('ptAusChart'), {
+    type: 'line',
+    data: { labels: days, datasets: ausSets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: { x: { grid: { display: false }, ticks: { maxTicksLimit: 10, maxRotation: 0 } }, y: { stacked: true, ...gridOpts, ticks: { callback: v => '$' + v + 'M' } } },
+      plugins: { legend: legendOpts, tooltip: { callbacks: { label: c => ` ${c.dataset.label}: $${c.parsed.y.toFixed(1)}M` } } }
+    }
+  });
 
-  // ── Operations ────────────────────────────────────────────────
-  else if (name === 'operations') {
-    const days30 = Array.from({length:30}, (_,i) => i+1);
-    const vol = [128,142,155,139,161,148,172,145,158,163,170,141,154,168,175,149,162,178,155,171,184,148,165,180,168,175,192,158,171,186];
-    new Chart(document.getElementById('opsVolumeChart'), {
-      type: 'line',
-      data: {
-        labels: days30,
-        datasets: [{ label: 'Orders', data: vol,
-          borderColor: '#58a6ff', backgroundColor: 'rgba(88,166,255,0.1)', tension: 0.3, fill: true, borderWidth: 2, pointRadius: 0 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { grid: { color: G }, min: 100 }, x: { grid: NG, ticks: { maxTicksLimit: 10 } } },
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw} orders` } } }
-      }
-    });
-    new Chart(document.getElementById('opsIssueChart'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Delayed Shipment','Wrong Item','Damaged','Missing Item','Other'],
-        datasets: [{ data: [42,27,18,8,5],
-          backgroundColor: ['#f78166','#d2a8ff','#f2cc60','#58a6ff','#3fb950'],
-          borderColor: '#161b22', borderWidth: 3, hoverOffset: 6 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false, cutout: '68%',
-        plugins: { legend: { position: 'right', labels: { padding: 12, boxWidth: 10 } } }
-      }
-    });
-    new Chart(document.getElementById('opsSLAChart'), {
-      type: 'bar',
-      data: {
-        labels: ['Electronics','Apparel','Home & Living','Sports','Beauty'],
-        datasets: [{ label: 'SLA Hit Rate (%)', data: [97.2,95.1,96.4,90.8,93.5],
-          backgroundColor: ctx => ctx.raw >= 95 ? 'rgba(63,185,80,0.4)' : 'rgba(247,129,102,0.4)',
-          borderColor: ctx => ctx.raw >= 95 ? '#3fb950' : '#f78166',
-          borderWidth: 2, borderRadius: 4 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-        scales: { x: { grid: { color: G }, ticks: { callback: v => v+'%' }, min: 85, max: 100 }, y: { grid: NG } },
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` SLA: ${ctx.raw}%` } } }
-      }
-    });
-    new Chart(document.getElementById('opsFulfillChart'), {
-      type: 'bar',
-      data: {
-        labels: ['Jakarta (WH1)','Surabaya (WH2)','Bandung (WH3)','Medan (WH4)'],
-        datasets: [{ label: 'Avg Days', data: [1.4,2.1,1.8,2.4],
-          backgroundColor: ctx => ctx.raw <= 2 ? 'rgba(63,185,80,0.4)' : 'rgba(247,129,102,0.4)',
-          borderColor: ctx => ctx.raw <= 2 ? '#3fb950' : '#f78166',
-          borderWidth: 2, borderRadius: 4 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { grid: { color: G }, ticks: { callback: v => v+'d' }, beginAtZero: true }, x: { grid: NG } },
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw} days avg` } } }
-      }
-    });
-  }
+  // Daily transaction value by product
+  const products = ['Fixed Earn', 'Dual Currency', 'Structured', 'Staking', 'Flexible Earn'];
+  const weights = [0.32, 0.26, 0.2, 0.12, 0.1];
+  new Chart(document.getElementById('ptTrxChart'), {
+    type: 'bar',
+    data: {
+      labels: days,
+      datasets: products.map((label, i) => ({
+        label, backgroundColor: PRODUCT_COLORS[i], borderRadius: 2,
+        data: days.map(() => Math.max(0, 413 * weights[i] * (0.4 + 1.2 * r())))
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: { x: { stacked: true, grid: { display: false }, ticks: { maxTicksLimit: 8, maxRotation: 0 } }, y: { stacked: true, ...gridOpts, ticks: { callback: v => '$' + v + 'K' } } },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.dataset.label}: $${c.parsed.y.toFixed(0)}K` } } }
+    }
+  });
 
-  // ── Finance ───────────────────────────────────────────────────
-  else if (name === 'finance') {
-    const rev = [44,48,62,57,75,88,81,98,94,112,168,155];
-    const cogs = [14,15,20,18,24,28,26,31,30,35,52,51];
-    new Chart(document.getElementById('finPLChart'), {
-      type: 'bar',
-      data: {
-        labels: months,
-        datasets: [
-          { label: 'Revenue ($K)', data: rev, backgroundColor: 'rgba(88,166,255,0.3)', borderColor: '#58a6ff', borderWidth: 2, borderRadius: 3 },
-          { label: 'COGS ($K)',    data: cogs, backgroundColor: 'rgba(247,129,102,0.4)', borderColor: '#f78166', borderWidth: 2, borderRadius: 3 }
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { grid: { color: G }, ticks: { callback: v => '$'+v+'K' }, beginAtZero: true }, x: { grid: NG } },
-        plugins: { legend: { labels: { boxWidth: 12, padding: 14 } } }
-      }
-    });
-    new Chart(document.getElementById('finExpChart'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Salaries','Infrastructure','Marketing','G&A','R&D'],
-        datasets: [{ data: [48,18,14,12,8],
-          backgroundColor: ['#58a6ff','#3fb950','#d2a8ff','#f2cc60','#f78166'],
-          borderColor: '#161b22', borderWidth: 3, hoverOffset: 6 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false, cutout: '68%',
-        plugins: { legend: { position: 'right', labels: { padding: 12, boxWidth: 10 } },
-          tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}%` } } }
-      }
-    });
-    new Chart(document.getElementById('finBudgetChart'), {
-      type: 'bar',
-      data: {
-        labels: ['Engineering','Marketing','Sales','Customer Success','G&A'],
-        datasets: [
-          { label: 'Budget ($K)',  data: [62,38,44,22,18], backgroundColor: 'rgba(88,166,255,0.2)', borderColor: '#58a6ff', borderWidth: 2, borderRadius: 3 },
-          { label: 'Actuals ($K)', data: [61,35,46,21,17], backgroundColor: 'rgba(63,185,80,0.35)', borderColor: '#3fb950', borderWidth: 2, borderRadius: 3 }
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { grid: { color: G }, ticks: { callback: v => '$'+v+'K' }, beginAtZero: true }, x: { grid: NG } },
-        plugins: { legend: { labels: { boxWidth: 12, padding: 14 } } }
-      }
-    });
-    new Chart(document.getElementById('finCashChart'), {
-      type: 'line',
-      data: {
-        labels: months,
-        datasets: [{ label: 'Cash Position ($K)', data: [380,372,368,374,386,402,414,431,452,486,562,628],
-          borderColor: '#3fb950', backgroundColor: 'rgba(63,185,80,0.1)', tension: 0.4, fill: true, borderWidth: 2, pointRadius: 3 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { grid: { color: G }, ticks: { callback: v => '$'+v+'K' }, min: 300 }, x: { grid: NG } },
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` $${ctx.raw}K` } } }
-      }
-    });
-  }
-
-  // ── Supply Chain ──────────────────────────────────────────────
-  else if (name === 'supply') {
-    const wks = ['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12'];
-    new Chart(document.getElementById('supInventoryChart'), {
-      type: 'line',
-      data: {
-        labels: wks,
-        datasets: [
-          { label: 'Electronics', data: [1820,1740,1660,1580,1500,1430,1360,1300,1280,1260,1245,1240], borderColor: '#58a6ff', tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2 },
-          { label: 'Apparel',     data: [1200,1140,1080,1010,960,900,920,880,870,860,855,850], borderColor: '#3fb950', tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2 },
-          { label: 'Sports',      data: [680,640,610,580,560,520,500,478,460,445,432,420], borderColor: '#f78166', tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2 }
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { grid: { color: G }, min: 300 }, x: { grid: NG } },
-        plugins: { legend: { labels: { boxWidth: 10, padding: 12 } },
-          tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw.toLocaleString()} units` } } }
-      }
-    });
-    new Chart(document.getElementById('supFillChart'), {
-      type: 'bar',
-      data: {
-        labels: ['Electronics','Home & Living','Beauty','Apparel','Sports'],
-        datasets: [{ label: 'Fill Rate (%)', data: [98.2,97.8,97.1,95.4,91.8],
-          backgroundColor: ctx => ctx.raw >= 96 ? 'rgba(63,185,80,0.4)' : ctx.raw >= 93 ? 'rgba(88,166,255,0.4)' : 'rgba(247,129,102,0.4)',
-          borderColor: ctx => ctx.raw >= 96 ? '#3fb950' : ctx.raw >= 93 ? '#58a6ff' : '#f78166',
-          borderWidth: 2, borderRadius: 4 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-        scales: { x: { grid: { color: G }, ticks: { callback: v => v+'%' }, min: 85, max: 100 }, y: { grid: NG } },
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` Fill Rate: ${ctx.raw}%` } } }
-      }
-    });
-    new Chart(document.getElementById('supLeadChart'), {
-      type: 'bar',
-      data: {
-        labels: ['TechDist Co.','FashionHub','SportCo','HomeSupply','BeautyWholesale'],
-        datasets: [{ label: 'Lead Time (days)', data: [12,18,22,9,14],
-          backgroundColor: ctx => ctx.raw <= 14 ? 'rgba(63,185,80,0.4)' : ctx.raw <= 20 ? 'rgba(88,166,255,0.4)' : 'rgba(247,129,102,0.4)',
-          borderColor: ctx => ctx.raw <= 14 ? '#3fb950' : ctx.raw <= 20 ? '#58a6ff' : '#f78166',
-          borderWidth: 2, borderRadius: 4 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { grid: { color: G }, ticks: { callback: v => v+'d' }, beginAtZero: true }, x: { grid: NG } },
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw} day lead time` } } }
-      }
-    });
-    new Chart(document.getElementById('supOTDChart'), {
-      type: 'line',
-      data: {
-        labels: months,
-        datasets: [
-          { label: 'OTD %',        data: [88.4,89.1,90.2,91.8,93.1,93.4,92.8,93.0,92.5,91.9,91.5,91.3], borderColor: '#58a6ff', backgroundColor: 'rgba(88,166,255,0.1)', tension: 0.4, fill: true, borderWidth: 2, pointRadius: 3 },
-          { label: 'Target (93%)', data: Array(12).fill(93), borderColor: '#3fb950', borderDash: [6,3], borderWidth: 1.5, pointRadius: 0, fill: false }
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { grid: { color: G }, ticks: { callback: v => v+'%' }, min: 85, max: 97 }, x: { grid: NG } },
-        plugins: { legend: { labels: { boxWidth: 10, padding: 14 } },
-          tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}%` } } }
-      }
-    });
-  }
+  // Revenue product mix
+  new Chart(document.getElementById('ptMixChart'), {
+    type: 'doughnut',
+    data: { labels: products, datasets: [{ data: [34, 24, 18, 14, 10], backgroundColor: PRODUCT_COLORS, borderColor: P.surface, borderWidth: 3 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '66%',
+      plugins: { legend: { position: 'right', labels: { boxWidth: 10, padding: 10 } }, tooltip: { callbacks: { label: c => ` ${c.label}: ${c.parsed}%` } } }
+    }
+  });
 }
+
+// ─── 2. Sales overview ────────────────────────────────────────────
+function initOverview() {
+  const reps = ['Sales A', 'Sales B', 'Sales C', 'Sales D', 'Sales E', 'Sales F', 'Sales G', 'Sales H'];
+  new Chart(document.getElementById('ptAusBySalesChart'), {
+    type: 'bar',
+    data: { labels: reps, datasets: [{ label: 'AUS', data: [48.6, 36.1, 29.4, 22.8, 17.3, 12.9, 9.8, 7.3], backgroundColor: P.accent, borderRadius: 3 }] },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      scales: { x: { ...gridOpts, ticks: { callback: v => '$' + v + 'M' } }, y: { grid: { display: false } } },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` $${c.parsed.x}M` } } }
+    }
+  });
+  new Chart(document.getElementById('ptCommChart'), {
+    type: 'bar',
+    data: {
+      labels: reps,
+      datasets: [
+        { label: "Rep's commission", data: [212, 158, 118, 86, 57, 52, 38, 29], backgroundColor: P.positive, borderRadius: 3 },
+        { label: "Upline's portion", data: [53, 40, 24, 18, 14, 13, 10, 7], backgroundColor: P.muted, borderRadius: 3 }
+      ]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      scales: { x: { stacked: true, ...gridOpts, ticks: { callback: v => 'Rp ' + v + 'M' } }, y: { stacked: true, grid: { display: false } } },
+      plugins: { legend: legendOpts, tooltip: { callbacks: { label: c => ` ${c.dataset.label}: Rp ${c.parsed.x}M` } } }
+    }
+  });
+}
+
+// ─── 3. Client profitability ──────────────────────────────────────
+const PROFIT = {
+  fiat: {
+    unit: 'USD', data: [4200, 6100, -3800, 2900, 8400, -5200, 3100, 7600, 1900, -2400, 6800, 8820],
+    fmt: v => (v >= 0 ? '+$' : '−$') + fmtNum(Math.abs(v)),
+    pl: '+$38,420', plSub: '+12.6% on net invested', flow: '+$305,000', bal: '$343,420'
+  },
+  crypto: {
+    unit: 'BTC', data: [0.021, 0.034, 0.012, 0.018, 0.041, 0.015, 0.019, 0.037, 0.016, 0.011, 0.033, 0.045],
+    fmt: v => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(3) + ' BTC',
+    pl: '+0.302 BTC', plSub: 'holdings grown by yield, not price', flow: '+3.20 BTC', bal: '3.502 BTC'
+  }
+};
+let profitChart;
+function renderProfit() {
+  const m = PROFIT[document.getElementById('ptProfitMethod').value];
+  document.getElementById('ptProfitPL').textContent = m.pl;
+  document.getElementById('ptProfitPLSub').textContent = m.plSub;
+  document.getElementById('ptProfitFlow').textContent = m.flow;
+  document.getElementById('ptProfitBal').textContent = m.bal;
+  document.getElementById('ptProfitBadge').textContent = m.unit;
+  const labels = ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
+  if (profitChart) profitChart.destroy();
+  profitChart = new Chart(document.getElementById('ptProfitChart'), {
+    type: 'bar',
+    data: { labels, datasets: [{ label: 'Profit / loss', data: m.data, backgroundColor: m.data.map(v => v >= 0 ? P.positive : P.negative), borderRadius: 3 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: { x: { grid: { display: false } }, y: gridOpts },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' ' + m.fmt(c.parsed.y) } } }
+    }
+  });
+}
+
+// ─── 4. CRM ───────────────────────────────────────────────────────
+function crmFilter(tag, btn) {
+  document.querySelectorAll('#ptCrmSeg button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#ptCrmBody tr').forEach(tr => {
+    tr.style.display = tag === 'all' || tr.dataset.tags.split(' ').includes(tag) ? '' : 'none';
+  });
+}
+function crmLog(btn) {
+  const tr = btn.closest('tr');
+  const client = tr.cells[0].textContent;
+  tr.querySelector('.lc').textContent = 'Today';
+  const wasGap = tr.dataset.tags.split(' ').includes('gap');
+  tr.dataset.tags = tr.dataset.tags.replace('gap', '').trim() || 'done';
+  btn.textContent = '✓ Logged';
+  btn.disabled = true;
+  if (wasGap) {
+    const gap = document.getElementById('ptCrmGap');
+    gap.textContent = Math.max(0, +gap.textContent - 1);
+  }
+  const log = document.getElementById('ptCrmLog');
+  const empty = log.querySelector('.muted');
+  if (empty) empty.remove();
+  const li = document.createElement('li');
+  li.innerHTML = `<span class="pt-pill pos">Call</span> Logged a contact with <strong>${client}</strong>. Next action: follow up in 14 days.`;
+  log.prepend(li);
+}
+
+// ─── Synthetic monthly price paths (10 years) ─────────────────────
+// Illustrative only: drift/volatility loosely shaped like each asset class.
+const ASSETS = [
+  { name: 'Crypto', seed: 314, mu: 0.028, sigma: 0.19 },
+  { name: 'Gold', seed: 10, mu: 0.006, sigma: 0.04 },
+  { name: 'Equity index', seed: 8, mu: 0.008, sigma: 0.045 }
+].map(a => {
+  const r = rng(a.seed), p = [100];
+  for (let i = 0; i < 120; i++) p.push(p[i] * Math.exp(a.mu - a.sigma * a.sigma / 2 + a.sigma * gauss(r)));
+  return { ...a, prices: p };
+});
+
+// ─── 5. DCA simulator ─────────────────────────────────────────────
+let dcaChart;
+function dca(prices, amt) {
+  let units = 0, invested = 0;
+  const inv = [], val = [];
+  for (let i = 0; i < prices.length; i++) {
+    if (i < prices.length - 1) { units += amt / prices[i]; invested += amt; }
+    inv.push(invested); val.push(units * prices[i]);
+  }
+  return { inv, val, invested, final: val[val.length - 1], lump: invested * prices[prices.length - 1] / prices[0] };
+}
+function renderDca() {
+  const years = +document.getElementById('ptDcaYears').value;
+  const amt = Math.max(0, +document.getElementById('ptDcaAmt').value || 0);
+  const pick = +document.getElementById('ptDcaAsset').value;
+  const n = years * 12 + 1;
+  const results = ASSETS.map(a => ({ name: a.name, ...dca(a.prices.slice(-n), amt) }));
+
+  document.getElementById('ptDcaBody').innerHTML = results.map(x => {
+    const dr = x.invested ? x.final / x.invested - 1 : 0, lr = x.invested ? x.lump / x.invested - 1 : 0;
+    return `<tr><td>${x.name}</td><td class="num">${fmtNum(x.invested)}</td><td class="num">${fmtNum(x.final)}</td>` +
+      `<td class="num ${dr >= 0 ? 'pos' : 'neg'}">${fmtPct(dr)}</td><td class="num">${fmtNum(x.lump)}</td>` +
+      `<td class="num ${lr >= 0 ? 'pos' : 'neg'}">${fmtPct(lr)}</td><td><span class="pt-pill ${x.final >= x.lump ? 'pos' : 'warn'}">${x.final >= x.lump ? 'DCA' : 'Lump sum'}</span></td></tr>`;
+  }).join('');
+
+  const x = results[pick];
+  const labels = x.inv.map((_, i) => i % 12 === 0 ? 'Y' + (i / 12) : '');
+  if (dcaChart) dcaChart.destroy();
+  dcaChart = new Chart(document.getElementById('ptDcaChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Portfolio value', data: x.val, borderColor: P.accent, backgroundColor: P.accent + '33', fill: true, pointRadius: 0, borderWidth: 2, tension: 0.2 },
+        { label: 'Invested', data: x.inv, borderColor: P.muted, borderDash: [5, 4], pointRadius: 0, borderWidth: 1.5 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: { x: { grid: { display: false }, ticks: { autoSkip: false, maxRotation: 0 } }, y: { ...gridOpts, ticks: { callback: v => fmtUSD(v) } } },
+      plugins: { legend: legendOpts, tooltip: { callbacks: { title: c => 'Month ' + c[0].dataIndex, label: c => ` ${c.dataset.label}: $${fmtNum(c.parsed.y)}` } } }
+    }
+  });
+}
+
+// ─── 6. Bitcoin impact to portfolio ───────────────────────────────
+let impactChart;
+function simulatePortfolio(wCrypto, rebalance) {
+  const crypto = ASSETS[0].prices.slice(-61), eq = ASSETS[2].prices.slice(-61);
+  const fiRet = Math.pow(1.06, 1 / 12) - 1;
+  const target = [wCrypto, (1 - wCrypto) * 0.6, (1 - wCrypto) * 0.4];
+  let hold = target.map(w => w * 100e6);
+  const values = [100e6];
+  for (let i = 1; i < 61; i++) {
+    hold = [hold[0] * crypto[i] / crypto[i - 1], hold[1] * eq[i] / eq[i - 1], hold[2] * (1 + fiRet)];
+    const v = hold[0] + hold[1] + hold[2];
+    values.push(v);
+    if (rebalance && i % 3 === 0) hold = target.map(w => w * v);
+  }
+  const rets = values.slice(1).map((v, i) => v / values[i] - 1);
+  const mean = rets.reduce((a, b) => a + b, 0) / rets.length;
+  const vol = Math.sqrt(rets.reduce((a, b) => a + (b - mean) ** 2, 0) / (rets.length - 1) * 12);
+  let peak = values[0], mdd = 0;
+  values.forEach(v => { peak = Math.max(peak, v); mdd = Math.min(mdd, v / peak - 1); });
+  const cagr = Math.pow(values[60] / values[0], 1 / 5) - 1;
+  return { values, cagr, vol, sharpe: (mean * 12 - 0.05) / vol, mdd };
+}
+function renderImpact() {
+  const reb = document.getElementById('ptImpactReb').checked;
+  const allocs = [0, 0.01, 0.05, 0.1];
+  const colors = [P.muted, P.accent2, P.accent, P.warning];
+  const sims = allocs.map(w => simulatePortfolio(w, reb));
+  const name = w => w === 0 ? 'No bitcoin' : (w * 100) + '% bitcoin';
+
+  document.getElementById('ptImpactBody').innerHTML = sims.map((s, i) =>
+    `<tr><td><span class="cap-dot" style="--c:${colors[i]}"></span> ${name(allocs[i])}</td>` +
+    `<td class="num">Rp ${(s.values[60] / 1e6).toFixed(1)}M</td><td class="num">${fmtPct(s.cagr)}</td>` +
+    `<td class="num">${(s.vol * 100).toFixed(1)}%</td><td class="num">${s.sharpe.toFixed(2)}</td>` +
+    `<td class="num neg">${(s.mdd * 100).toFixed(1)}%</td></tr>`).join('');
+
+  if (impactChart) impactChart.destroy();
+  impactChart = new Chart(document.getElementById('ptImpactChart'), {
+    type: 'line',
+    data: {
+      labels: sims[0].values.map((_, i) => i % 12 === 0 ? 'Y' + (i / 12) : ''),
+      datasets: sims.map((s, i) => ({ label: name(allocs[i]), data: s.values.map(v => v / 1e6), borderColor: colors[i], pointRadius: 0, borderWidth: 2, tension: 0.2 }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: { x: { grid: { display: false }, ticks: { autoSkip: false, maxRotation: 0 } }, y: { ...gridOpts, ticks: { callback: v => 'Rp ' + v + 'M' } } },
+      plugins: { legend: legendOpts, tooltip: { callbacks: { title: c => 'Month ' + c[0].dataIndex, label: c => ` ${c.dataset.label}: Rp ${c.parsed.y.toFixed(1)}M` } } }
+    }
+  });
+}
+
+// ─── 9. Structured product template (sharkfin) ────────────────────
+let sfChart;
+function renderSharkfin() {
+  const v = id => +document.getElementById(id).value || 0;
+  const amt = v('ptSfAmt'), days = v('ptSfDays'), bar = Math.max(101, v('ptSfBar'));
+  const lo = v('ptSfMin'), hi = v('ptSfMax'), reb = v('ptSfReb');
+  const apy = p => p <= 100 ? lo : p < bar ? lo + (hi - lo) * (p - 100) / (bar - 100) : reb;
+  const coupon = p => amt * apy(p) / 100 * days / 365;
+
+  const xs = [];
+  for (let p = 80; p <= Math.max(130, bar + 15); p++) xs.push(p);
+  if (sfChart) sfChart.destroy();
+  sfChart = new Chart(document.getElementById('ptSfChart'), {
+    type: 'line',
+    data: {
+      labels: xs.map(p => p + '%'),
+      datasets: [{ label: 'APY', data: xs.map(apy), borderColor: P.accent, backgroundColor: P.accent + '26', fill: true, pointRadius: 0, borderWidth: 2, stepped: false }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: { x: { grid: { display: false }, ticks: { maxTicksLimit: 12 } }, y: { ...gridOpts, beginAtZero: true, ticks: { callback: v => v + '%' } } },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { title: c => 'Price at expiry: ' + c[0].label + ' of spot', label: c => ` APY ${c.parsed.y.toFixed(2)}%` } } }
+    }
+  });
+
+  const mid = Math.round((100 + bar) / 2);
+  const scen = [[90, 'Falls 10%'], [100, 'Unchanged'], [mid, 'Rises to midway'], [bar - 1, 'Just under barrier'], [bar, 'Hits barrier']];
+  document.getElementById('ptSfBody').innerHTML = scen.map(([p, label]) =>
+    `<tr><td>${p}% <span class="pt-pill">${label}</span></td><td class="num">${apy(p).toFixed(2)}%</td>` +
+    `<td class="num">${fmtNum(coupon(p))}</td><td class="num">${fmtNum(amt + coupon(p))}</td></tr>`).join('');
+}
+
+// Dashboard is the panel open on load
+portalInited.dashboard = true;
+initDashboard();

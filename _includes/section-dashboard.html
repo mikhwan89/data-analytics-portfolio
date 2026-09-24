@@ -1,267 +1,356 @@
 <!-- DASHBOARD -->
 <section id="dashboard">
   <div class="container">
-    <p class="section-label">Sample Dashboards</p>
-    <h2>Analytics Across Functions</h2>
-    <p class="section-sub">Six functional dashboard types built from dummy DBT data, plus a live project showing how data can be structured to tell a story and guide someone to a conclusion.</p>
+    <p class="section-label">Sample Dashboard</p>
+    <h2>More Than a Dashboard: A Sales Workspace</h2>
+    <p class="section-sub">Modelled on the sales portal I built at CAMP on the analytics-as-code stack. It's one place where a sales team tracks its book, reads the market, learns the products, runs client simulations and manages relationships. Click through the sidebar. Every name and figure here is synthetic.</p>
 
-    <div class="dash-tab-bar">
-      <button class="dash-tab-btn active" onclick="showDash('marketing', this)">Marketing Analytics</button>
-      <button class="dash-tab-btn" onclick="showDash('segmentation', this)">Customer Segmentation</button>
-      <button class="dash-tab-btn" onclick="showDash('retention', this)">Customer Retention</button>
-      <button class="dash-tab-btn" onclick="showDash('operations', this)">Operations</button>
-      <button class="dash-tab-btn" onclick="showDash('finance', this)">Finance</button>
-      <button class="dash-tab-btn" onclick="showDash('supply', this)">Supply Chain</button>
-      <button class="dash-tab-btn" onclick="showDash('storytelling', this)">Data Storytelling</button>
+    <div class="cap-legend">
+      <span class="cap-chip internal">Internal data</span>
+      <span class="cap-chip external">External data</span>
+      <span class="cap-chip knowledge">Product knowledge</span>
+      <span class="cap-chip sim">Simulation</span>
+      <span class="cap-chip crm">CRM &amp; write-back</span>
     </div>
 
-    <!-- ── 1. MARKETING ─────────────────────────────────────────── -->
-    <div class="dash-panel active" id="dash-marketing">
-      <div class="kpi-row">
-        <div class="kpi blue"><div class="kpi-label">Total Revenue (2024)</div><div class="kpi-value">$812K</div><div class="kpi-delta up">↑ 34% vs prior year</div></div>
-        <div class="kpi green"><div class="kpi-label">New Customers</div><div class="kpi-value">88</div><div class="kpi-delta up">↑ 22% YoY</div></div>
-        <div class="kpi purple"><div class="kpi-label">Avg LTV</div><div class="kpi-value">$2,140</div><div class="kpi-delta up">↑ 8% vs target</div></div>
-        <div class="kpi red"><div class="kpi-label">Blended CAC</div><div class="kpi-value">$198</div><div class="kpi-delta down">LTV:CAC = 10.8x ✓</div></div>
-      </div>
-      <div class="charts-grid">
-        <div class="chart-card"><h3>Monthly Revenue & Spend</h3><div class="chart-wrap tall"><canvas id="revenueChart"></canvas></div></div>
-        <div class="chart-card"><h3>Acquisition by Channel</h3><div class="chart-wrap tall"><canvas id="channelChart"></canvas></div></div>
-      </div>
-      <div class="charts-row2">
-        <div class="chart-card"><h3>ROAS by Channel (2024)</h3><div class="chart-wrap"><canvas id="roasChart"></canvas></div></div>
-        <div class="chart-card"><h3>Acquisition Funnel</h3><div class="chart-wrap"><canvas id="funnelChart"></canvas></div></div>
-      </div>
-      <div class="table-card">
-        <h3>Top Campaigns – Q4 2024</h3>
-        <div class="table-scroll"><table>
-          <thead><tr><th>Campaign</th><th>Platform</th><th>Spend</th><th>Conversions</th><th>CPA</th><th>ROAS</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr><td>Brand Search - Nov</td><td>Google</td><td>$2,808</td><td>94</td><td>$29.87</td><td>4.8x</td><td><span class="badge good">Top</span></td></tr>
-            <tr><td>Retargeting - Black Friday</td><td>Facebook</td><td>$1,890</td><td>28</td><td>$67.50</td><td>3.9x</td><td><span class="badge good">Top</span></td></tr>
-            <tr><td>Non-Brand Search - Nov</td><td>Google</td><td>$5,472</td><td>88</td><td>$62.18</td><td>3.6x</td><td><span class="badge good">Top</span></td></tr>
-            <tr><td>Lookalike - Q4</td><td>Facebook</td><td>$2,124</td><td>44</td><td>$48.27</td><td>3.2x</td><td><span class="badge ok">Avg</span></td></tr>
-            <tr><td>Display Remarketing - Dec</td><td>Google</td><td>$1,026</td><td>30</td><td>$34.20</td><td>2.8x</td><td><span class="badge ok">Avg</span></td></tr>
-            <tr><td>Prospecting - Cold Audience</td><td>Facebook</td><td>$2,628</td><td>20</td><td>$131.40</td><td>1.9x</td><td><span class="badge low">Review</span></td></tr>
-          </tbody>
-        </table></div>
-      </div>
-    </div>
-
-    <!-- ── 2. CUSTOMER SEGMENTATION ──────────────────────────────── -->
-    <div class="dash-panel" id="dash-segmentation">
-      <div class="kpi-row">
-        <div class="kpi blue"><div class="kpi-label">Total Active Customers</div><div class="kpi-value">1,240</div><div class="kpi-delta up">↑ 18% YoY</div></div>
-        <div class="kpi green"><div class="kpi-label">Champions (High Value)</div><div class="kpi-value">18%</div><div class="kpi-delta up">223 customers</div></div>
-        <div class="kpi red"><div class="kpi-label">At-Risk Segment</div><div class="kpi-value">22%</div><div class="kpi-delta down">↑ 3pp vs Q3 — action needed</div></div>
-        <div class="kpi purple"><div class="kpi-label">Revenue Concentration</div><div class="kpi-value">45%</div><div class="kpi-delta up">from top 18% of customers</div></div>
-      </div>
-      <div class="charts-grid">
-        <div class="chart-card"><h3>Revenue Contribution by Segment</h3><div class="chart-wrap tall"><canvas id="segRevenueChart"></canvas></div></div>
-        <div class="chart-card"><h3>Customer Count by Segment</h3><div class="chart-wrap tall"><canvas id="segSizeChart"></canvas></div></div>
-      </div>
-      <div class="charts-row2">
-        <div class="chart-card"><h3>Avg Order Value by Segment</h3><div class="chart-wrap"><canvas id="segAOVChart"></canvas></div></div>
-        <div class="chart-card"><h3>Segment Trend – Q4 (Champions vs At-Risk)</h3><div class="chart-wrap"><canvas id="segTrendChart"></canvas></div></div>
-      </div>
-      <div class="table-card">
-        <h3>Segment Summary</h3>
-        <div class="table-scroll"><table>
-          <thead><tr><th>Segment</th><th>Customers</th><th>% Total</th><th>Avg Revenue</th><th>Avg Orders/yr</th><th>Recommended Action</th></tr></thead>
-          <tbody>
-            <tr><td>Champions</td><td>223</td><td>18%</td><td>$580</td><td>8.4</td><td><span class="badge good">Reward & Upsell</span></td></tr>
-            <tr><td>Loyal</td><td>298</td><td>24%</td><td>$320</td><td>5.1</td><td><span class="badge good">Cross-sell</span></td></tr>
-            <tr><td>Promising</td><td>260</td><td>21%</td><td>$145</td><td>2.7</td><td><span class="badge ok">Nurture</span></td></tr>
-            <tr><td>At-Risk</td><td>273</td><td>22%</td><td>$88</td><td>1.3</td><td><span class="badge low">Retain Now</span></td></tr>
-            <tr><td>Churned</td><td>186</td><td>15%</td><td>$12</td><td>0.2</td><td><span class="badge low">Win-back</span></td></tr>
-          </tbody>
-        </table></div>
-      </div>
-    </div>
-
-    <!-- ── 3. CUSTOMER RETENTION ─────────────────────────────────── -->
-    <div class="dash-panel" id="dash-retention">
-      <div class="kpi-row">
-        <div class="kpi blue"><div class="kpi-label">M3 Retention Rate</div><div class="kpi-value">68%</div><div class="kpi-delta up">↑ 4pp vs prior cohort</div></div>
-        <div class="kpi red"><div class="kpi-label">Monthly Churn Rate</div><div class="kpi-value">4.2%</div><div class="kpi-delta down">↑ 0.3pp MoM — monitor</div></div>
-        <div class="kpi green"><div class="kpi-label">Net Revenue Retention</div><div class="kpi-value">112%</div><div class="kpi-delta up">Expansion outpacing churn</div></div>
-        <div class="kpi purple"><div class="kpi-label">Reactivated (Q4)</div><div class="kpi-value">34</div><div class="kpi-delta up">↑ 21% vs Q3</div></div>
-      </div>
-      <div class="charts-grid">
-        <div class="chart-card"><h3>Cohort Retention Curves</h3><div class="chart-wrap tall"><canvas id="retCohortChart"></canvas></div></div>
-        <div class="chart-card"><h3>Monthly Churn Rate</h3><div class="chart-wrap tall"><canvas id="retChurnChart"></canvas></div></div>
-      </div>
-      <div class="charts-row2">
-        <div class="chart-card"><h3>Net Revenue Retention by Segment</h3><div class="chart-wrap"><canvas id="retNRRChart"></canvas></div></div>
-        <div class="chart-card"><h3>Monthly Active Customers</h3><div class="chart-wrap"><canvas id="retActiveChart"></canvas></div></div>
-      </div>
-      <div class="table-card">
-        <h3>Cohort Retention Summary</h3>
-        <div class="table-scroll"><table>
-          <thead><tr><th>Cohort</th><th>Size</th><th>M1</th><th>M3</th><th>M6</th><th>M12</th><th>Cohort Revenue</th></tr></thead>
-          <tbody>
-            <tr><td>Jan 2024</td><td>68</td><td>85%</td><td>72%</td><td>61%</td><td>52%</td><td>$48K</td></tr>
-            <tr><td>Apr 2024</td><td>74</td><td>83%</td><td>69%</td><td>58%</td><td>—</td><td>$41K</td></tr>
-            <tr><td>Jul 2024</td><td>81</td><td>87%</td><td>74%</td><td>62%</td><td>—</td><td>$55K</td></tr>
-            <tr><td>Oct 2024</td><td>88</td><td>82%</td><td>70%</td><td>—</td><td>—</td><td>$39K</td></tr>
-          </tbody>
-        </table></div>
-      </div>
-    </div>
-
-    <!-- ── 4. OPERATIONS ──────────────────────────────────────────── -->
-    <div class="dash-panel" id="dash-operations">
-      <div class="kpi-row">
-        <div class="kpi blue"><div class="kpi-label">Orders This Month</div><div class="kpi-value">4,280</div><div class="kpi-delta up">↑ 12% MoM</div></div>
-        <div class="kpi green"><div class="kpi-label">SLA Hit Rate</div><div class="kpi-value">94.2%</div><div class="kpi-delta up">Target: 95% — close</div></div>
-        <div class="kpi purple"><div class="kpi-label">Avg Fulfillment Time</div><div class="kpi-value">1.8 days</div><div class="kpi-delta up">↓ 0.3d vs last month</div></div>
-        <div class="kpi red"><div class="kpi-label">Open Escalations</div><div class="kpi-value">12</div><div class="kpi-delta down">3 nearing SLA breach</div></div>
-      </div>
-      <div class="charts-grid">
-        <div class="chart-card"><h3>Daily Order Volume (Last 30 Days)</h3><div class="chart-wrap tall"><canvas id="opsVolumeChart"></canvas></div></div>
-        <div class="chart-card"><h3>Issue Type Breakdown</h3><div class="chart-wrap tall"><canvas id="opsIssueChart"></canvas></div></div>
-      </div>
-      <div class="charts-row2">
-        <div class="chart-card"><h3>SLA Hit Rate by Category</h3><div class="chart-wrap"><canvas id="opsSLAChart"></canvas></div></div>
-        <div class="chart-card"><h3>Avg Fulfillment Time by Warehouse</h3><div class="chart-wrap"><canvas id="opsFulfillChart"></canvas></div></div>
-      </div>
-      <div class="table-card">
-        <h3>Open Escalations</h3>
-        <div class="table-scroll"><table>
-          <thead><tr><th>Issue Type</th><th>Open</th><th>SLA Breached</th><th>Avg Age</th><th>Priority</th></tr></thead>
-          <tbody>
-            <tr><td>Delayed Shipment</td><td>5</td><td>3</td><td>4.2 days</td><td><span class="badge low">High</span></td></tr>
-            <tr><td>Wrong Item Delivered</td><td>3</td><td>1</td><td>2.8 days</td><td><span class="badge low">High</span></td></tr>
-            <tr><td>Damaged in Transit</td><td>2</td><td>0</td><td>1.5 days</td><td><span class="badge ok">Med</span></td></tr>
-            <tr><td>Missing Item</td><td>1</td><td>0</td><td>0.8 days</td><td><span class="badge ok">Med</span></td></tr>
-            <tr><td>Other</td><td>1</td><td>0</td><td>0.5 days</td><td><span class="badge good">Low</span></td></tr>
-          </tbody>
-        </table></div>
-      </div>
-    </div>
-
-    <!-- ── 5. FINANCE ─────────────────────────────────────────────── -->
-    <div class="dash-panel" id="dash-finance">
-      <div class="kpi-row">
-        <div class="kpi blue"><div class="kpi-label">Q4 Revenue</div><div class="kpi-value">$435K</div><div class="kpi-delta up">↑ 38% vs Q4 prior year</div></div>
-        <div class="kpi green"><div class="kpi-label">Gross Margin</div><div class="kpi-value">68.2%</div><div class="kpi-delta up">↑ 2.1pp YoY</div></div>
-        <div class="kpi purple"><div class="kpi-label">EBITDA (Q4)</div><div class="kpi-value">$113K</div><div class="kpi-delta up">26% margin</div></div>
-        <div class="kpi red"><div class="kpi-label">OpEx vs Budget</div><div class="kpi-value">−3%</div><div class="kpi-delta up">$3.8K under budget</div></div>
-      </div>
-      <div class="charts-grid">
-        <div class="chart-card"><h3>Monthly Revenue vs COGS</h3><div class="chart-wrap tall"><canvas id="finPLChart"></canvas></div></div>
-        <div class="chart-card"><h3>OpEx Breakdown</h3><div class="chart-wrap tall"><canvas id="finExpChart"></canvas></div></div>
-      </div>
-      <div class="charts-row2">
-        <div class="chart-card"><h3>Budget vs Actuals by Dept</h3><div class="chart-wrap"><canvas id="finBudgetChart"></canvas></div></div>
-        <div class="chart-card"><h3>Cumulative Cash Position</h3><div class="chart-wrap"><canvas id="finCashChart"></canvas></div></div>
-      </div>
-      <div class="table-card">
-        <h3>P&L Summary – Q4 2024</h3>
-        <div class="table-scroll"><table>
-          <thead><tr><th>Metric</th><th>Oct</th><th>Nov</th><th>Dec</th><th>Q4 Total</th><th>vs Budget</th></tr></thead>
-          <tbody>
-            <tr><td>Revenue</td><td>$112K</td><td>$168K</td><td>$155K</td><td>$435K</td><td><span class="badge good">+12%</span></td></tr>
-            <tr><td>COGS</td><td>$35K</td><td>$52K</td><td>$51K</td><td>$138K</td><td><span class="badge good">−3%</span></td></tr>
-            <tr><td>Gross Profit</td><td>$77K</td><td>$116K</td><td>$104K</td><td>$297K</td><td><span class="badge good">+18%</span></td></tr>
-            <tr><td>Total OpEx</td><td>$58K</td><td>$65K</td><td>$61K</td><td>$184K</td><td><span class="badge ok">−1%</span></td></tr>
-            <tr><td>EBITDA</td><td>$19K</td><td>$51K</td><td>$43K</td><td>$113K</td><td><span class="badge good">+31%</span></td></tr>
-          </tbody>
-        </table></div>
-      </div>
-    </div>
-
-    <!-- ── 6. SUPPLY CHAIN ────────────────────────────────────────── -->
-    <div class="dash-panel" id="dash-supply">
-      <div class="kpi-row">
-        <div class="kpi blue"><div class="kpi-label">Avg Days of Inventory</div><div class="kpi-value">32 days</div><div class="kpi-delta up">Target: 30–45 ✓</div></div>
-        <div class="kpi green"><div class="kpi-label">Fill Rate</div><div class="kpi-value">96.4%</div><div class="kpi-delta up">↑ 1.2pp vs last month</div></div>
-        <div class="kpi red"><div class="kpi-label">Stockout SKUs</div><div class="kpi-value">8</div><div class="kpi-delta down">of 245 active SKUs</div></div>
-        <div class="kpi purple"><div class="kpi-label">On-Time Delivery</div><div class="kpi-value">91.3%</div><div class="kpi-delta down">↓ 1.8pp vs 93% target</div></div>
-      </div>
-      <div class="charts-grid">
-        <div class="chart-card"><h3>Inventory Level Trend (12 Weeks)</h3><div class="chart-wrap tall"><canvas id="supInventoryChart"></canvas></div></div>
-        <div class="chart-card"><h3>Fill Rate by Category</h3><div class="chart-wrap tall"><canvas id="supFillChart"></canvas></div></div>
-      </div>
-      <div class="charts-row2">
-        <div class="chart-card"><h3>Avg Supplier Lead Time (Days)</h3><div class="chart-wrap"><canvas id="supLeadChart"></canvas></div></div>
-        <div class="chart-card"><h3>On-Time Delivery Trend</h3><div class="chart-wrap"><canvas id="supOTDChart"></canvas></div></div>
-      </div>
-      <div class="table-card">
-        <h3>Inventory Alert – Low Stock SKUs</h3>
-        <div class="table-scroll"><table>
-          <thead><tr><th>Category</th><th>Stock (units)</th><th>Days Left</th><th>Reorder Status</th><th>Supplier</th></tr></thead>
-          <tbody>
-            <tr><td>Sports & Outdoors</td><td>420</td><td>8 days</td><td><span class="badge low">Urgent</span></td><td>SportCo</td></tr>
-            <tr><td>Apparel</td><td>850</td><td>14 days</td><td><span class="badge low">Reorder Now</span></td><td>FashionHub</td></tr>
-            <tr><td>Electronics</td><td>1,240</td><td>28 days</td><td><span class="badge ok">Reorder Soon</span></td><td>TechDist Co.</td></tr>
-            <tr><td>Beauty & Health</td><td>680</td><td>22 days</td><td><span class="badge ok">Monitor</span></td><td>BeautyWholesale</td></tr>
-            <tr><td>Home & Living</td><td>2,100</td><td>45 days</td><td><span class="badge good">Sufficient</span></td><td>HomeSupply</td></tr>
-          </tbody>
-        </table></div>
-      </div>
-    </div>
-
-    <!-- ── 7. DATA STORYTELLING ──────────────────────────────────── -->
-    <div class="dash-panel" id="dash-storytelling">
-
-      <div class="story-hero-card">
-        <span class="story-live-pill">Live Project</span>
-        <div class="story-title-line">Data doesn't just describe reality — it can be structured to <span>argue a point</span>.</div>
-        <p class="story-body-text">
-          <strong style="color:var(--text)">mystoreofvalue.com</strong> is a financial analytics platform I built that tracks long-term asset performance across cryptocurrencies, commodities, and market indices.
-          But it's more than a data display — it's an argument. The site is designed to take someone who asks
-          <em>"what should I hold to protect my wealth?"</em> and walk them, step by step, through the evidence that leads to a clear, data-backed answer.
-          Every metric shown, every chart drawn, every ranking presented serves that narrative.
-        </p>
-        <div class="story-cta-row">
-          <a href="https://mystoreofvalue.com" target="_blank" class="btn btn-primary">Visit mystoreofvalue.com →</a>
-          <span class="story-url-label">Live at <a href="https://mystoreofvalue.com" target="_blank">mystoreofvalue.com</a></span>
+    <div class="portal">
+      <aside class="pt-side">
+        <div class="pt-brand">Sales <span>Portal</span></div>
+        <div class="pt-nav">
+          <button class="pt-tab active" onclick="showPortal('dashboard', this)"><svg viewBox="0 0 24 24"><path d="M3 10.6 12 3.2l9 7.4"/><path d="M5.6 9.4V20a.8.8 0 0 0 .8.8h11.2a.8.8 0 0 0 .8-.8V9.4"/></svg><span>Dashboard</span><i class="cap-dot internal"></i></button>
+          <button class="pt-tab" onclick="showPortal('overview', this)"><svg viewBox="0 0 24 24"><path d="M3.2 20.8h17.6"/><rect x="5" y="10" width="3.6" height="8"/><rect x="10.2" y="4.6" width="3.6" height="13.4"/><rect x="15.4" y="13.2" width="3.6" height="4.8"/></svg><span>Sales Overview</span><i class="cap-dot internal"></i></button>
+          <button class="pt-tab" onclick="showPortal('profit', this)"><svg viewBox="0 0 24 24"><circle cx="9.2" cy="8" r="3.2"/><path d="M3.2 19.4c0-3.4 2.7-5.2 6-5.2s6 1.8 6 5.2"/><path d="M16.2 5.4a3 3 0 0 1 0 5.2"/><path d="M17.8 14.6c2.1.7 3.4 2.3 3.4 4.8"/></svg><span>Client Profitability</span><i class="cap-dot internal"></i></button>
+          <button class="pt-tab" onclick="showPortal('crm', this)"><svg viewBox="0 0 24 24"><circle cx="9" cy="7.8" r="3.1"/><path d="M3.2 19.2c0-3.3 2.6-5 5.8-5s5.8 1.7 5.8 5"/><path d="M16.6 4.6a3 3 0 0 1 0 5.4"/><path d="M18.4 14.4c1.6.6 2.6 1.9 2.6 3.9"/><path d="M19.5 3.4v4.2M17.4 5.5h4.2"/></svg><span>CRM</span><i class="cap-dot crm"></i></button>
+          <button class="pt-tab" onclick="showPortal('dca', this)"><svg viewBox="0 0 24 24"><rect x="5.2" y="2.8" width="13.6" height="18.4" rx="2.2"/><rect x="8" y="5.8" width="8" height="3.4" rx="1"/><path d="M8.4 13h.02M12 13h.02M15.6 13h.02M8.4 17h.02M12 17h.02M15.6 17h.02"/></svg><span>DCA Simulator</span><i class="cap-dot sim"></i><i class="cap-dot external"></i></button>
+          <button class="pt-tab" onclick="showPortal('impact', this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M9.4 8.2h4a2 2 0 0 1 0 4h-4z"/><path d="M9.4 12.2h4.5a2 2 0 0 1 0 4H9.4z"/><path d="M9.4 8.2v8M11.2 6.4v1.8M13.2 6.4v1.8M11.2 16.2V18M13.2 16.2V18"/></svg><span>Bitcoin Impact</span><i class="cap-dot sim"></i><i class="cap-dot external"></i></button>
+          <button class="pt-tab" onclick="showPortal('news', this)"><svg viewBox="0 0 24 24"><path d="M4 5.2h11.8v15.6H5.4A1.4 1.4 0 0 1 4 19.4z"/><path d="M15.8 9.4H19a1 1 0 0 1 1 1v8a2.4 2.4 0 0 1-2.4 2.4"/><path d="M7 8.6h5.8M7 12.1h5.8M7 15.6h3.8"/></svg><span>News</span><i class="cap-dot external"></i></button>
+          <button class="pt-tab" onclick="showPortal('products', this)"><svg viewBox="0 0 24 24"><path d="M20.8 8.4 12 3.4 3.2 8.4v7.2l8.8 5 8.8-5z"/><path d="m3.2 8.4 8.8 5 8.8-5"/><path d="M12 13.4v7.2"/></svg><span>Product List</span><i class="cap-dot knowledge"></i></button>
+          <button class="pt-tab" onclick="showPortal('structured', this)"><svg viewBox="0 0 24 24"><path d="M13.8 3.2H7a2 2 0 0 0-2 2v13.6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.4z"/><path d="M13.8 3.2v5.2H19"/><path d="M8.8 13h6.4M8.8 16.4h4.2"/></svg><span>Structured Product</span><i class="cap-dot knowledge"></i><i class="cap-dot sim"></i></button>
+          <button class="pt-tab" onclick="showPortal('knowledge', this)"><svg viewBox="0 0 24 24"><path d="M4.2 5A2.2 2.2 0 0 1 6.4 2.8h13.4v15.6H6.4A2.2 2.2 0 0 0 4.2 20.6z"/><path d="M4.2 18.6v.8a2.2 2.2 0 0 0 2.2 2.2h13.4v-3"/></svg><span>Fundamental Knowledge</span><i class="cap-dot knowledge"></i></button>
+          <button class="pt-tab" onclick="showPortal('moredata', this)"><svg viewBox="0 0 24 24"><circle cx="5.6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18.4" cy="12" r="1.5"/></svg><span>More Data</span><i class="cap-dot external"></i></button>
         </div>
-      </div>
+      </aside>
 
-      <div class="story-points-grid">
-        <div class="story-point">
-          <div class="story-point-num">Mechanism 01</div>
-          <strong>The question leads the data</strong>
-          <p>The site opens with a question real investors ask: <em>which assets actually hold value over time?</em> Every chart and table that follows is the answer to that question — not just data for its own sake.</p>
+      <div class="pt-main">
+        <header class="pt-topbar">
+          <span class="pt-user"><span class="pt-avatar">SA</span>sales.a@example.com</span>
+          <span class="pt-btn">Sign out</span>
+        </header>
+        <div class="pt-head">
+          <span class="pt-rule"></span>
+          <div>
+            <div class="pt-title">Sales Dashboard</div>
+            <div class="pt-sub">Track performance. Drive impact.</div>
+          </div>
         </div>
-        <div class="story-point">
-          <div class="story-point-num">Mechanism 02</div>
-          <strong>Metrics chosen to persuade</strong>
-          <p>CAGR, Sharpe ratio, max drawdown, and Sortino ratio aren't shown because they exist — each one is selected because it exposes a different dimension of the argument. Risk-adjusted returns tell a much stronger story than raw gains alone.</p>
-        </div>
-        <div class="story-point">
-          <div class="story-point-num">Mechanism 03</div>
-          <strong>Rankings close the argument</strong>
-          <p>The leaderboard lets the data state the conclusion itself. Visitors don't need to be told which assets win — sorting the table by any metric makes the answer self-evident. The analyst's job is done before the user even scrolls.</p>
-        </div>
-      </div>
 
-      <div class="story-metrics-row">
-        <div class="story-metric">
-          <div class="story-metric-label">BTC — 10Y CAGR</div>
-          <div class="story-metric-value" style="color:var(--accent2)">+79%</div>
-          <div class="story-metric-sub">annualised</div>
+        <!-- ── 1. DASHBOARD ─────────────────────────────────────────── -->
+        <div class="pt-panel active" id="pt-dashboard">
+          <div class="pt-why"><span class="cap-chip internal">Internal data</span>Each rep's own book, filtered by row-level security in the semantic layer. A manager opening the same page sees the whole team.</div>
+          <div class="pt-filters">
+            <label>From<input type="date" value="2026-08-25" disabled></label>
+            <label>To<input type="date" value="2026-09-23" disabled></label>
+            <label>Preset<select disabled><option>Last 30 days</option></select></label>
+            <label>Product<select disabled><option>All products</option></select></label>
+            <label>Client name<input type="search" placeholder="Name…" disabled></label>
+          </div>
+          <div class="pt-kpis">
+            <div class="pt-kpi"><div class="pt-kpi-label">AUS</div><div class="pt-kpi-value">$48.6M</div><div class="pt-kpi-sub">assets under supervision (USD)</div><div class="pt-bar" style="background:var(--p-accent)"></div></div>
+            <div class="pt-kpi"><div class="pt-kpi-label">Transaction Value USD</div><div class="pt-kpi-value">$12.4M</div><div class="pt-kpi-sub">active transaction volume</div><div class="pt-bar" style="background:var(--p-accent2)"></div></div>
+            <div class="pt-kpi"><div class="pt-kpi-label">Fee revenue (IDR)</div><div class="pt-kpi-value">Rp 1.84B</div><div class="pt-kpi-sub">total fees collected</div><div class="pt-bar" style="background:var(--p-warning)"></div></div>
+            <div class="pt-kpi"><div class="pt-kpi-label">Your commission (IDR)</div><div class="pt-kpi-value">Rp 212M</div><div class="pt-kpi-sub">sales commission earned</div><div class="pt-bar" style="background:var(--p-positive)"></div></div>
+            <div class="pt-kpi"><div class="pt-kpi-label">Upline commission (IDR)</div><div class="pt-kpi-value">Rp 53M</div><div class="pt-kpi-sub">upline portion</div><div class="pt-bar" style="background:var(--p-muted)"></div></div>
+          </div>
+          <div class="pt-card">
+            <div class="pt-card-head"><span>Daily Asset Under Supervision (USD)</span><em>by asset</em></div>
+            <div class="pt-chart" style="height:240px"><canvas id="ptAusChart"></canvas></div>
+          </div>
+          <div class="pt-row2">
+            <div class="pt-card">
+              <div class="pt-card-head"><span>Daily transaction value (USD)</span><em>active volume · by product</em></div>
+              <div class="pt-chart"><canvas id="ptTrxChart"></canvas></div>
+            </div>
+            <div class="pt-card">
+              <div class="pt-card-head"><span>Revenue product mix</span><em>fee · by USD</em></div>
+              <div class="pt-chart"><canvas id="ptMixChart"></canvas></div>
+            </div>
+          </div>
+          <div class="pt-row2">
+            <div class="pt-card">
+              <div class="pt-card-head"><span>Top clients</span><em>active volume · by USD</em></div>
+              <div class="pt-tbl"><table>
+                <thead><tr><th>Client</th><th class="num">Volume (USD)</th><th class="num">Txns</th></tr></thead>
+                <tbody>
+                  <tr><td>Client A</td><td class="num">2,184,500</td><td class="num">42</td></tr>
+                  <tr><td>Client B</td><td class="num">1,562,300</td><td class="num">18</td></tr>
+                  <tr><td>Client C</td><td class="num">1,108,900</td><td class="num">27</td></tr>
+                  <tr><td>Client D</td><td class="num">874,200</td><td class="num">11</td></tr>
+                  <tr><td>Client E</td><td class="num">651,750</td><td class="num">35</td></tr>
+                </tbody>
+              </table></div>
+            </div>
+            <div class="pt-card">
+              <div class="pt-card-head"><span>Upcoming maturities</span><em>next 14 days</em></div>
+              <div class="pt-tbl"><table>
+                <thead><tr><th>Client</th><th>Product</th><th class="num">Amount</th><th class="num">Matures</th></tr></thead>
+                <tbody>
+                  <tr><td>Client B</td><td>Fixed Earn 90D</td><td class="num">250,000 <span class="mono">USDT</span></td><td class="num">26 Sep</td></tr>
+                  <tr><td>Client F</td><td>Dual Currency</td><td class="num">1.50 <span class="mono">BTC</span></td><td class="num">28 Sep</td></tr>
+                  <tr><td>Client A</td><td>Sharkfin</td><td class="num">400,000 <span class="mono">USDT</span></td><td class="num">01 Oct</td></tr>
+                  <tr><td>Client D</td><td>Fixed Earn 30D</td><td class="num">42.00 <span class="mono">ETH</span></td><td class="num">04 Oct</td></tr>
+                </tbody>
+              </table></div>
+            </div>
+          </div>
+          <div class="pt-card">
+            <div class="pt-card-head"><span>Assets under supervision</span><em>with birthdays in the next 30 days</em></div>
+            <div class="pt-tbl"><table>
+              <thead><tr><th>Client</th><th class="num">AUM</th><th class="num">Idle Asset</th><th class="num">Total AUS</th><th>Birthday Soon</th></tr></thead>
+              <tbody>
+                <tr><td>Client A</td><td class="num">6,420,000</td><td class="num">310,500</td><td class="num">6,730,500</td><td></td></tr>
+                <tr><td>Client B</td><td class="num">4,985,200</td><td class="num">1,204,000</td><td class="num">6,189,200</td><td><span class="pt-pill warn">02 Oct</span></td></tr>
+                <tr><td>Client C</td><td class="num">3,118,700</td><td class="num">96,300</td><td class="num">3,215,000</td><td></td></tr>
+                <tr><td>Client G</td><td class="num">1,640,000</td><td class="num">812,900</td><td class="num">2,452,900</td><td><span class="pt-pill warn">11 Oct</span></td></tr>
+              </tbody>
+            </table></div>
+          </div>
         </div>
-        <div class="story-metric">
-          <div class="story-metric-label">Gold — 10Y CAGR</div>
-          <div class="story-metric-value" style="color:var(--accent)">+6.4%</div>
-          <div class="story-metric-sub">annualised</div>
-        </div>
-        <div class="story-metric">
-          <div class="story-metric-label">S&P 500 — 10Y CAGR</div>
-          <div class="story-metric-value" style="color:var(--accent)">+12.5%</div>
-          <div class="story-metric-sub">annualised</div>
-        </div>
-        <div class="story-metric">
-          <div class="story-metric-label">USD Purchasing Power</div>
-          <div class="story-metric-value" style="color:var(--accent3)">−26%</div>
-          <div class="story-metric-sub">10Y cumulative loss</div>
-        </div>
-      </div>
-      <p class="story-metric-note">Sample figures from the live site — visit for current calculated values across all holding periods and assets.</p>
 
-    </div>
+        <!-- ── 2. SALES OVERVIEW ─────────────────────────────────────── -->
+        <div class="pt-panel" id="pt-overview">
+          <div class="pt-why"><span class="cap-chip internal">Internal data</span>The manager's view of the whole team: the league table, commission split between each rep and their upline, and the team rollup.</div>
+          <div class="pt-kpis six">
+            <div class="pt-kpi"><div class="pt-kpi-label">Total AUS</div><div class="pt-kpi-value">$184.2M</div><div class="pt-bar" style="background:var(--p-accent)"></div></div>
+            <div class="pt-kpi"><div class="pt-kpi-label">Clients</div><div class="pt-kpi-value">1,286</div><div class="pt-bar" style="background:var(--p-accent2)"></div></div>
+            <div class="pt-kpi"><div class="pt-kpi-label">Transaction volume</div><div class="pt-kpi-value">$46.8M</div><div class="pt-bar" style="background:var(--p-accent)"></div></div>
+            <div class="pt-kpi"><div class="pt-kpi-label">Fee revenue</div><div class="pt-kpi-value">Rp 7.12B</div><div class="pt-bar" style="background:var(--p-warning)"></div></div>
+            <div class="pt-kpi"><div class="pt-kpi-label">Commission payable</div><div class="pt-kpi-value">Rp 929M</div><div class="pt-bar" style="background:var(--p-positive)"></div></div>
+            <div class="pt-kpi"><div class="pt-kpi-label">Sales reps</div><div class="pt-kpi-value">8</div><div class="pt-bar" style="background:var(--p-muted)"></div></div>
+          </div>
+          <div class="pt-row2">
+            <div class="pt-card">
+              <div class="pt-card-head"><span>Assets under supervision by sales</span><em>USD</em></div>
+              <div class="pt-chart" style="height:250px"><canvas id="ptAusBySalesChart"></canvas></div>
+            </div>
+            <div class="pt-card">
+              <div class="pt-card-head"><span>Commission payable by sales</span><em>rep vs upline portion · IDR</em></div>
+              <div class="pt-chart" style="height:250px"><canvas id="ptCommChart"></canvas></div>
+            </div>
+          </div>
+          <div class="pt-card">
+            <div class="pt-card-head"><span>Sales league table</span><em>last 30 days</em></div>
+            <div class="pt-tbl"><table>
+              <thead><tr><th>Sales</th><th>Upline</th><th class="num">AUS (USD)</th><th class="num">Txns</th><th class="num">Volume (USD)</th><th class="num">Fee revenue (IDR)</th><th class="num">Total comm (IDR)</th></tr></thead>
+              <tbody>
+                <tr><td>Sales A</td><td>Lead 1</td><td class="num">48.6M</td><td class="num">212</td><td class="num">12.4M</td><td class="num">1.84B</td><td class="num">265M</td></tr>
+                <tr><td>Sales B</td><td>Lead 1</td><td class="num">36.1M</td><td class="num">164</td><td class="num">9.8M</td><td class="num">1.42B</td><td class="num">198M</td></tr>
+                <tr><td>Sales C</td><td>Lead 2</td><td class="num">29.4M</td><td class="num">141</td><td class="num">7.1M</td><td class="num">1.05B</td><td class="num">142M</td></tr>
+                <tr><td>Sales D</td><td>Lead 2</td><td class="num">22.8M</td><td class="num">96</td><td class="num">5.6M</td><td class="num">0.88B</td><td class="num">104M</td></tr>
+                <tr><td>Sales E</td><td>Lead 1</td><td class="num">17.3M</td><td class="num">77</td><td class="num">4.2M</td><td class="num">0.61B</td><td class="num">71M</td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+
+        <!-- ── 3. CLIENT PROFITABILITY ───────────────────────────────── -->
+        <div class="pt-panel" id="pt-profit">
+          <div class="pt-why"><span class="cap-chip internal">Internal data</span>How a client's portfolio has actually done, with deposits and withdrawals separated out, so a rep can start a review meeting with facts.</div>
+          <div class="pt-filters">
+            <label>Method
+              <select id="ptProfitMethod" onchange="renderProfit()">
+                <option value="fiat">1 · Fiat value change</option>
+                <option value="crypto">2 · Crypto amount change</option>
+              </select>
+            </label>
+            <label>Client<select disabled><option>Client C</option></select></label>
+          </div>
+          <div class="pt-kpis three">
+            <div class="pt-kpi"><div class="pt-kpi-label">Profit / Loss</div><div class="pt-kpi-value pos" id="ptProfitPL">+$38,420</div><div class="pt-kpi-sub" id="ptProfitPLSub">+12.6% on net invested</div></div>
+            <div class="pt-kpi"><div class="pt-kpi-label">Net flow</div><div class="pt-kpi-value" id="ptProfitFlow">+$305,000</div><div class="pt-kpi-sub">deposits − withdrawals</div></div>
+            <div class="pt-kpi"><div class="pt-kpi-label">Current balance</div><div class="pt-kpi-value" id="ptProfitBal">$343,420</div><div class="pt-kpi-sub">across all products</div></div>
+          </div>
+          <div class="pt-card">
+            <div class="pt-card-head"><span>Monthly profitability</span><em id="ptProfitBadge">USD</em></div>
+            <div class="pt-chart"><canvas id="ptProfitChart"></canvas></div>
+          </div>
+          <div class="pt-card">
+            <div class="pt-card-head"><span>Client profitability leaderboard</span><em>your clients · last 12 months</em></div>
+            <div class="pt-tbl"><table>
+              <thead><tr><th>Client</th><th class="num">P&amp;L (USD)</th><th class="num">Net flow (USD)</th><th class="num">Balance (USD)</th></tr></thead>
+              <tbody>
+                <tr><td>Client A</td><td class="num pos">+612,300</td><td class="num">4,100,000</td><td class="num">6,730,500</td></tr>
+                <tr><td>Client B</td><td class="num pos">+401,900</td><td class="num">5,200,000</td><td class="num">6,189,200</td></tr>
+                <tr><td>Client C</td><td class="num pos">+38,420</td><td class="num">305,000</td><td class="num">343,420</td></tr>
+                <tr><td>Client H</td><td class="num neg">−21,750</td><td class="num">180,000</td><td class="num">158,250</td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+
+        <!-- ── 4. CRM ─────────────────────────────────────────────────── -->
+        <div class="pt-panel" id="pt-crm">
+          <div class="pt-why"><span class="cap-chip crm">CRM &amp; write-back</span>The page writes as well as reads. Contacts logged here go through an API into the warehouse, and the worklist is built from both the rep's notes and live client data. Try <strong>Log contact</strong>.</div>
+          <div class="pt-kpis three">
+            <div class="pt-kpi"><div class="pt-kpi-label">Open leads</div><div class="pt-kpi-value">14</div><div class="pt-bar" style="background:var(--p-accent)"></div></div>
+            <div class="pt-kpi"><div class="pt-kpi-label">Became clients</div><div class="pt-kpi-value">6</div><div class="pt-kpi-sub">last 90 days</div><div class="pt-bar" style="background:var(--p-positive)"></div></div>
+            <div class="pt-kpi"><div class="pt-kpi-label">No contact in 60+ days</div><div class="pt-kpi-value" id="ptCrmGap">3</div><div class="pt-kpi-sub">existing clients</div><div class="pt-bar" style="background:var(--p-negative)"></div></div>
+          </div>
+          <div class="pt-card">
+            <div class="pt-card-head">
+              <span>Existing customers</span>
+              <div class="pt-seg" id="ptCrmSeg">
+                <button class="active" onclick="crmFilter('all', this)">Worklist</button>
+                <button onclick="crmFilter('gap', this)">Coverage gap</button>
+                <button onclick="crmFilter('maturing', this)">Maturing</button>
+              </div>
+            </div>
+            <div class="pt-tbl"><table>
+              <thead><tr><th>Client</th><th class="num">AUS (USD)</th><th>Last contact</th><th>Why it's here</th><th></th></tr></thead>
+              <tbody id="ptCrmBody">
+                <tr data-tags="gap"><td>Client G</td><td class="num">2,452,900</td><td class="lc">94 days ago</td><td><span class="pt-pill neg">No contact 90+ days</span></td><td><button class="pt-action" onclick="crmLog(this)">Log contact</button></td></tr>
+                <tr data-tags="maturing"><td>Client B</td><td class="num">6,189,200</td><td class="lc">12 days ago</td><td><span class="pt-pill warn">250k USDT matures 26 Sep</span></td><td><button class="pt-action" onclick="crmLog(this)">Log contact</button></td></tr>
+                <tr data-tags="gap"><td>Client J</td><td class="num">812,000</td><td class="lc">67 days ago</td><td><span class="pt-pill neg">No contact 60+ days</span></td><td><button class="pt-action" onclick="crmLog(this)">Log contact</button></td></tr>
+                <tr data-tags="maturing gap"><td>Client F</td><td class="num">1,318,400</td><td class="lc">71 days ago</td><td><span class="pt-pill warn">1.5 BTC DCI matures 28 Sep</span></td><td><button class="pt-action" onclick="crmLog(this)">Log contact</button></td></tr>
+                <tr data-tags="drift"><td>Client K</td><td class="num">640,100</td><td class="lc">20 days ago</td><td><span class="pt-pill">AUS down 35% in 30 days</span></td><td><button class="pt-action" onclick="crmLog(this)">Log contact</button></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+          <div class="pt-card">
+            <div class="pt-card-head"><span>Action log</span><em>this session</em></div>
+            <ul class="pt-log" id="ptCrmLog"><li class="muted">Nothing logged yet. In the live portal, due next actions are also emailed to the rep.</li></ul>
+          </div>
+        </div>
+
+        <!-- ── 5. DCA SIMULATOR ───────────────────────────────────────── -->
+        <div class="pt-panel" id="pt-dca">
+          <div class="pt-why"><span class="cap-chip sim">Simulation</span><span class="cap-chip external">External data</span>A client asks what investing a fixed amount every month would have done. The live portal answers from daily market prices ingested alongside the internal data. Change the inputs below.</div>
+          <div class="pt-filters">
+            <label>Asset
+              <select id="ptDcaAsset" onchange="renderDca()">
+                <option value="0">Crypto</option><option value="1">Gold</option><option value="2">Equity index</option>
+              </select>
+            </label>
+            <label>Range
+              <select id="ptDcaYears" onchange="renderDca()">
+                <option value="3">3 years</option><option value="5" selected>5 years</option><option value="10">10 years</option>
+              </select>
+            </label>
+            <label>Amount per buy (USD)<input type="number" id="ptDcaAmt" value="500" min="10" step="50" oninput="renderDca()"></label>
+          </div>
+          <div class="pt-card">
+            <div class="pt-card-head"><span>Invested vs. portfolio value (DCA)</span><em>monthly buys</em></div>
+            <div class="pt-chart" style="height:250px"><canvas id="ptDcaChart"></canvas></div>
+          </div>
+          <div class="pt-card">
+            <div class="pt-card-head"><span>DCA vs. lump sum</span><em>same total invested</em></div>
+            <div class="pt-tbl"><table>
+              <thead><tr><th>Asset</th><th class="num">Invested</th><th class="num">DCA value</th><th class="num">DCA return</th><th class="num">Lump sum value</th><th class="num">Lump sum return</th><th>Better</th></tr></thead>
+              <tbody id="ptDcaBody"></tbody>
+            </table></div>
+          </div>
+          <p class="pt-foot">Illustrative price paths generated for this page, not market data.</p>
+        </div>
+
+        <!-- ── 6. BITCOIN IMPACT ─────────────────────────────────────── -->
+        <div class="pt-panel" id="pt-impact">
+          <div class="pt-why"><span class="cap-chip sim">Simulation</span><span class="cap-chip external">External data</span>What adding a small bitcoin allocation does to a conventional portfolio's return and risk: CAGR, volatility, Sharpe and max drawdown, with or without rebalancing.</div>
+          <div class="pt-filters">
+            <label class="pt-check"><input type="checkbox" id="ptImpactReb" onchange="renderImpact()"> Quarterly rebalancing</label>
+          </div>
+          <div class="pt-card">
+            <div class="pt-card-head"><span>Portfolio value by bitcoin allocation</span><em>Rp 100M initial · 5 years</em></div>
+            <div class="pt-chart" style="height:250px"><canvas id="ptImpactChart"></canvas></div>
+          </div>
+          <div class="pt-card">
+            <div class="pt-card-head"><span>Return and risk</span><em>risk-free 5% p.a.</em></div>
+            <div class="pt-tbl"><table>
+              <thead><tr><th>Portfolio</th><th class="num">Final value</th><th class="num">CAGR</th><th class="num">Volatility (ann.)</th><th class="num">Sharpe</th><th class="num">Max drawdown</th></tr></thead>
+              <tbody id="ptImpactBody"></tbody>
+            </table></div>
+          </div>
+          <p class="pt-foot">Base portfolio: 60% equity index, 40% fixed income at 6% p.a. Illustrative price paths, not market data.</p>
+        </div>
+
+        <!-- ── 7. NEWS ───────────────────────────────────────────────── -->
+        <div class="pt-panel" id="pt-news">
+          <div class="pt-why"><span class="cap-chip external">External data</span>Crypto news and in-house research gathered on a schedule into the same warehouse, so reps read the market where they read their book.</div>
+          <div class="pt-news">
+            <div class="pt-news-item"><div class="pt-news-meta"><span class="pt-pill accent">Research desk</span>2 hours ago</div><div class="pt-news-title">Weekly outlook: where the current cycle sits against the last three</div><p>In-house note, with talking points for client calls this week.</p></div>
+            <div class="pt-news-item"><div class="pt-news-meta"><span class="pt-pill">Crypto media</span>5 hours ago</div><div class="pt-news-title">Spot ETF flows turn positive for a third straight week</div><p>Net inflows concentrated in the two largest funds.</p></div>
+            <div class="pt-news-item"><div class="pt-news-meta"><span class="pt-pill">Wire service</span>Yesterday</div><div class="pt-news-title">Central bank holds rates; rupiah steadies against the dollar</div><p>Why it matters for clients holding USDT against IDR.</p></div>
+            <div class="pt-news-item"><div class="pt-news-meta"><span class="pt-pill">Crypto media</span>Yesterday</div><div class="pt-news-title">Stablecoin supply reaches a new high</div><p>On-chain dollar liquidity keeps growing into the quarter end.</p></div>
+            <div class="pt-news-item"><div class="pt-news-meta"><span class="pt-pill">Derivatives</span>2 days ago</div><div class="pt-news-title">Options open interest clusters around month-end strikes</div><p>Context for this week's structured product conversations.</p></div>
+          </div>
+          <p class="pt-foot">Sample headlines for illustration.</p>
+        </div>
+
+        <!-- ── 8. PRODUCT LIST ───────────────────────────────────────── -->
+        <div class="pt-panel" id="pt-products">
+          <div class="pt-why"><span class="cap-chip knowledge">Product knowledge</span>One-pagers a rep can walk a client through, beside the data that shows which clients each product suits.</div>
+          <div class="pt-prod-grid">
+            <div class="pt-prod"><div class="pt-prod-cat">Earn</div><div class="pt-prod-name">Flexible Earn</div><p>Yield on idle assets with no lock-up. Withdraw any time.</p><div class="pt-prod-meta"><span>Tenor: open</span><span>Risk: low</span></div></div>
+            <div class="pt-prod"><div class="pt-prod-cat">Earn</div><div class="pt-prod-name">Fixed Earn</div><p>Higher yield for a fixed lock-up, with auto roll-over at maturity.</p><div class="pt-prod-meta"><span>Tenor: 30–180D</span><span>Risk: low</span></div></div>
+            <div class="pt-prod"><div class="pt-prod-cat">Yield enhancement</div><div class="pt-prod-name">Dual Currency</div><p>Enhanced yield in exchange for settling in one of two assets at a target price.</p><div class="pt-prod-meta"><span>Tenor: 1–30D</span><span>Risk: medium</span></div></div>
+            <div class="pt-prod"><div class="pt-prod-cat">Staking</div><div class="pt-prod-name">Staking</div><p>Network rewards on proof-of-stake assets, paid out on a schedule.</p><div class="pt-prod-meta"><span>Tenor: per network</span><span>Risk: medium</span></div></div>
+            <div class="pt-prod"><div class="pt-prod-cat">Structured</div><div class="pt-prod-name">Structured Products</div><p>Sharkfin, accumulator, fixed coupon convertible and more, each built from its own template.</p><div class="pt-prod-meta"><span>Tenor: bespoke</span><span>Risk: varies</span></div></div>
+          </div>
+        </div>
+
+        <!-- ── 9. STRUCTURED PRODUCT TEMPLATE ────────────────────────── -->
+        <div class="pt-panel" id="pt-structured">
+          <div class="pt-why"><span class="cap-chip knowledge">Product knowledge</span><span class="cap-chip sim">Simulation</span>Enter the deal parameters and the template draws the payoff, so a rep can price a proposal and explain it in the same meeting. This one is a sharkfin note.</div>
+          <div class="pt-tpl-chips"><span class="pt-pill accent">Sharkfin</span><span class="pt-pill">Accumulator</span><span class="pt-pill">Fixed Coupon Convertible</span><span class="pt-pill">Range Accrual</span><span class="pt-pill">Basis Trade</span><span class="pt-pill">Bull Spread</span></div>
+          <div class="pt-filters">
+            <label>Investment (USDT)<input type="number" id="ptSfAmt" value="100000" step="1000" oninput="renderSharkfin()"></label>
+            <label>Tenor (days)<input type="number" id="ptSfDays" value="30" min="1" oninput="renderSharkfin()"></label>
+            <label>Knock-out barrier (% of spot)<input type="number" id="ptSfBar" value="110" min="101" oninput="renderSharkfin()"></label>
+            <label>Min APY (%)<input type="number" id="ptSfMin" value="2" step="0.5" oninput="renderSharkfin()"></label>
+            <label>Max APY (%)<input type="number" id="ptSfMax" value="14" step="0.5" oninput="renderSharkfin()"></label>
+            <label>Rebate APY (%)<input type="number" id="ptSfReb" value="4" step="0.5" oninput="renderSharkfin()"></label>
+          </div>
+          <div class="pt-card">
+            <div class="pt-card-head"><span>Payoff at expiry</span><em>APY vs. price at expiry</em></div>
+            <div class="pt-chart" style="height:240px"><canvas id="ptSfChart"></canvas></div>
+          </div>
+          <div class="pt-card">
+            <div class="pt-card-head"><span>Scenarios</span><em>what the client receives</em></div>
+            <div class="pt-tbl"><table>
+              <thead><tr><th>Price at expiry</th><th class="num">APY</th><th class="num">Coupon (USDT)</th><th class="num">Total returned (USDT)</th></tr></thead>
+              <tbody id="ptSfBody"></tbody>
+            </table></div>
+          </div>
+        </div>
+
+        <!-- ── 10. FUNDAMENTAL KNOWLEDGE ─────────────────────────────── -->
+        <div class="pt-panel" id="pt-knowledge">
+          <div class="pt-why"><span class="cap-chip knowledge">Product knowledge</span>Background reading that gets new reps up to speed and helps any rep brief a client. It lives in the same place they already work.</div>
+          <div class="pt-prod-grid">
+            <div class="pt-prod"><div class="pt-prod-cat">Primer · PDF</div><div class="pt-prod-name">Blockchain &amp; Cryptocurrency Fundamentals</div><p>From how a blockchain settles to why supply schedules matter, written for client conversations.</p></div>
+            <div class="pt-prod"><div class="pt-prod-cat">Industry · PDF</div><div class="pt-prod-name">Stablecoins, CBDCs &amp; Digital Assets in Banking</div><p>How banks and financial institutions are adopting digital assets worldwide.</p></div>
+            <div class="pt-prod"><div class="pt-prod-cat">Guide</div><div class="pt-prod-name">Product Selection Guide</div><p>Matching a client's goal and risk appetite to the right product, step by step.</p></div>
+            <div class="pt-prod"><div class="pt-prod-cat">Deck</div><div class="pt-prod-name">Product Offering</div><p>The full product line-up, ready to share on screen.</p></div>
+          </div>
+        </div>
+
+        <!-- ── 11. MORE DATA ─────────────────────────────────────────── -->
+        <div class="pt-panel" id="pt-moredata">
+          <div class="pt-why"><span class="cap-chip external">External data</span>A curated list of third-party charts, each linked straight to the one view worth opening, for analysis the warehouse doesn't cover.</div>
+          <div class="pt-prod-grid">
+            <a class="pt-prod link" href="https://charts.bitbo.io/cycle-repeat/" target="_blank" rel="noopener noreferrer"><div class="pt-prod-cat">Bitbo ↗</div><div class="pt-prod-name">Cycle Repeat</div><p>The current halving cycle overlaid on previous ones, the quickest answer to "where are we versus last time?"</p></a>
+            <a class="pt-prod link" href="https://charts.checkonchain.com/btconchain/pricing/pricing_onchainoriginals/pricing_onchainoriginals_dark.html" target="_blank" rel="noopener noreferrer"><div class="pt-prod-cat">Checkonchain ↗</div><div class="pt-prod-name">On-chain Price Models</div><p>Valuation bands built from on-chain cost basis rather than price history.</p></a>
+            <a class="pt-prod link" href="https://www.bitcoinmagazinepro.com/charts/addresses-holding-x-btc-by-year/" target="_blank" rel="noopener noreferrer"><div class="pt-prod-cat">Bitcoin Magazine Pro ↗</div><div class="pt-prod-name">Addresses Holding &gt; X BTC</div><p>An adoption and distribution read that price charts can't give you.</p></a>
+            <a class="pt-prod link" href="https://www.coinglass.com/pro/options/OIStrike" target="_blank" rel="noopener noreferrer"><div class="pt-prod-cat">Coinglass ↗</div><div class="pt-prod-name">Options OI by Strike</div><p>Where options positioning is concentrated, useful context for structured products.</p></a>
+          </div>
+        </div>
+
+      </div><!-- .pt-main -->
+    </div><!-- .portal -->
+
+    <p class="portal-note">
+      <strong>How the live version works:</strong> the same PostgreSQL → dbt → Cube stack serves every tab. Firebase sign-in claims decide which rows each person can read,
+      the CRM writes back through a small API, and every card's query is traceable to the Postgres query log.
+      This portfolio copy runs on synthetic data in plain JavaScript.
+    </p>
 
   </div>
 </section>

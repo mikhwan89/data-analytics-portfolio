@@ -368,6 +368,145 @@
         </div>
       </div>
 
+      <div class="opinion-card">
+        <h3>Analytics as Code: An Open-Source BI Stack, Managed with AI</h3>
+        <p class="opinion-preview">
+          Looker and Holistics set the bar for how analytics teams should work: the semantic layer is code, and Git records every change.
+          I wanted to know whether AI could help me build that same experience end to end on open-source tools, without per-seat
+          licences and with code at every single layer. It can, and the result turned out to be more than a BI tool.
+        </p>
+        <button class="opinion-toggle" onclick="toggleOpinion('opinion-aac', this)">Read full article ↓</button>
+
+        <div class="article-body" id="opinion-aac" style="display:none;">
+
+          <h4><span class="point-num">—</span>The Benchmark: Looker & Holistics</h4>
+          <p>
+            I've written before about why Looker and Holistics stand out. Their key advantage is structural:
+            <strong>the semantic layer is code</strong>. Metrics, joins and business logic are defined once in files,
+            not hidden behind a GUI. That one decision drives everything else:
+          </p>
+          <ul>
+            <li><strong>Git tells the whole story.</strong> Who added or changed what, when, and why, right there in the commit message.</li>
+            <li><strong>Analytics engineers collaborate like software teams.</strong> Reviews, history and rollbacks cover the data model, not just the pipelines.</li>
+            <li><strong>Holistics goes one step further.</strong> Its dashboards are code too. You build a dashboard by writing it, with no drag and drop.</li>
+          </ul>
+          <p>
+            In that earlier piece I also argued that a code-based model is what makes a BI stack <strong>AI-ready</strong>.
+            This article is what happened when I took that argument literally.
+          </p>
+
+          <h4><span class="point-num">1</span>The Challenge I Set Myself</h4>
+          <p>
+            <strong>Could AI help me build that same experience with open-source tools, end to end?</strong> I set two conditions:
+          </p>
+          <ol>
+            <li><strong>Cost efficient.</strong> An open-source core (PostgreSQL, Dagster, dbt Core, Cube Core), with no per-seat BI licences.</li>
+            <li><strong>Code at every single layer.</strong> Ingestion, transformations, metrics, access rules and the dashboards themselves. If every layer is code, an LLM can help build and maintain all of it.</li>
+          </ol>
+
+          <h4><span class="point-num">2</span>The Stack</h4>
+          <p>From raw data to the dashboard, every layer is defined in code:</p>
+          <ul>
+            <li><strong>Dagster</strong> (Python): ingestion and orchestration on a schedule, from databases, APIs and files.</li>
+            <li><strong>PostgreSQL 17</strong> (SQL): the warehouse, layered <code>stage → intermediate → mart</code>.</li>
+            <li><strong>dbt Core</strong> (SQL): transformations and data tests, run by Dagster.</li>
+            <li><strong>Cube Core</strong> (YAML · JS): the semantic layer, with metrics and row-level security.</li>
+            <li><strong>Firebase Auth</strong> (JWT): sign-in, whose claims decide who reads which numbers.</li>
+            <li><strong>Dashboards</strong> (HTML · JS): plain web pages, written as code, with no BI tool in the path.</li>
+          </ul>
+          <p>
+            Sources land in Postgres, dbt shapes them into marts, and Cube serves the marts, never the raw stage tables.
+            The access model is the part I like most: <strong>everyone opens the same page, and Cube hands back only the rows
+            that person's Firebase claims allow.</strong> A sales rep sees their own book, and a manager sees the team.
+            The rule lives in one place, in code.
+          </p>
+
+          <h4><span class="point-num">3</span>Managed with AI, Never a Black Box</h4>
+          <p>
+            AI helps write the code, but every layer has a UI that a human can open, read and question:
+          </p>
+          <ul>
+            <li><strong>Dagster UI</strong> shows pipelines, schedules, run history and asset lineage, and answers <em>"Did it run? What failed, and why?"</em></li>
+            <li><strong>dbt Docs</strong> covers every model, column and test, so it doubles as the data dictionary. It answers <em>"What does this column actually mean?"</em></li>
+            <li><strong>Cube Playground</strong> lets you inspect measures and dimensions and run test queries on the semantic layer. It answers <em>"Is this metric defined correctly?"</em></li>
+          </ul>
+          <p>
+            This matters. People who don't write code can still review the models, schedules and business logic.
+            The AI speeds up the work, but it doesn't replace the checks.
+          </p>
+
+          <h4><span class="point-num">4</span>Every Query Leaves a Trace</h4>
+          <p>
+            Every query carries a request label, so each one maps back to the dashboard card that sent it:
+            <strong>dashboard card → Cube access log → Postgres query log</strong>. That chain answers questions most BI setups struggle with:
+          </p>
+          <ul>
+            <li>Is every card on this dashboard running the query we expect?</li>
+            <li>Which dashboards are actually used, and by whom?</li>
+            <li>Which cards are slow enough to need query tuning?</li>
+          </ul>
+          <p>
+            The last question is where AI earns its place again. Given the query log, the plan and the schema, it can propose an index,
+            a better mart grain or a rewritten query. Those changes let the whole stack run on a modest single server instead of
+            a high-spec one.
+          </p>
+
+          <h4><span class="point-num">5</span>A Dashboard Is Just a Website</h4>
+          <p>
+            This is the part I didn't fully expect. Once the dashboard is plain HTML and JS, an LLM can build <em>more than a dashboard</em>.
+            Work that used to take a long time, or that a BI tool couldn't support at all, is now a prompt away:
+          </p>
+          <ul>
+            <li><strong>Add more than data.</strong> Context, explainers, news, calculators and simulators can sit right next to the numbers.</li>
+            <li><strong>Let users write data, if you allow it.</strong> Forms can insert or correct data in the database, straight from the dashboard.</li>
+            <li><strong>Say yes to more requests.</strong> An improvement that once took weeks, or wasn't doable in a BI tool, becomes a quick change.</li>
+          </ul>
+          <p>
+            A dashboard can become a product, not just a report. The sample dashboard above is modelled on exactly that: one sales workspace
+            that combines performance, market data, product knowledge, client simulations and a CRM.
+          </p>
+
+          <h4><span class="point-num">6</span>So, Should You Skip Looker or Holistics?</h4>
+          <p>Honestly? Not if you have the budget.</p>
+          <h5>Choose Looker / Holistics when</h5>
+          <ul>
+            <li>There's budget for licences</li>
+            <li>You want dedicated vendor support</li>
+            <li>You want more features out of the box</li>
+            <li>You want regular updates that follow industry trends</li>
+          </ul>
+          <h5>Choose an open-source stack when</h5>
+          <ul>
+            <li>Cost efficiency matters</li>
+            <li>You want every layer as code</li>
+            <li>You want AI working across the whole stack</li>
+            <li>You want to build data products alongside reports</li>
+          </ul>
+          <p>But if you're cost-conscious, the open-source route is surprisingly capable.</p>
+
+          <div class="article-conclusion">
+            <p>
+              <strong>Analytics as code isn't just for big budgets.</strong> An open-source stack can deliver the Looker / Holistics way of working.
+              AI works best when every layer is code, and humans can still see every layer. And a dashboard can be a product, not just a report.
+              Thank you to the PostgreSQL, Dagster, dbt and Cube communities for making it possible.
+            </p>
+          </div>
+
+          <div class="article-tags">
+            <span class="tag blue">Analytics as Code</span>
+            <span class="tag blue">Open Source BI</span>
+            <span class="tag blue">AI-Managed Stack</span>
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">Dagster</span>
+            <span class="tag">dbt Core</span>
+            <span class="tag">Cube Core</span>
+            <span class="tag">Firebase Auth</span>
+            <span class="tag">Row-Level Security</span>
+            <span class="tag blue">Semantic Layer</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
