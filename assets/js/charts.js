@@ -46,6 +46,7 @@ const PORTAL_INIT = {
   overview: initOverview,
   profit: renderProfit,
   dca: renderDca,
+  crm: renderLeads,
   impact: renderImpact,
   structured: renderSharkfin
 };
@@ -191,11 +192,78 @@ function crmLog(btn) {
     const gap = document.getElementById('ptCrmGap');
     gap.textContent = Math.max(0, +gap.textContent - 1);
   }
+  crmLogLine(`<span class="pt-pill pos">Call</span> Logged a contact with <strong>${client}</strong>. Next action: follow up in 14 days.`);
+}
+
+// Leads — people who are not clients yet. They end one of two ways, as a
+// client or abandoned with a reason; nothing is deleted.
+const LEADS = [
+  { name: 'Lead A', pot: 'high', line: 'B2C', src: 'Referral', aum: 1500000, next: 'Send sharkfin proposal', due: -2, last: 5, status: 'open' },
+  { name: 'Lead B', pot: 'high', line: 'B2B', src: 'Partner', aum: 3000000, next: 'Demo sub-account setup', due: 0, last: 3, status: 'open' },
+  { name: 'Lead C', pot: 'mid', line: 'B2C', src: 'Event', aum: 400000, next: 'Follow up after webinar', due: 3, last: 9, status: 'open' },
+  { name: 'Lead D', pot: 'mid', line: 'B2C', src: 'Inbound', aum: 250000, next: 'Qualifying call', due: 1, last: 2, status: 'open' },
+  { name: 'Lead E', pot: 'low', line: 'B2C', src: 'Outbound', aum: 80000, next: 'Share product deck', due: 6, last: 14, status: 'open' },
+  { name: 'Lead F', pot: 'mid', line: 'B2B', src: 'Referral', aum: 900000, next: 'Legal review of agreement', due: 10, last: 6, status: 'open' },
+  { name: 'Lead G', pot: 'low', line: 'B2C', src: 'Inbound', aum: 50000, next: 'Check KYC status', due: -1, last: 12, status: 'open' },
+  { name: 'Lead H', pot: 'high', line: 'B2C', src: 'Referral', aum: 1200000, last: 21, status: 'closed', note: 'Client since 02 Sep' },
+  { name: 'Lead I', pot: 'mid', line: 'B2C', src: 'Event', aum: 300000, last: 34, status: 'closed', note: 'Client since 18 Aug' },
+  { name: 'Lead J', pot: 'mid', line: 'B2C', src: 'Inbound', aum: 150000, last: 40, status: 'closed', note: 'Client since 11 Aug' },
+  { name: 'Lead K', pot: 'high', line: 'B2B', src: 'Partner', aum: 2500000, last: 52, status: 'closed', note: 'Client since 29 Jul' },
+  { name: 'Lead L', pot: 'mid', line: 'B2C', src: 'Outbound', aum: 200000, last: 45, status: 'abandoned', note: 'Chose a competitor' },
+  { name: 'Lead M', pot: 'low', line: 'B2C', src: 'Event', aum: 60000, last: 60, status: 'abandoned', note: 'No response' }
+];
+let leadStatus = 'open';
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function renderLeads() {
+  const by = st => LEADS.filter(l => l.status === st);
+  const open = by('open'), closed = by('closed'), abandoned = by('abandoned');
+  const pipeline = open.reduce((a, l) => a + l.aum, 0);
+  const conv = Math.round(closed.length / (closed.length + abandoned.length) * 100);
+  const pot = p => open.filter(l => l.pot === p).length;
+  document.getElementById('ptLeadFunnel').innerHTML =
+    `<span><b>${open.length}</b> open</span><span class="muted">${pot('high')} high · ${pot('mid')} mid · ${pot('low')} low</span>` +
+    `<span><b>${fmtUSD(pipeline)}</b> expected</span><span><b>${closed.length}</b> became clients</span>` +
+    `<span><b>${abandoned.length}</b> abandoned</span><span><b>${conv}%</b> of finished leads converted</span>`;
+  document.getElementById('ptLeadOpenKpi').textContent = open.length;
+  document.getElementById('ptLeadPipeKpi').textContent = fmtUSD(pipeline) + ' expected AUM';
+  document.getElementById('ptLeadClosedKpi').textContent = closed.length;
+  document.getElementById('ptLeadConvKpi').textContent = conv + '% of finished leads';
+
+  const rows = LEADS.filter(l => leadStatus === 'all' || l.status === leadStatus);
+  document.getElementById('ptLeadBadge').textContent = `${rows.length}${leadStatus === 'all' ? '' : ' ' + leadStatus} of ${LEADS.length}`;
+  const potCls = { high: 'pos', mid: 'warn', low: '' };
+  const dueBadge = d => d === undefined ? '' : d < 0 ? `<span class="pt-pill neg">${-d}d overdue</span>` : d === 0 ? '<span class="pt-pill warn">today</span>' : `<span class="pt-pill">in ${d}d</span>`;
+  const statusCell = l => l.status === 'open' ? '<span class="pt-pill accent">Open</span>'
+    : l.status === 'closed' ? `<span class="pt-pill pos">Became client</span> <span class="muted">${l.note}</span>`
+    : `<span class="pt-pill neg">Abandoned</span> <span class="muted">${l.note}</span>`;
+  document.getElementById('ptLeadBody').innerHTML = rows.map(l =>
+    `<tr><td>${esc(l.name)}</td><td><span class="pt-pill ${potCls[l.pot]}">${l.pot[0].toUpperCase() + l.pot.slice(1)}</span></td>` +
+    `<td>${l.line}</td><td>${l.src}</td><td class="num">${fmtNum(l.aum)}</td>` +
+    `<td>${l.next ? esc(l.next) + ' ' + dueBadge(l.due) : '—'}</td><td>${l.last === 0 ? 'Today' : l.last + ' days ago'}</td><td>${statusCell(l)}</td></tr>`).join('');
+}
+function leadFilter(st, btn) {
+  document.querySelectorAll('#ptLeadSeg button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  leadStatus = st;
+  renderLeads();
+}
+function leadAdd(e) {
+  e.preventDefault();
+  const v = id => document.getElementById(id).value.trim();
+  const name = v('ptLeadName');
+  LEADS.unshift({ name, pot: v('ptLeadPot'), line: v('ptLeadLine'), src: v('ptLeadSrc'), aum: +v('ptLeadAum') || 0,
+    next: v('ptLeadNext') || 'Intro call', due: 7, last: 0, status: 'open' });
+  document.getElementById('ptLeadName').value = '';
+  leadFilter('open', document.querySelector('#ptLeadSeg button'));
+  crmLogLine(`<span class="pt-pill accent">Lead</span> Added <strong>${esc(name)}</strong> to the pipeline. Next action due in 7 days.`);
+}
+function crmLogLine(html) {
   const log = document.getElementById('ptCrmLog');
   const empty = log.querySelector('.muted');
   if (empty) empty.remove();
   const li = document.createElement('li');
-  li.innerHTML = `<span class="pt-pill pos">Call</span> Logged a contact with <strong>${client}</strong>. Next action: follow up in 14 days.`;
+  li.innerHTML = html;
   log.prepend(li);
 }
 

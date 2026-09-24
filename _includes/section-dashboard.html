@@ -189,10 +189,10 @@
 
         <!-- ── 4. CRM ─────────────────────────────────────────────────── -->
         <div class="pt-panel" id="pt-crm">
-          <div class="pt-why"><span class="cap-chip crm">CRM &amp; write-back</span>The page writes as well as reads. Contacts logged here go through an API into the warehouse, and the worklist is built from both the rep's notes and live client data. Try <strong>Log contact</strong>.</div>
+          <div class="pt-why"><span class="cap-chip crm">CRM &amp; write-back</span>The page writes as well as reads. Contacts and leads entered here go through an API into the warehouse, and the worklist is built from both the rep's notes and live client data. Try <strong>Log contact</strong> or <strong>+ Add a lead</strong>.</div>
           <div class="pt-kpis three">
-            <div class="pt-kpi"><div class="pt-kpi-label">Open leads</div><div class="pt-kpi-value">14</div><div class="pt-bar" style="background:var(--p-accent)"></div></div>
-            <div class="pt-kpi"><div class="pt-kpi-label">Became clients</div><div class="pt-kpi-value">6</div><div class="pt-kpi-sub">last 90 days</div><div class="pt-bar" style="background:var(--p-positive)"></div></div>
+            <div class="pt-kpi"><div class="pt-kpi-label">Open leads</div><div class="pt-kpi-value" id="ptLeadOpenKpi">7</div><div class="pt-kpi-sub" id="ptLeadPipeKpi">$6.2M expected AUM</div><div class="pt-bar" style="background:var(--p-accent)"></div></div>
+            <div class="pt-kpi"><div class="pt-kpi-label">Leads became clients</div><div class="pt-kpi-value" id="ptLeadClosedKpi">4</div><div class="pt-kpi-sub" id="ptLeadConvKpi">67% of finished leads</div><div class="pt-bar" style="background:var(--p-positive)"></div></div>
             <div class="pt-kpi"><div class="pt-kpi-label">No contact in 60+ days</div><div class="pt-kpi-value" id="ptCrmGap">3</div><div class="pt-kpi-sub">existing clients</div><div class="pt-bar" style="background:var(--p-negative)"></div></div>
           </div>
           <div class="pt-card">
@@ -213,6 +213,35 @@
                 <tr data-tags="maturing gap"><td>Client F</td><td class="num">1,318,400</td><td class="lc">71 days ago</td><td><span class="pt-pill warn">1.5 BTC DCI matures 28 Sep</span></td><td><button class="pt-action" onclick="crmLog(this)">Log contact</button></td></tr>
                 <tr data-tags="drift"><td>Client K</td><td class="num">640,100</td><td class="lc">20 days ago</td><td><span class="pt-pill">AUS down 35% in 30 days</span></td><td><button class="pt-action" onclick="crmLog(this)">Log contact</button></td></tr>
               </tbody>
+            </table></div>
+          </div>
+          <div class="pt-card">
+            <div class="pt-card-head">
+              <span>Leads</span>
+              <em id="ptLeadBadge">—</em>
+            </div>
+            <div class="pt-funnel" id="ptLeadFunnel"></div>
+            <details class="pt-add">
+              <summary>+ Add a lead</summary>
+              <form class="pt-filters" onsubmit="leadAdd(event)">
+                <label>Lead name<input type="text" id="ptLeadName" placeholder="e.g. Lead N" required></label>
+                <label>Potential<select id="ptLeadPot"><option value="high">High</option><option value="mid" selected>Mid</option><option value="low">Low</option></select></label>
+                <label>Business line<select id="ptLeadLine"><option value="B2C">B2C — asset management</option><option value="B2B">B2B — tech provider</option></select></label>
+                <label>Source<select id="ptLeadSrc"><option>Referral</option><option>Event</option><option>Inbound</option><option>Outbound</option><option>Partner</option></select></label>
+                <label>Expected AUM (USD)<input type="number" id="ptLeadAum" value="250000" min="0" step="10000"></label>
+                <label>Next action<input type="text" id="ptLeadNext" value="Intro call"></label>
+                <button type="submit" class="pt-action pt-submit">Add lead</button>
+              </form>
+            </details>
+            <div class="pt-seg pt-seg-block" id="ptLeadSeg">
+              <button class="active" onclick="leadFilter('open', this)">Open</button>
+              <button onclick="leadFilter('closed', this)">Became clients</button>
+              <button onclick="leadFilter('abandoned', this)">Abandoned</button>
+              <button onclick="leadFilter('all', this)">All</button>
+            </div>
+            <div class="pt-tbl"><table>
+              <thead><tr><th>Lead</th><th>Potential</th><th>Line</th><th>Source</th><th class="num">Expected AUM</th><th>Next action</th><th>Last contact</th><th>Status</th></tr></thead>
+              <tbody id="ptLeadBody"></tbody>
             </table></div>
           </div>
           <div class="pt-card">
