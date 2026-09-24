@@ -505,6 +505,35 @@ pre { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 12p
 .article-body .article-conclusion p { margin-bottom: 0; }
 .article-tags { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 6px; }
 
+/* ===== SIDE PROJECTS ===== */
+#projects { background: var(--bg); border-bottom: 1px solid var(--border); }
+.proj-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.proj-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px 28px;
+  display: flex; flex-direction: column; transition: border-color .2s;
+}
+.proj-card:hover { border-color: var(--accent); }
+.proj-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.proj-logo {
+  width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800;
+}
+.proj-logo.mandarin { background: rgba(247,129,102,0.15); color: var(--accent3); border: 1px solid rgba(247,129,102,0.3); }
+.proj-logo.tanukeys { background: rgba(242,204,96,0.15); color: #f2cc60; border: 1px solid rgba(242,204,96,0.3); }
+.proj-head h3 { font-size: 18px; font-weight: 700; line-height: 1.2; margin-bottom: 4px; }
+.proj-status {
+  display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 9px; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: .8px;
+}
+.proj-status.live { background: rgba(63,185,80,0.15); border: 1px solid rgba(63,185,80,0.3); color: var(--accent2); }
+.proj-status.soon { background: rgba(242,204,96,0.12); border: 1px solid rgba(242,204,96,0.3); color: #f2cc60; }
+.proj-card > p { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
+.proj-list { padding-left: 18px; margin-bottom: 16px; }
+.proj-list li { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+.proj-card .tags { margin-bottom: 18px; }
+.proj-btn { align-self: flex-start; margin-top: auto; }
+
 /* ===== FOOTER ===== */
 footer {
   background: var(--bg); border-top: 1px solid var(--border);
@@ -517,7 +546,13 @@ footer a { color: var(--accent); }
 @media (max-width: 900px) {
   .skills-grid { grid-template-columns: 1fr 1fr; }
   .dbt-layout { grid-template-columns: 1fr; }
+  .proj-grid { grid-template-columns: 1fr; }
+  nav { padding: 0 20px; }
+  .nav-links { gap: 14px; }
   h1 { font-size: 38px; }
+}
+@media (max-width: 720px) {
+  .nav-links { display: none; }
 }
 @media (max-width: 600px) {
   .container { padding: 0 16px; }
@@ -532,6 +567,7 @@ footer a { color: var(--accent); }
   .ach-company { flex-direction: row; align-items: center; justify-content: flex-start; gap: 8px; }
   .ach-company-name { text-align: left; }
   .opinion-card { padding: 20px; }
+  .proj-card { padding: 20px; }
   .opinion-card > h3 { font-size: 17px; }
   .code-tabs { flex-wrap: wrap; }
   /* DBT section */

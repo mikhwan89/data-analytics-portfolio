@@ -17,7 +17,8 @@ Live site: https://mikhwan89.github.io/data-analytics-portfolio/
 │   ├── section-dashboard.html
 │   ├── section-dbt.html              # DBT Jinja syntax wrapped in {% raw %}
 │   ├── section-thoughts.html         # Add new opinion pieces here
-│   └── section-career.html
+│   ├── section-career.html
+│   └── section-projects.html         # Side projects (apps)
 ├── assets/
 │   ├── css/
 │   │   └── style.css                 # All styles and responsive layout
